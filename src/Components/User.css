@@ -1,0 +1,56 @@
+.headmain {
+  text-align: center;
+  color: chocolate;
+}
+
+.signup {
+  text-align: center;
+  color: crimson;
+}
+
+.link {
+  font-size: 20px;
+  position: relative;
+  left: 60px;
+  top: -40px;
+  right: -30px;
+  bottom: 70px;
+  color: darkblue;
+}
+
+.Register-button {
+  position: relative;
+  left: -20px;
+  top: 10px;
+  right: 50px;
+  bottom: 10px;
+}
+
+.fundoohead {
+  padding-left: 50%;
+  color: chocolate;
+}
+
+button {
+  position: relative;
+  left: -30px;
+  top: 10px;
+  right: 102px;
+  bottom: 103px;
+  
+}
+
+.main{
+  margin-top: 5%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-bottom: 0%;
+  
+  border: 5px solid coral;
+  border-radius: 1em;
+  border-spacing: 1em;
+}
+.Register{
+ padding-left: 18%;
+    padding-right: 11%;
+}

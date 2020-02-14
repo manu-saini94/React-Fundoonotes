@@ -37,20 +37,37 @@ button {
   top: 10px;
   right: 102px;
   bottom: 103px;
-  
 }
 
-.main{
+.mainReg {
   margin-top: 5%;
   margin-left: 25%;
   margin-right: 25%;
-  margin-bottom: 0%;
-  
+  margin-bottom: 20%;
+
+  border: 5px solid coral;
+  border-radius: 1em;
+  border-spacing: 2em;
+}
+
+.mainLogin {
+  margin-top: 5%;
+  margin-left: 25%;
+  margin-right: 25%;
+  margin-bottom: 25%;
+
   border: 5px solid coral;
   border-radius: 1em;
   border-spacing: 1em;
 }
-.Register{
- padding-left: 18%;
-    padding-right: 11%;
+
+.Register {
+  padding-left: 18%;
+  padding-right: 11%;
+}
+
+.Login {
+  padding-right: 0%;
+  padding-left: 0%;
+  padding-bottom: 10%;
 }

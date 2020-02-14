@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-// import Grid from "@material-ui/core/Grid";
-import { Container, Paper, FormControl } from "@material-ui/core";
+import { Container } from "@material-ui/core";
 import Controller from '../Controller/UserController';
 import TextField from "@material-ui/core/TextField";
 import "./User.css";
@@ -34,25 +33,37 @@ class Registration extends Component {
     };
   }
 
-
-  onLogin = () => {
-
+  loginPage = () => {
+    this.props.history.push('/login')
   }
+
+
 
   onchangeUsername = event => {
     this.setState({ Username: event.target.value });
   };
 
-  onchangeEmail = event => {
-    this.setState({ Email: event.target.value });
-    let emailchng = this.state.Email.match(
-      "[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}"
-    );
+  onchangeEmail = async event => {
+    let emailData = event.target.value
+    await this.setState({ Email: emailData });
+    console.log("email validation state", this.state.Email);
+
+    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.Email)) {
+      console.log("email");
+
+    }
+    else {
+      console.log("not email");
+
+
+    }
+    // let emailchng = await emailData.test("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}");
+    // console.log("email validation", emailchng);
+
   };
 
   onchangeFirstname = event => {
-    if (event.target.value != "" && (event.target.value))
-      this.setState({ Firstname: event.target.value });
+    this.setState({ Firstname: event.target.value });
 
   };
 
@@ -82,32 +93,36 @@ class Registration extends Component {
     }
     console.log(registrationDetails)
     Controller.register(registrationDetails).then((res) => {
-      console.log(res.data.token)
+      console.log("hiii...", res)
       if (res.status === 200) {
+        alert("Verification link is sent")
         this.props.history.push("/login")
+        console.log(res)
+        let token = res.data.object
+        console.log(token)
+        localStorage.setItem("registerToken", token)
         this.setState({
           error: true,
           message: 'Registration success'
         })
       }
-      else {
-        this.setState({
-          error: true,
-          message: 'Please Reregister'
-        })
-      }
-    }).catch((error) => {
-      console.log(error)
+      // else {
+      //   this.setState({
+      //     error: true,
+      //     message: 'Please Reregister'
+      //   })
+      // }
     })
-  };
+  }
+
 
 
   render() {
     const classes = { useStyles };
 
     return (
-      <div className="main" >
-        <Container maxWidth="sm">
+      <div className="mainReg" >
+        <Container maxWidth="50px" fixed>
           <form className="Register" style={{ width: "50%" }} >
             <h3 className="fundoohead">fundoonotes</h3>
             <div className="row" style={{ width: "300%" }}>
@@ -213,9 +228,10 @@ class Registration extends Component {
                   color="primary"
                   className={classes.paper}
                   style={{ color: "blue" }}
-                  onClick={this.onLogin}
+                  onClick={this.loginPage}
                 >
-                  Login
+                  signin
+
                 </Button>
               </div>
             </div>

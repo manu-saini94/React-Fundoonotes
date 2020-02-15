@@ -79,8 +79,8 @@ class Login extends Component {
         Controller.login(loginDetails).then((res) => {
             console.log("hiii...", res)
             if (res.status === 200) {
-                alert("You have successfully Logged In")
-                this.props.history.push("/login")
+                console.log("login....")
+                this.props.history.push("/dashboard")
                 console.log(res)
                 let token = res.data.object
                 localStorage.setItem("logintoken", token)

@@ -6,6 +6,7 @@ import Registration from "./Components/Registration";
 import Login from "./Components/Login";
 import Forgotpassword from "./Components/Forgotpassword";
 import Resetpassword from "./Components/Resetpassword";
+import DashBoard from "./Components/DashBoard";
 
 class App extends Component {
   render() {
@@ -17,6 +18,7 @@ class App extends Component {
           <Route path="/register" component={Registration}></Route>
           <Route path="/forgot" component={Forgotpassword}></Route>
           <Route path="/reset/:jwt" component={Resetpassword}></Route>
+          <Route path="/dashboard" component={DashBoard}></Route>
         </Router>
       </div>
     );

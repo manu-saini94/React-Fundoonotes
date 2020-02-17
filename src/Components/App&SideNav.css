@@ -4,9 +4,26 @@
   padding-bottom: 0.5%;
   display: flex;
 }
-/* .App_Card{
-   
-} */
+.App_Name {
+  margin-top: -1.8em;
+  padding-right: 75%;
+  font-size: 22px;
+  font-weight: 525;
+  font-style: normal;
+  color: rgb(87, 87, 87);
+}
+
+
+
+.App_Nav {
+  padding-left: 0%;
+  padding-bottom: 0.5%;
+}
+
+.App_Card {
+  padding-right: 20%;
+}
+
 .InputeBase2 {
   height: 4%;
   width: 90%;
@@ -14,16 +31,13 @@
   padding-bottom: 0.5%;
   padding-left: 2%;
 }
-.Serach_Card {
-  width: 70%;
-  height: 4%;
+.Search_Card {
+  margin-top: -1.8em;
+  padding-left: 80%;
+  padding-right: 10%;
+  display: flex;
 }
-/* .serach_card1{
-    height: 20%;
-} */
-.Serach_Icon {
-  padding-left: 1%;
-}
+
 .sideIcons {
   display: flex;
   width: 5%;

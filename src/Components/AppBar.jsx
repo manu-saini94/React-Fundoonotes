@@ -13,13 +13,79 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import MoreIcon from '@material-ui/icons/MoreVert';
 import RefreshIcon from '@material-ui/icons/Refresh';
 import SettingsIcon from '@material-ui/icons/Settings';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Drawer from "@material-ui/core/Drawer";
+import List from "@material-ui/core/List";
+import Divider from "@material-ui/core/Divider";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { useTheme } from "@material-ui/core/styles";
+import clsx from "clsx";
+import NotesIcon from '@material-ui/icons/Notes';
+import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
+import LabelOutlinedIcon from '@material-ui/icons/LabelOutlined';
+
+
+
+
+
+
+const drawerWidth = 244;
 
 
 const useStyles = makeStyles(theme => ({
+    root: {
+        display: "flex"
+    },
+    appBar: {
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+        })
+    },
+    appBarShift: {
+        transition: theme.transitions.create(["margin", "width"], {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen
+        })
+    },
+
+    hide: {
+        display: "none"
+    },
+    drawer: {
+        width: drawerWidth,
+        flexShrink: 0
+    },
+    drawerPaper: {
+        top: "79px",
+        width: drawerWidth
+    },
+    drawerHeader: {
+        display: "flex",
+        alignItems: "center",
+        padding: theme.spacing(0, 1),
+        ...theme.mixins.toolbar,
+        justifyContent: "flex-end"
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen
+        }),
+        marginLeft: -drawerWidth
+    },
+    contentShift: {
+        transition: theme.transitions.create("margin", {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen
+        }),
+        marginLeft: 0
+    },
     palette: {
         backgroundColor: '#fafafa'
     },
@@ -43,8 +109,7 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: fade(theme.palette.common.black, 0.25),
         },
         marginRight: theme.spacing(2),
-        marginLeft: 0,
-        width: '100%',
+        width: '50%',
         [theme.breakpoints.up('sm')]: {
             marginLeft: theme.spacing(3),
             width: 'auto',
@@ -85,13 +150,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const theme = useTheme();
+
+    const [open, setOpen] = React.useState(false);
+
 
     const handleProfileMenuOpen = event => {
         setAnchorEl(event.currentTarget);
@@ -114,7 +183,7 @@ export default function PrimarySearchAppBar() {
     const renderMenu = (
         <Menu
             anchorEl={anchorEl}
-            anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            anchorOrigin={{ vertical: '', horizontal: 'right' }}
             id={menuId}
             keepMounted
             transformOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -168,7 +237,7 @@ export default function PrimarySearchAppBar() {
     );
 
     return (
-        <div>
+        <div className={classes.root}>
             <AppBar position="static" className={classes.palette} style={{ marginTop: '-1%', paddingBottom: '0.6%' }} >
                 <div >
                     <img style={{ paddingRight: '88%', marginBottom: '-4.7%', marginTop: '-5%' }} src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
@@ -179,15 +248,18 @@ export default function PrimarySearchAppBar() {
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
+                        className={clsx(classes.menuButton, open)}
+                        onClick={props.handleDraweropen}
+
                     >
-                        <MenuIcon style={{ color: '#424242', marginRight: '-180%', paddingTop: '-80%', marginBottom: '-10%', paddingBottom: '65%' }} />
+                        <MenuIcon style={{ color: '#424242', marginRight: '-180%', paddingTop: '-80%', marginBottom: '-10%', paddingBottom: '80%' }} />
                     </IconButton>
-                    <Typography style={{ color: '#424242', paddingLeft: '2%' }} className={classes.title} variant="h6" noWrap>
-                        Keep
+                    <Typography style={{ color: '#616161', marginLeft: '2.5%', marginTop: '0.4%', fontSize: '150%' }} className={classes.title} variant="h6" noWrap >
+                        fundoo
           </Typography>
-                    <div className={classes.search}>
+                    <div style={{ paddingRight: '5%', paddingTop: '0.2%', paddingBottom: '0.2%', marginTop: '0.5%', marginLeft: '5%' }} className={classes.search}>
                         <div className={classes.searchIcon}>
-                            <SearchIcon />
+                            <SearchIcon style={{ paddingRight: '40%' }} />
                         </div>
                         <InputBase
                             placeholder="Search…"
@@ -221,17 +293,7 @@ export default function PrimarySearchAppBar() {
                             <AccountCircle style={{ color: '#424242', paddingBottom: '65%' }} />
                         </IconButton>
                     </div>
-                    <div className={classes.sectionMobile}>
-                        <IconButton
-                            aria-label="show more"
-                            aria-controls={mobileMenuId}
-                            aria-haspopup="true"
-                            onClick={handleMobileMenuOpen}
-                            color="inherit"
-                        >
-                            <MoreIcon />
-                        </IconButton>
-                    </div>
+
                 </Toolbar>
             </AppBar>
             {renderMobileMenu}

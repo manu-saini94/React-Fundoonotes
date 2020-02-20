@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import AppNavBar from './AppBar'
 import SideNavBar from './SideBar'
-import SimpleExpansionPanel from './TakeNote'
+import NotesMenu from './NotesMenu'
 
 
 class DashBoard extends Component {
@@ -16,7 +16,7 @@ class DashBoard extends Component {
 
     handleDraweropen = () => {
 
-        this.setState({ open: !this.state.open }) 
+        this.setState({ open: !this.state.open })
     }
 
     render() {
@@ -24,7 +24,7 @@ class DashBoard extends Component {
             <div>
                 <AppNavBar handleDraweropen={this.handleDraweropen} />
                 <SideNavBar show={this.state.open} />
-                <SimpleExpansionPanel />
+                <NotesMenu open={this.state.open}/>
 
 
             </div>

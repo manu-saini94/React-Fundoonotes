@@ -1,17 +1,27 @@
 import React, { Component } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-import { Container } from "@material-ui/core";
 import Controller from '../Controller/UserController';
 import TextField from "@material-ui/core/TextField";
 import "./User.css";
+import Box from '@material-ui/core/Box';
+
+
+const defaultProps = {
+  bgcolor: 'background.paper',
+  m: 1,
+  border: 2,
+  style: { width: '50rem', height: '35rem', margin: '85px' },
+};
 
 const useStyles = makeStyles(theme => ({
+
   root: {
-    flexGrow: 1
+
   },
+
   paper: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
     textAlign: "center",
     color: theme.palette.text.secondary
   }
@@ -121,14 +131,22 @@ class Registration extends Component {
     const classes = { useStyles };
 
     return (
-      <div className="mainReg" >
-        <Container maxWidth="50px" fixed>
-          <form className="Register" style={{ width: "50%" }} >
-            <h3 className="fundoohead">fundoonotes</h3>
-            <div className="row" style={{ width: "300%" }}>
-              <div className="col s6 Reg-Username" >
+      <div style={{ paddingRight: '50%', marginLeft: '180px' }}>
 
+        <Box display="flex" justifyContent="center" borderColor="text.primary" {...defaultProps} >
+          
+          <div style={{ marginRight: '15%', paddingRight: '20%', marginTop: '10%' }}>
+            <div style={{paddingBottom:'10%'}}>
+              <div style={{marginTop:'20%'  }}>
+                {/* <div style={{ paddingTop: '10%', marginBottom: '5%', paddingLeft: '-90%', marginTop: '-5%', paddingRight: '90%' }}>
+                
+                </div> */}
+                <div style={{ color: '#616161',fontSize:'35px',marginTop:'-50%',marginBottom:'12%',fontWeight:'lighter'}}>
+                  <img style={{ paddingTop: '15%'}} width='60px' height='60px' src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
+                  fundoo
+                </div>
                 <TextField
+
                   required={true}
                   error={this.state.error}
                   id="Username"
@@ -137,9 +155,13 @@ class Registration extends Component {
                   value={this.state.Username}
                   onChange={this.onchangeUsername}
                   className={classes.paper}
+                  
                 />
               </div>
-              <div className="col s6 Reg-Firstname">
+              <div style={{paddingLeft:'10%', paddingRight:'10%',marginLeft:'50%',marginRight:'-200%',marginTop:'9%'}}>
+                <div style={{ color: '#c62828', fontSize: '25px', marginTop: '-26%', fontWeight: '50px',marginBottom: '6%' }}>
+                  Registration
+                </div>
                 <TextField
                   required={true}
                   error={this.state.error}
@@ -152,92 +174,96 @@ class Registration extends Component {
                 />
               </div>
             </div>
-            <div className="row" style={{ width: "300%" }}>
-
-              <div className="col s6 Reg-Lastname">
-                <TextField
-                  required={true}
-                  error={this.state.error}
-                  id="Lastname"
-                  label="Lastname"
-                  variant="outlined"
-                  value={this.state.Lastname}
-                  onChange={this.onchangeLastname}
-                  className={classes.paper}
-                />
-              </div>
-              <div className="col s6 Reg-Email">
-                <TextField
-                  required={true}
-                  error={this.state.error}
-                  id="Email"
-                  label="Email"
-                  variant="outlined"
-                  value={this.state.Email}
-                  onChange={this.onchangeEmail}
-                />
-              </div>
+<div>
+            <div>
+              <TextField
+                required={true}
+                error={this.state.error}
+                id="Lastname"
+                label="Lastname"
+                variant="outlined"
+                value={this.state.Lastname}
+                onChange={this.onchangeLastname}
+                className={classes.paper}
+              />
             </div>
-            <div className="row" style={{ width: "300%" }}>
+              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '-24.1%' }}>
+              <TextField
 
-              <div className="col s6 Reg-Password">
-                <TextField
-                  required={true}
-                  error={this.state.error}
-                  id="Password"
-                  label="Password"
-                  type="password"
-                  variant="outlined"
-                  value={this.state.Password}
-                  onChange={this.onchangePassword}
-                  className={classes.paper}
-                />
-              </div>
-              <div className="col s6 Reg-Passwordagain" >
-                <TextField
-                  required={true}
-                  error={this.state.error}
-                  id="Passwordagain"
-                  label="Confirm Password"
-                  type="password"
-                  variant="outlined"
-                  value={this.state.Passwordagain}
-                  onChange={this.onchangePasswordagain}
-                  className={classes.paper}
-                />
-              </div>
+                required={true}
+                error={this.state.error}
+                id="Email"
+                label="Email"
+                variant="outlined"
+                value={this.state.Email}
+                onChange={this.onchangeEmail}
+              />
             </div>
-            <div className="row" style={{ width: "300%" }}>
+            </div>
+            <div>
+            <div>
+              <TextField
 
-              <div className="col s6 Reg-button">
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  color="primary"
-                  className={classes.paper}
-                  style={{ color: "blue" }}
-                  onClick={this.onSubmit}
-                >
-                  Submit
+                required={true}
+                error={this.state.error}
+                id="Password"
+                label="Password"
+                type="password"
+                variant="outlined"
+                value={this.state.Password}
+                onChange={this.onchangePassword}
+                className={classes.paper}
+              />
+            </div>
+              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '9%' }}>
+              <TextField
+
+                required={true}
+                error={this.state.error}
+                id="Passwordagain"
+                label="Confirm Password"
+                type="password"
+                variant="outlined"
+                value={this.state.Passwordagain}
+                onChange={this.onchangePasswordagain}
+                className={classes.paper}
+              />
+            </div>
+            </div>
+            <div>
+            <div>
+              <Button
+
+                variant="outlined"
+                size="medium"
+                color="primary"
+                className={classes.paper}
+                style={{ color: "blue" }}
+                onClick={this.onSubmit}
+              >
+                Submit
                 </Button>
-              </div>
-              <div className="col s6 Reg-button">
-                <Button
-                  variant="outlined"
-                  size="medium"
-                  color="primary"
-                  className={classes.paper}
-                  style={{ color: "blue" }}
-                  onClick={this.loginPage}
-                >
-                  signin
-
-                </Button>
-              </div>
             </div>
-          </form>
-        </Container>
+              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '2%' }}>
+              <Button
+                variant="outlined"
+                size="medium"
+                color="primary"
+                className={classes.paper}
+                style={{ color: "blue" }}
+                onClick={this.loginPage}
+              >
+                signin
+  
+                </Button>
+            </div>
+            </div>
+          </div>
+        </Box>
+
+
       </div>
+
     );
   }
 }

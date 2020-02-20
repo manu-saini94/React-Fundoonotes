@@ -39,16 +39,6 @@ button {
   bottom: 103px;
 }
 
-.mainReg {
-  margin-top: 5%;
-  margin-left: 25%;
-  margin-right: 25%;
-  margin-bottom: 20%;
-
-  border: 5px solid coral;
-  border-radius: 1em;
-  border-spacing: 2em;
-}
 
 .mainLogin {
   margin-top: 5%;

@@ -6,13 +6,23 @@ import { Container } from "@material-ui/core";
 import Controller from '../Controller/UserController';
 import TextField from "@material-ui/core/TextField";
 import "./User.css";
+import Box from '@material-ui/core/Box';
+
+const defaultProps = {
+    bgcolor: 'background.paper',
+    m: 1,
+    border: 1.5,
+    style: { width: '49rem', height: '34rem', margin: '85px' },
+};
 
 const useStyles = makeStyles(theme => ({
+
     root: {
-        flexGrow: 1
+
     },
+
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         textAlign: "center",
         color: theme.palette.text.secondary
     }
@@ -59,7 +69,7 @@ class ResetPassword extends Component {
         Controller.resetpassword(resetDetails, this.state.jwt).then((res) => {
             console.log("hiii...", res)
             if (res.status === 200) {
-                alert("YPassword has been reset")
+                alert("Your Password has been reset")
                 this.props.history.push("/login")
                 this.setState({
                     error: true,
@@ -81,16 +91,20 @@ class ResetPassword extends Component {
         const classes = { useStyles };
 
         return (
-            <div className="mainLogin" >
-                <Container maxWidth="sm">
-                    <form className="Login" style={{ width: "50%" }} >
-                        <h3 className="fundoohead">fundoonotes</h3>
+            <div style={{ paddingRight: '50%', marginLeft: '180px' }}>
 
+                <Box display="flex" justifyContent="center" borderColor="text.primary" {...defaultProps} >
+                    <div style={{ marginTop: '14px', marginLeft: '14px' }}>
+                        <img width='60px' height='60px' src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
+                    </div>
+                    <div style={{ color: '#616161', fontSize: '35px', fontWeight: 'lighter', marginTop: '25px' }}>
 
-                        <div className="row" style={{ width: "300%" }}>
-
-                            <div className="col s6 Reg-Password">
-                                <TextField
+                        fundoo
+                </div>
+                    <div style={{ width: '100%', marginTop: '-105px' }}>
+                        <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px', paddingBottom: '53px',paddingTop:'91px' }}>Reset Password</div>
+                            <div style={{ paddingBottom: '23px', paddingRight: '176px' }}>
+                                < TextField
                                     required={true}
                                     error={this.state.error}
                                     id="newPassword"
@@ -102,13 +116,9 @@ class ResetPassword extends Component {
                                     className={classes.paper}
                                 />
                             </div>
-                        </div>
+                            <div style={{ paddingRight: '176px', paddingBottom: '30px' }}>
 
-
-                        <div className="row" style={{ width: "300%" }}>
-
-                            <div className="col s6 Reg-Password">
-                                <TextField
+                                < TextField
                                     required={true}
                                     error={this.state.error}
                                     id="newPasswordagain"
@@ -121,33 +131,35 @@ class ResetPassword extends Component {
                                 />
                             </div>
                         </div>
+                      
 
-
-
-                        <div className="row" style={{ width: "300%" }}>
-
-                            <div className="col s6 Reg-button">
-                                <Button
-                                    variant="outlined"
-                                    size="medium"
-                                    color="primary"
-                                    className={classes.paper}
-                                    style={{ color: "blue" }}
-                                    onClick={this.onSubmit}
-                                >
-                                    Submit
+                        <div style={{ marginLeft: '-264px' ,paddingLeft:'142px'}}>
+                            <Button
+                                variant="outlined"
+                                size="medium"
+                                color="primary"
+                                className={classes.paper}
+                                style={{ color: "blue" }}
+                                onClick={this.onSubmit}
+                            >
+                                Submit
                 </Button>
-                            </div>
                         </div>
+                        <div style={{ marginLeft: '215px', marginTop: '-36px', paddingRight: '191px' }}>
 
-
-
-
-                    </form>
-                </Container>
+                        </div>
+                    </div>
+                </Box>
             </div>
         );
     }
 }
 
 export default ResetPassword
+
+
+
+
+
+
+

@@ -11,7 +11,7 @@ const defaultProps = {
   bgcolor: 'background.paper',
   m: 1,
   border: 2,
-  style: { width: '50rem', height: '35rem', margin: '85px' },
+  style: { width: '49rem', height: '34rem', margin: '85px' },
 };
 
 const useStyles = makeStyles(theme => ({
@@ -134,17 +134,18 @@ class Registration extends Component {
       <div style={{ paddingRight: '50%', marginLeft: '180px' }}>
 
         <Box display="flex" justifyContent="center" borderColor="text.primary" {...defaultProps} >
-          
-          <div style={{ marginRight: '15%', paddingRight: '20%', marginTop: '10%' }}>
-            <div style={{paddingBottom:'10%'}}>
-              <div style={{marginTop:'20%'  }}>
-                {/* <div style={{ paddingTop: '10%', marginBottom: '5%', paddingLeft: '-90%', marginTop: '-5%', paddingRight: '90%' }}>
-                
-                </div> */}
-                <div style={{ color: '#616161',fontSize:'35px',marginTop:'-50%',marginBottom:'12%',fontWeight:'lighter'}}>
-                  <img style={{ paddingTop: '15%'}} width='60px' height='60px' src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
-                  fundoo
+          <div style={{ marginTop: '14px',marginLeft: '14px'}}>
+            <img width='60px' height='60px' src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
+          </div>
+          <div style={{ color: '#616161', fontSize: '35px', fontWeight: 'lighter',marginTop: '25px' }}>
+
+            fundoo
                 </div>
+<div style={{width:'100%',marginTop:'-105px'}}>
+            <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161',fontSize: '25px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px',paddingBottom:'42px' }}>Registration</div>
+              <div style={{ display: 'flex', justifyContent: 'space-evenly', paddingBottom: '15px', marginLeft: '-175px'}}>
+              
+               
                 <TextField
 
                   required={true}
@@ -157,11 +158,8 @@ class Registration extends Component {
                   className={classes.paper}
                   
                 />
-              </div>
-              <div style={{paddingLeft:'10%', paddingRight:'10%',marginLeft:'50%',marginRight:'-200%',marginTop:'9%'}}>
-                <div style={{ color: '#c62828', fontSize: '25px', marginTop: '-26%', fontWeight: '50px',marginBottom: '6%' }}>
-                  Registration
-                </div>
+              
+               
                 <TextField
                   required={true}
                   error={this.state.error}
@@ -172,10 +170,9 @@ class Registration extends Component {
                   onChange={this.onchangeFirstname}
                   className={classes.paper}
                 />
-              </div>
             </div>
-<div>
-            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-evenly', paddingBottom: '15px', marginLeft:'-175px' }}>
+            
               <TextField
                 required={true}
                 error={this.state.error}
@@ -186,8 +183,8 @@ class Registration extends Component {
                 onChange={this.onchangeLastname}
                 className={classes.paper}
               />
-            </div>
-              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '-24.1%' }}>
+            
+             
               <TextField
 
                 required={true}
@@ -198,10 +195,10 @@ class Registration extends Component {
                 value={this.state.Email}
                 onChange={this.onchangeEmail}
               />
+           
             </div>
-            </div>
-            <div>
-            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-evenly', paddingBottom: '20px', marginLeft: '-175px' }}>
+           
               <TextField
 
                 required={true}
@@ -214,8 +211,6 @@ class Registration extends Component {
                 onChange={this.onchangePassword}
                 className={classes.paper}
               />
-            </div>
-              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '9%' }}>
               <TextField
 
                 required={true}
@@ -229,9 +224,8 @@ class Registration extends Component {
                 className={classes.paper}
               />
             </div>
-            </div>
-            <div>
-            <div>
+            
+                <div style={{marginLeft:'-255px'}}>
               <Button
 
                 variant="outlined"
@@ -243,9 +237,10 @@ class Registration extends Component {
               >
                 Submit
                 </Button>
-            </div>
-              <div style={{ paddingLeft: '10%', paddingRight: '10%', marginLeft: '50%', marginRight: '-200%', marginTop: '2%' }}>
+                </div>
+                <div style={{marginLeft:'14px',marginTop:'-36px'}}>
               <Button
+          
                 variant="outlined"
                 size="medium"
                 color="primary"
@@ -256,9 +251,10 @@ class Registration extends Component {
                 signin
   
                 </Button>
+                </div>
             </div>
             </div>
-          </div>
+          
         </Box>
 
 

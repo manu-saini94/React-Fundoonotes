@@ -6,18 +6,29 @@ import { Container } from "@material-ui/core";
 import Controller from '../Controller/UserController';
 import TextField from "@material-ui/core/TextField";
 import "./User.css";
+import Box from '@material-ui/core/Box';
 
+
+const defaultProps = {
+    bgcolor: 'background.paper',
+    m: 1,
+    border: 1.5,
+    style: { width: '49rem', height: '25rem', margin: '85px' },
+};
 
 const useStyles = makeStyles(theme => ({
+
     root: {
-        flexGrow: 1
+
     },
+
     paper: {
-        padding: theme.spacing(2),
+        padding: theme.spacing(1),
         textAlign: "center",
         color: theme.palette.text.secondary
     }
 }));
+
 
 class Forgotpassword extends Component {
     constructor(props) {
@@ -88,15 +99,19 @@ class Forgotpassword extends Component {
         const classes = { useStyles };
 
         return (
-            <div className="mainLogin" >
-                <Container maxWidth="sm">
-                    <form className="Login" style={{ width: "50%" }} >
-                        <h3 className="fundoohead">fundoonotes</h3>
+            <div style={{ paddingRight: '50%', marginLeft: '180px' }}>
 
+                <Box display="flex" justifyContent="center" borderColor="text.primary" {...defaultProps} >
+                    <div style={{ marginTop: '14px', marginLeft: '14px' }}>
+                        <img width='60px' height='60px' src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
+                    </div>
+                    <div style={{ color: '#616161', fontSize: '35px', fontWeight: 'lighter', marginTop: '25px' }}>
 
-                        <div className="row" style={{ width: "300%" }}>
-
-                            <div className="col s6 Reg-Email">
+                        fundoo
+                </div>
+                    <div style={{ width: '100%', marginTop: '-105px' }}>
+                        <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px', paddingBottom: '45px' }}>Forgot Password</div>
+                            <div style={{ paddingBottom: '23px', paddingRight: '176px' }}>
                                 <TextField
                                     required={true}
                                     error={this.state.error}
@@ -113,28 +128,26 @@ class Forgotpassword extends Component {
 
 
 
-                        <div className="row" style={{ width: "300%" }}>
-
-                            <div className="col s6 Reg-button">
-                                <Button
-                                    variant="outlined"
-                                    size="medium"
-                                    color="primary"
-                                    className={classes.paper}
-                                    style={{ color: "blue" }}
-                                    onClick={this.onSubmit}
-                                >
-                                    Submit
+                        <div style={{ paddingRight: '114px' }}>                        <Button
+                            variant="outlined"
+                            size="medium"
+                            color="primary"
+                            className={classes.paper}
+                            style={{ color: "blue" }}
+                            onClick={this.onSubmit}
+                        >
+                            Submit
                 </Button>
-                            </div>
                         </div>
 
+                    </div>
 
 
 
-                    </form>
-                </Container>
+
+                </Box>
             </div>
+
         );
     }
 }

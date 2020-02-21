@@ -5,11 +5,15 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import InputBase from '@material-ui/core/InputBase';
+
 
 const useStyles = makeStyles(theme => ({
+
     root: {
+        border: 1,
         width: '50%',
-        paddingLeft:'20%'
+        paddingLeft: '443px'
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
@@ -24,43 +28,17 @@ export default function SimpleExpansionPanel() {
         <div className={classes.root}>
             <ExpansionPanel>
                 <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
+
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                 >
-                    <Typography className={classes.heading}>Expansion Panel 1</Typography>
+                    <InputBase style={{ color: '#616161', fontWeight: 'bolder', fontSize: '17px' }} placeholder="Take a note…" className={classes.heading}></InputBase>
                 </ExpansionPanelSummary>
                 <ExpansionPanelDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                        sit amet blandit leo lobortis eget.
-          </Typography>
+
                 </ExpansionPanelDetails>
             </ExpansionPanel>
-            <ExpansionPanel>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel2a-content"
-                    id="panel2a-header"
-                >
-                    <Typography className={classes.heading}>Expansion Panel 2</Typography>
-                </ExpansionPanelSummary>
-                <ExpansionPanelDetails>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-                        sit amet blandit leo lobortis eget.
-          </Typography>
-                </ExpansionPanelDetails>
-            </ExpansionPanel>
-            <ExpansionPanel disabled>
-                <ExpansionPanelSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel3a-content"
-                    id="panel3a-header"
-                >
-                    <Typography className={classes.heading}>Disabled Expansion Panel</Typography>
-                </ExpansionPanelSummary>
-            </ExpansionPanel>
+
         </div>
     );
 }

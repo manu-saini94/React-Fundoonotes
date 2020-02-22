@@ -39,6 +39,8 @@ class Registration extends Component {
       Password: "",
       Passwordagain: "",
       error: false,
+      err1:false,
+      err2:false,
       message: ""
     };
   }
@@ -47,29 +49,48 @@ class Registration extends Component {
     this.props.history.push('/login')
   }
 
+  helpermailMethod=() => {
+   if(this.state.err1)
+   {
+    return "Not a valid mail id"   
+   }
+  }
 
+  helperusernameMethod=() =>{
+    if (this.state.err2) {
+      return "cannot be empty"
+    } 
+  }
 
-  onchangeUsername = event => {
-    this.setState({ Username: event.target.value });
-  };
+  // helperfirstnameMethod = () => {
+  //   if (this.state.err3) {
+  //     return "cannot be empty"
+  //   }
+  // }
+  onchangeUsername = async event => {
+    await this.setState({ Username: event.target.value });
 
-  onchangeEmail = async event => {
-    let emailData = event.target.value
-    await this.setState({ Email: emailData });
-    console.log("email validation state", this.state.Email);
-
-    if (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/.test(this.state.Email)) {
-      console.log("email");
+    if (this.state.Username!==null) {
+      this.setState({ err2: false });
 
     }
     else {
-      console.log("not email");
+      this.setState({ err2: true });
+    }
+  };
 
+  onchangeEmail = async event => {
+     
+    await this.setState({ Email: event.target.value });
+
+    if (/^[a-zA-z\d._-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,4}$/.test(this.state.Email)) {
+      this.setState({ err1: false});
 
     }
-    // let emailchng = await emailData.test("[a-z0-9._%+-]+@[a-z0-9.-]+.[a-z]{2,3}");
-    // console.log("email validation", emailchng);
-
+    else {
+      this.setState({ err1: true });
+    }
+  
   };
 
   onchangeFirstname = event => {
@@ -149,20 +170,20 @@ class Registration extends Component {
                 <TextField
 
                   required={true}
-                  error={this.state.error}
+                  error={this.state.err2}
                   id="Username"
                   label="Username"
                   variant="outlined"
                   value={this.state.Username}
                   onChange={this.onchangeUsername}
                   className={classes.paper}
-                  
+                  helperText={this.helperusernameMethod}
                 />
               
                
                 <TextField
                   required={true}
-                  error={this.state.error}
+                  error={this.state.err3}
                   id="Firstname"
                   label="Firstname"
                   variant="outlined"
@@ -175,7 +196,6 @@ class Registration extends Component {
             
               <TextField
                 required={true}
-                error={this.state.error}
                 id="Lastname"
                 label="Lastname"
                 variant="outlined"
@@ -188,12 +208,14 @@ class Registration extends Component {
               <TextField
 
                 required={true}
-                error={this.state.error}
+                error={this.state.err1}
                 id="Email"
                 label="Email"
                 variant="outlined"
                 value={this.state.Email}
                 onChange={this.onchangeEmail}
+                 helperText={this.helpermailMethod}
+
               />
            
             </div>
@@ -202,7 +224,6 @@ class Registration extends Component {
               <TextField
 
                 required={true}
-                error={this.state.error}
                 id="Password"
                 label="Password"
                 type="password"
@@ -214,7 +235,6 @@ class Registration extends Component {
               <TextField
 
                 required={true}
-                error={this.state.error}
                 id="Passwordagain"
                 label="Confirm Password"
                 type="password"

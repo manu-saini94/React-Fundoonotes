@@ -28,7 +28,7 @@ var controller = {
     }
     ,
     resetpassword(resetDetails, jwt) {
-        console.log("controller resetpassword method ", resetDetails)
+        console.log("controller `resetpassword method ", resetDetails)
         console.log(jwt)
         return axios.put(`http://localhost:8080/user/resetpassword/${jwt}`, resetDetails)
     }

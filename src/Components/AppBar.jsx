@@ -6,7 +6,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
-import MenuItem from '@material-ui/core/MenuItem';
+import { MenuItem, Grid } from '@material-ui/core';
 import Menu from '@material-ui/core/Menu';
 import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
@@ -237,67 +237,91 @@ export default function PrimarySearchAppBar(props) {
     );
 
     return (
-        <div className={classes.root}>
-            <AppBar position="static" className={classes.palette} style={{ marginTop: '-1%', paddingBottom: '0.6%' }} >
-                <div >
-                    <img style={{ paddingRight: '88%', marginBottom: '-4.7%', marginTop: '-5%' }} src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
-                </div>
-                <Toolbar>
-                    <IconButton
-                        edge="start"
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="open drawer"
-                        className={clsx(classes.menuButton, open)}
-                        onClick={props.handleDraweropen}
+        <Grid>
+            <div className={classes.root}>
 
-                    >
-                        <MenuIcon style={{ color: '#424242', marginRight: '-180%', paddingTop: '-80%', marginBottom: '-10%', paddingBottom: '80%' }} />
-                    </IconButton>
-                    <Typography style={{ color: '#616161', marginLeft: '2.5%', marginTop: '0.4%', fontSize: '150%' }} className={classes.title} variant="h6" noWrap >
-                        fundoo
+                <AppBar position="fixed" className={classes.palette} >
+
+                    <Toolbar style={{
+                        marginBottom: '7px',
+                        marginTop: '8px'
+                    }} >
+                        <Grid item xs={1} style={{ marginTop: '-18px' }}>
+
+
+                            <IconButton
+                                edge="start"
+                                className={classes.menuButton}
+                                color="inherit"
+                                aria-label="open drawer"
+                                className={clsx(classes.menuButton, open)}
+                                onClick={props.handleDraweropen}
+
+                            >
+                                <MenuIcon style={{ color: '#424242' }} />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={1} style={{
+                            marginLeft: '-87px',
+                            marginTop: '6px'
+                        }}>
+                            <div  >
+                                <img src={"https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"} alt="Logo" />
+                            </div>
+                        </Grid>
+                        <Grid style={{
+                            marginLeft: '-28px',
+                            marginBottom: '-4px'
+                        }}>
+                            <Typography style={{ color: '#616161', fontSize: '150%' }} className={classes.title} variant="h6" noWrap >
+                                fundoo
           </Typography>
-                    <div style={{ paddingRight: '5%', paddingTop: '0.2%', paddingBottom: '0.2%', marginTop: '0.5%', marginLeft: '5%' }} className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon style={{ paddingRight: '40%' }} />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                        />
-                    </div>
-                    <div className={classes.grow} />
-                    <div className={classes.sectionDesktop}>
-                        <IconButton aria-label="show 4 new mails" color="inherit" >
+                        </Grid>
+                        <Grid style={{ marginLeft: '29px' }}>
+                            <div className={classes.search}>
+                                <div className={classes.searchIcon}>
+                                    <SearchIcon style={{ paddingRight: '40%' }} />
+                                </div>
+                                <InputBase
+                                    placeholder="Search…"
+                                    classes={{
+                                        root: classes.inputRoot,
+                                        input: classes.inputInput,
+                                    }}
+                                    inputProps={{ 'aria-label': 'search' }}
+                                />
+                            </div>
+                        </Grid>
+                        <Grid style={{ marginLeft: '595px' }}>
+                            <div className={classes.grow} />
+                            <div className={classes.sectionDesktop}>
+                                <IconButton aria-label="show 4 new mails" color="inherit" >
 
-                            <RefreshIcon style={{ color: '#424242', paddingBottom: '65%' }} />
+                                    <RefreshIcon style={{ color: '#424242', paddingBottom: '65%' }} />
 
-                        </IconButton>
-                        <IconButton aria-label="show 17 new notifications" color="inherit">
+                                </IconButton>
+                                <IconButton aria-label="show 17 new notifications" color="inherit">
 
-                            <SettingsIcon style={{ color: '#424242', paddingBottom: '65%' }} />
+                                    <SettingsIcon style={{ color: '#424242', paddingBottom: '65%' }} />
 
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle style={{ color: '#424242', paddingBottom: '65%' }} />
-                        </IconButton>
-                    </div>
-
-                </Toolbar>
-            </AppBar>
-            {renderMobileMenu}
-            {renderMenu}
-        </div>
+                                </IconButton>
+                                <IconButton
+                                    edge="end"
+                                    aria-label="account of current user"
+                                    aria-controls={menuId}
+                                    aria-haspopup="true"
+                                    onClick={handleProfileMenuOpen}
+                                    color="inherit"
+                                >
+                                    <AccountCircle style={{ color: '#424242', paddingBottom: '65%' }} />
+                                </IconButton>
+                            </div>
+                        </Grid>
+                    </Toolbar>
+                </AppBar>
+                {renderMobileMenu}
+                {renderMenu}
+            </div>
+        </Grid>
     );
 }

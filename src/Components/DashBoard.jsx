@@ -22,9 +22,10 @@ class DashBoard extends Component {
     render() {
         return (
             <div>
+               
                 <AppNavBar handleDraweropen={this.handleDraweropen} />
                 <SideNavBar show={this.state.open} />
-                <NotesMenu open={this.state.open}/>
+                <NotesMenu open={this.state.open} />
 
 
             </div>

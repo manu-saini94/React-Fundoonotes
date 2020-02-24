@@ -121,6 +121,7 @@ export default function SideNavBar(props) {
     return (
 
         <Drawer
+            position="fixed"
             className={classes.drawer}
             variant="persistent"
             anchor="left"

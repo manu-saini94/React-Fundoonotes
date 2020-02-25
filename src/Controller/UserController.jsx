@@ -31,6 +31,14 @@ var controller = {
         console.log("controller `resetpassword method ", resetDetails)
         console.log(jwt)
         return axios.put(`http://localhost:8080/user/resetpassword/${jwt}`, resetDetails)
+    },
+
+    takenote(noteDetails) {
+        console.log("controller `takenote method ", noteDetails)
+        const token = localStorage.getItem("logintoken")
+        console.log("gggggggggg ", token)
+        return axios.post("http://localhost:8080/note/create/" + token, noteDetails)
+
     }
 
 }

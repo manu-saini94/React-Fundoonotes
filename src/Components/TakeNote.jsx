@@ -4,11 +4,10 @@ import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import InputBase from '@material-ui/core/InputBase';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import { TextField, Toolbar, Grid } from '@material-ui/core';
+import { TextField, Toolbar, Grid, IconButton } from '@material-ui/core';
 import AddAlertTwoToneIcon from '@material-ui/icons/AddAlertTwoTone';
 import PersonAddTwoToneIcon from '@material-ui/icons/PersonAddTwoTone';
 import ColorLensTwoToneIcon from '@material-ui/icons/ColorLensTwoTone';
@@ -17,6 +16,13 @@ import MoreVertTwoToneIcon from '@material-ui/icons/MoreVertTwoTone';
 import Button from '@material-ui/core/Button';
 import SaveIcon from '@material-ui/icons/Save';
 import CancelTwoToneIcon from '@material-ui/icons/CancelTwoTone';
+import Tooltip from '@material-ui/core/Tooltip';
+import Pin from '../IMG/pin.svg';
+import Unpin from '../IMG/unpin.svg';
+import Controller from '../Controller/UserController';
+
+
+
 
 const useStyles = makeStyles(theme => ({
 
@@ -48,13 +54,22 @@ export default function SimpleExpansionPanel() {
     const [pholder, setPholder] = React.useState("Take a note...");
     const [openflag, setOpenflag] = React.useState(true);
     const [title, setTitle] = React.useState("");
+    const [takeanote, setTakeanote] = React.useState("");
+    const [isPinned, setIsPinned] = React.useState(false);
+    const [isArchived, setIsArchived] = React.useState(false);
+    const [isTrashed, setIsTrashed] = React.useState(false);
+    const [color, setColor] = React.useState("");
+    const [reminder, setReminder] = React.useState("");
+    const [labelName, setLabelName] = React.useState("");
+
     useEffect(() => {
-        if (title !== "") {
+        if (title !== "" || takeanote !== "") {
             setOpenflag(false);
         } else {
             setOpenflag(true);
         }
-    }, [title])
+    }, [title, takeanote])
+
     const onChangeTitle = event => {
         setTitle(event.target.value);
         console.log(title)
@@ -62,21 +77,82 @@ export default function SimpleExpansionPanel() {
 
     }
 
+    const onChangeTakeanote = event => {
+        setTakeanote(event.target.value);
+        console.log(takeanote)
+        console.log(openflag)
+    }
+
+
+    const handleIsPinned = () => {
+        setIsPinned(!isPinned);
+
+    }
+
+    const onSubmit = () => {
+        var noteDetails = {
+
+            title: title,
+            takeanote: takeanote,
+            trashed: isTrashed,
+            archived: isArchived,
+            pinned: isPinned,
+            color: color,
+            reminder: reminder,
+            labelname: labelName
+
+        }
+
+
+        console.log(noteDetails)
+        Controller.takenote(noteDetails).then((res) => {
+            console.log("hiii...", res)
+            if (res.status === 200) {
+                console.log(res.data.message)
+            }
+
+        })
+    }
+
 
     return (
         <div className={classes.root}>
 
             <ExpansionPanel style={{ width: '550px' }}>
-                <ExpansionPanelSummary
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <InputBase style={{ color: 'black', fontWeight: 'bolder', fontSize: '17px', paddingTop: '1px' }} placeholder={pholder} onClick={() => setPholder("Title")} fullWidth="true" value={title} className={classes.heading} onChange={onChangeTitle}></InputBase>
-                </ExpansionPanelSummary>
+                <Grid item xs={12}>
+
+                    <ExpansionPanelSummary
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <InputBase style={{ color: 'black', fontWeight: 'bolder', fontSize: '17px', paddingTop: '1px' }} placeholder={pholder} onClick={() => setPholder("Title")} fullWidth="true" value={title} className={classes.heading} onChange={onChangeTitle}></InputBase>
+                        {/* {pinning ? (<div>true</div>) : (<div>false</div>)} */}
+
+                        {isPinned ?
+                            <Grid style={{
+                                paddingLeft: '42px',
+                                marginTop: '-15px'
+                            }} item xs={1}>
+                                <Tooltip color="#424242" title="Unpin note" arrow>
+                                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                                        <img src={Unpin} onClick={handleIsPinned} /> </IconButton>
+                                </Tooltip>
+                            </Grid>
+                            : <Grid style={{
+                                paddingLeft: '42px',
+                                marginTop: '-15px'
+                            }} item xs={1}>
+                                <Tooltip color="#424242" title="Pin note" arrow>
+                                    <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu"> <img src={Pin} onClick={handleIsPinned} /></IconButton></Tooltip>
+                            </Grid>}
+
+                    </ExpansionPanelSummary>
+                </Grid>
                 <ExpansionPanelDetails style={{ paddingBottom: '73px' }}>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <InputBase style={{ color: '#424242', fontWeight: 'bold', fontSize: '17px', paddingTop: '1px' }} className={classes.textborder} placeholder="Take a note..." multiline="true" fullWidth="true" className={classes.heading} />
+                            <InputBase style={{ color: '#424242', fontWeight: 'bold', fontSize: '17px', paddingTop: '1px', margin: 'none' }} className={classes.textborder} placeholder="Take a note..." multiline="true" fullWidth="true"
+                                value={takeanote} className={classes.heading} onChange={onChangeTakeanote} />
                         </Grid>
                         <Grid style={{ marginBottom: '-10px' }} item xs={12}>
                             <Toolbar style={{
@@ -86,19 +162,33 @@ export default function SimpleExpansionPanel() {
                                 marginBottom: '-113px'
                             }} variant="dense">
                                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                    <AddAlertTwoToneIcon style={{ fontSize: '19px' }} />
+                                    <Tooltip title="Remind me" arrow>
+                                        <AddAlertTwoToneIcon style={{ fontSize: '19px' }} />
+                                    </Tooltip>
                                 </IconButton>
                                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                    <PersonAddTwoToneIcon style={{ fontSize: '19px' }} />
+                                    <Tooltip title="Collaborator" arrow>
+                                        <PersonAddTwoToneIcon style={{ fontSize: '19px' }} />
+                                    </Tooltip>
+                                </IconButton>
+
+                                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+                                    <Tooltip title="Change color" arrow>
+
+                                        <ColorLensTwoToneIcon style={{ fontSize: '19px' }} />
+                                    </Tooltip>
                                 </IconButton>
                                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                    <ColorLensTwoToneIcon style={{ fontSize: '19px' }} />
+                                    <Tooltip title="Archive" arrow>
+
+                                        <ArchiveTwoToneIcon style={{ fontSize: '19px' }} />
+                                    </Tooltip>
                                 </IconButton>
                                 <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                    <ArchiveTwoToneIcon style={{ fontSize: '19px' }} />
-                                </IconButton>
-                                <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                                    <MoreVertTwoToneIcon style={{ fontSize: '19px' }} />
+                                    <Tooltip title="More" arrow>
+
+                                        <MoreVertTwoToneIcon style={{ fontSize: '19px' }} />
+                                    </Tooltip>
                                 </IconButton>
 
                                 <Grid style={{
@@ -106,15 +196,18 @@ export default function SimpleExpansionPanel() {
                                     paddingRight: '15px'
                                 }}>
 
+                                    <Tooltip title="Close" arrow>
 
-                                    <Button color="primary"
-                                        disabled={openflag}
-                                        color="#424242"
-                                        size="small"
-                                        className={classes.button}
-                                        startIcon={<CancelTwoToneIcon />}>close</Button>
+                                        <Button color="primary"
+                                            disabled={openflag}
+                                            color="#424242"
+                                            size="small"
+                                            onClick={onSubmit}
+                                            className={classes.button}
+                                            startIcon={<CancelTwoToneIcon />}
+                                        >close</Button>
 
-
+                                    </Tooltip>
                                 </Grid>
 
                             </Toolbar>
@@ -123,7 +216,7 @@ export default function SimpleExpansionPanel() {
                 </ExpansionPanelDetails>
             </ExpansionPanel>
 
-        </div>
+        </div >
     );
 }
 

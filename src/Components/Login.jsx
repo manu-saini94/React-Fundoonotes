@@ -91,8 +91,9 @@ class Login extends Component {
             if (res.status === 200) {
                 console.log("login....")
                 this.props.history.push("/dashboard")
-                console.log(res)
+
                 let token = res.data.object
+                console.log(token)
                 localStorage.setItem("logintoken", token)
                 this.setState({
                     error: true,

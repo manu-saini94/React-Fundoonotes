@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -93,7 +93,7 @@ const useStyles = makeStyles(theme => ({
         flexGrow: 1,
     },
     menuButton: {
-        marginRight: theme.spacing(2),
+        // marginRight: theme.spacing(2),
     },
     title: {
         display: 'none',
@@ -242,10 +242,7 @@ export default function PrimarySearchAppBar(props) {
 
                 <AppBar position="fixed" className={classes.palette} >
 
-                    <Toolbar style={{
-                        marginBottom: '7px',
-                        marginTop: '8px'
-                    }} >
+                    <Toolbar>
                         <Grid item xs={1} style={{ marginTop: '-18px' }}>
 
 
@@ -323,5 +320,7 @@ export default function PrimarySearchAppBar(props) {
                 {renderMenu}
             </div>
         </Grid>
+
+
     );
 }

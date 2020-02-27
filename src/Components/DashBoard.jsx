@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import AppNavBar from './AppBar'
 import SideNavBar from './SideBar'
 import NotesMenu from './NotesMenu'
+import CreateNote from './CreateNote'
 
 
 class DashBoard extends Component {
@@ -9,7 +10,8 @@ class DashBoard extends Component {
         super(props)
 
         this.state = {
-            open: true
+            open: true,
+            noteOpen: true
 
         }
     }
@@ -19,13 +21,28 @@ class DashBoard extends Component {
         this.setState({ open: !this.state.open })
     }
 
+
+    componentDidMount() {
+        //    this.notemenu();
+    }
+
+    // notemenu =
+    //     <NotesMenu open={this.state.open} />
+
     render() {
         return (
             <div>
-               
-                <AppNavBar handleDraweropen={this.handleDraweropen} />
-                <SideNavBar show={this.state.open} />
-                <NotesMenu open={this.state.open} />
+                <div>
+                    <AppNavBar handleDraweropen={this.handleDraweropen} />
+                </div>
+
+                <div style={{ display: 'flex', background: '' }}>
+                    <SideNavBar show={this.state.open} />
+                </div>
+                <div style={{ background: '' }}>
+                    <NotesMenu open={this.state.open} />
+                </div>
+
 
 
             </div>

@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
         flexShrink: 0
     },
     drawerPaper: {
-        top: "79px",
+        top: "64px",
         width: drawerWidth
     },
     drawerHeader: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
         ...theme.mixins.toolbar,
         justifyContent: "flex-end"
     },
-      palette: {
+    palette: {
         backgroundColor: '#fafafa'
     },
     grow: {
@@ -129,6 +129,7 @@ export default function SideNavBar(props) {
             classes={{
                 paper: classes.drawerPaper
             }}
+            style={{ display: 'flex', flexDirection: 'column' }}
         >
 
             <Divider />
@@ -136,7 +137,7 @@ export default function SideNavBar(props) {
             <List>
                 <ListItem style={{ marginTop: '-2%' }} button key="Notes">
                     <ListItemIcon style={{ paddingTop: '2%', fontWeight: 'bolder', marginBottom: '-2%', marginRight: '59%' }}>
-                        <NotesIcon style={{ paddingTop: '4%' }} /> <ListItemText style={{ paddingLeft: '50%', paddingBottom: '2%', fontFamily: 'Arial', fontWeight: 'bolder', color: '#212121', marginBottom: '12%', fontSizeAdjust: 'inherit' }} >Notes</ListItemText>
+                        <NotesIcon  /> <ListItemText style={{ paddingLeft: '50%', paddingBottom: '2%', fontFamily: 'Arial', fontWeight: 'bolder', color: '#212121', marginBottom: '12%', fontSizeAdjust: 'inherit' }} >Notes</ListItemText>
                     </ListItemIcon>
                 </ListItem>
 

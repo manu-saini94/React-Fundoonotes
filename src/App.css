@@ -19,6 +19,29 @@
 }
 
 @keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+  padding-bottom: 12px;
+}
+.inputbase {
+  width: 100%;
+  font-weight: bold;
+  font-size: 120%;
+  display: flex;
+  padding-left: 10px;
+  padding-bottom: 9px;
+  padding-top: 9px;
+}
+
+.CloseButton {
+  padding-left: 202px;
+  padding-bottom: 4px;
 }

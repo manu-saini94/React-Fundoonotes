@@ -35,6 +35,8 @@ var controller = {
 
     takenote(noteDetails) {
         console.log("controller `takenote method ", noteDetails)
+        console.log("Pin ", noteDetails.pinned)
+        console.log("Archive ", noteDetails.archived)
         const token = localStorage.getItem("logintoken")
         console.log("gggggggggg ", token)
         return axios.post("http://localhost:8080/note/create/" + token, noteDetails)

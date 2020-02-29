@@ -41,6 +41,10 @@ class Registration extends Component {
       error: false,
       err1:false,
       err2:false,
+      err3:false,
+      err4:false,
+      err5:false,
+      err6:false,
       message: ""
     };
   }
@@ -62,20 +66,38 @@ class Registration extends Component {
     } 
   }
 
-  // helperfirstnameMethod = () => {
-  //   if (this.state.err3) {
-  //     return "cannot be empty"
-  //   }
-  // }
+  helperfirstnameMethod = () => {
+    if (this.state.err3) {
+      return "cannot be empty"
+    }
+  }
+  helperlastnameMethod = () => {
+    if (this.state.err4) {
+      return "cannot be empty"
+    }
+  }
+
+  helperpasswordMethod = () => {
+    if (this.state.err5) {
+      return "enter between 8 to 20 characters "
+    }
+  }
+
+  helperpasswordagainMethod = () => {
+    if (this.state.err6) {
+      return "enter between 8 to 20 characters "
+    }
+  }
+
   onchangeUsername = async event => {
     await this.setState({ Username: event.target.value });
 
-    if (this.state.Username!==null) {
-      this.setState({ err2: false });
+    if (this.state.Username==="") {
+      this.setState({ err2: true });
 
     }
     else {
-      this.setState({ err2: true });
+      this.setState({ err2: false});
     }
   };
 
@@ -93,22 +115,58 @@ class Registration extends Component {
   
   };
 
-  onchangeFirstname = event => {
-    this.setState({ Firstname: event.target.value });
+  onchangeFirstname = async event => {
+    await this.setState({ Firstname: event.target.value });
+
+    if (this.state.Firstname === "") {
+      this.setState({ err3: true });
+
+    }
+    else {
+      this.setState({ err3: false });
+    }
 
   };
 
-  onchangeLastname = event => {
-    this.setState({ Lastname: event.target.value });
+  onchangeLastname = async event => {
+    await this.setState({ Lastname: event.target.value });
+
+    if (this.state.Lastname === "") {
+      this.setState({ err4: true });
+
+    }
+    else {
+      this.setState({ err4: false });
+    }
 
   };
 
-  onchangePassword = event => {
-    this.setState({ Password: event.target.value });
-  };
+  onchangePassword = async event =>{
+    await this.setState({ Password: event.target.value });
+    var pass=this.state.Password;
+  
+    if (pass.length<8 || pass.length >20) {
+      this.setState({ err5: true });
 
-  onchangePasswordagain = event => {
-    this.setState({ Passwordagain: event.target.value });
+    }
+    else {
+      this.setState({ err5: false });
+    }
+  }
+
+ 
+
+  onchangePasswordagain = async event => {
+    await this.setState({ Passwordagain: event.target.value });
+    var passagain = this.state.Passwordagain;
+
+    if (passagain.length < 8 || passagain.length > 20) {
+      this.setState({ err6: true });
+
+    }
+    else {
+      this.setState({ err6: false });
+    }
   };
 
   onSubmit = () => {
@@ -177,7 +235,7 @@ class Registration extends Component {
                   value={this.state.Username}
                   onChange={this.onchangeUsername}
                   className={classes.paper}
-                  helperText={this.helperusernameMethod}
+                  helperText={this.helperusernameMethod()}
                 />
               
                
@@ -190,18 +248,25 @@ class Registration extends Component {
                   value={this.state.Firstname}
                   onChange={this.onchangeFirstname}
                   className={classes.paper}
+                  helperText={this.helperfirstnameMethod()}
+
                 />
             </div>
               <div style={{ display: 'flex', justifyContent: 'space-evenly', paddingBottom: '15px', marginLeft:'-175px' }}>
             
               <TextField
                 required={true}
+                  error={this.state.err4}
+
                 id="Lastname"
                 label="Lastname"
                 variant="outlined"
                 value={this.state.Lastname}
                 onChange={this.onchangeLastname}
                 className={classes.paper}
+                  helperText={this.helperlastnameMethod()}
+
+
               />
             
              
@@ -214,7 +279,7 @@ class Registration extends Component {
                 variant="outlined"
                 value={this.state.Email}
                 onChange={this.onchangeEmail}
-                 helperText={this.helpermailMethod}
+                 helperText={this.helpermailMethod()}
 
               />
            
@@ -224,6 +289,8 @@ class Registration extends Component {
               <TextField
 
                 required={true}
+                  error={this.state.err5}
+
                 id="Password"
                 label="Password"
                 type="password"
@@ -231,10 +298,14 @@ class Registration extends Component {
                 value={this.state.Password}
                 onChange={this.onchangePassword}
                 className={classes.paper}
+                  helperText={this.helperpasswordMethod()}
+
               />
               <TextField
 
                 required={true}
+                  error={this.state.err6}
+
                 id="Passwordagain"
                 label="Confirm Password"
                 type="password"
@@ -242,6 +313,8 @@ class Registration extends Component {
                 value={this.state.Passwordagain}
                 onChange={this.onchangePasswordagain}
                 className={classes.paper}
+                  helperText={this.helperpasswordagainMethod()}
+
               />
             </div>
             

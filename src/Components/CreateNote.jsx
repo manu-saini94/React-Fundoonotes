@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import Card from '@material-ui/core/Card';
-import { InputBase, MuiThemeProvider, createMuiTheme, Tooltip, Grid, makeStyles } from '@material-ui/core';
+import { InputBase, MuiThemeProvider, createMuiTheme, MenuItem, Tooltip, Grid, makeStyles, Menu } from '@material-ui/core';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
 import IconButton from '@material-ui/core/IconButton';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
@@ -8,12 +8,20 @@ import PaletteOutlinedIcon from '@material-ui/icons/PaletteOutlined';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
 import Button from '@material-ui/core/Button';
 import MoreVertTwoToneIcon from '@material-ui/icons/MoreVertTwoTone';
+import Toolbar from '@material-ui/core/Toolbar';
 import Pin from '../IMG/pin.svg';
 import Unpin from '../IMG/unpin.svg';
 import Controller from '../Controller/UserController';
 import "../App.css";
+import "../Notes.css";
+import Snackbar from '@material-ui/core/Snackbar';
+import CloseIcon from '@material-ui/icons/Close';
+import Fade from '@material-ui/core/Fade';
+
+
 
 const saveclose = "Save & Close";
+const bgcolor = "";
 // const theme = createMuiTheme({
 //     overrides: {
 //         MuiInputBase: {
@@ -42,19 +50,49 @@ export default class CreateNote extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            open: false,
+            menu: false,
             openNote: false,
             title: '',
             description: '',
-            craeteNote: false,
-
-            isTrashed: false,
+            createNote: false,
             isArchived: false,
+            archivemsg: "",
             isPinned: false,
-            color: "",
             reminder: "",
             labelName: "",
-            createdTime: ""
+            createdTime: "",
+            colorAnchor: null,
+            colorOpen: false,
+            color: "#FDFEFE",
+            manycolor:
+                [{ name: "White", colorCode: "#FDFEFE" },
+                { name: "Red", colorCode: "#ef9a9a" },
+                { name: "Cyan", colorCode: "#80deea" },
+                { name: "Blue", colorCode: "#2196f3" },
+                { name: "Indigo", colorCode: "#9fa8da" },
+                { name: "LightBlue", colorCode: "#90caf9" },
+                { name: "Purple", colorCode: "#b39ddb" },
+                { name: "Yellow", colorCode: "#c5e1a5" },
+                { name: "Lime", colorCode: "#e6ee9c" },
+                { name: "Pink", colorCode: "#f48fb1" },
+                { name: "gray", colorCode: "#eeeeee" },
+                { name: "Brown", colorCode: "#bcaaa4" },
+                ],
+
         }
+    }
+
+
+
+
+
+    handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        this.setState({ open: false })
     }
 
     handleClickOpen = () => {
@@ -62,11 +100,7 @@ export default class CreateNote extends Component {
             openNote: true
         })
     }
-    handleClickClose = () => {
-        this.setState({
-            openNote: false
-        })
-    }
+
 
     onChangeTitle = (event) => {
         this.setState({
@@ -81,14 +115,112 @@ export default class CreateNote extends Component {
     }
 
     handleIsPinned = () => {
+
         this.setState({ isPinned: !this.state.isPinned })
 
     }
 
+    handleIsArchived = async () => {
+        console.log("in archive", this.state.isPinned + "   " + this.state.isArchived);
+
+        if ((this.state.title !== " " || this.state.description !== " ") && this.state.isPinned === true) {
+            console.log("in if");
+            console.log("state a and p before ", this.state.isPinned + "   " + this.state.isArchived);
+
+            await this.setState({ isPinned: false })
+            this.setState({
+                isArchived: true
+            })
+            console.log("state a and p ", this.state.isPinned + "   " + this.state.isArchived);
+
+            this.setState({ archivemsg: "Note Unpinned and Archived" })
+            this.setState({ open: true })
+
+
+            var noteDetails = {
+                title: this.state.title,
+                takeanote: this.state.description,
+                createdtime: this.state.createdTime,
+                trashed: this.state.isTrashed,
+                archived: this.state.isArchived,
+                pinned: this.state.isPinned,
+                color: this.state.color,
+                reminder: this.state.reminder,
+                labelName: this.state.labelName
+            }
+            console.log("noteDta", noteDetails)
+
+            await Controller.takenote(noteDetails).then((res) => {
+                console.log("hiiiii", res)
+                if (res.status === 200) {
+                    console.log(res.data.message)
+                }
+
+            })
+            this.setState({
+                title: '',
+                description: '',
+                createNote: false,
+                isArchived: false,
+                isPinned: false,
+                color: "#FDFEFE",
+                reminder: "",
+                labelName: "",
+                createdTime: "",
+            })
+
+
+
+        }
+        else
+            if (this.state.title !== "" || this.state.description !== "") {
+                this.setState({ isArchived: true })
+                this.setState({ archivemsg: "Note Archived" })
+                this.setState({ open: true })
+            }
+            else {
+                this.setState({ archivemsg: "Cannot Archive" })
+                this.setState({ open: true })
+            }
+
+    }
+    changeColor = (event) => {
+        this.setState({
+            colorOpen: true,
+            colorAnchor: event.currentTarget
+        })
+    }
+    changeNoteColor = (event) => {
+
+        this.setState({ color: event.target.value })
+    }
+    closeColorBox = () => {
+        this.setState({
+            colorOpen: false,
+            colorAnchor: null
+        })
+    }
+
+    MenuClose = () => {
+        this.setState({ menu: false })
+    }
+    openMenu = () => {
+        this.setState({ menu: true })
+    }
     onClose = () => {
 
         if (this.state.title === '' && this.state.description === '') {
             this.setState({
+                title: '',
+                description: '',
+                createNote: false,
+                isArchived: false,
+                archivemsg: "",
+                isPinned: false,
+                color: "#FDFEFE",
+                reminder: "",
+                labelName: "",
+                createdTime: "",
                 openNote: false
             })
         }
@@ -103,9 +235,8 @@ export default class CreateNote extends Component {
                 color: this.state.color,
                 reminder: this.state.reminder,
                 labelName: this.state.labelName
-
-
             }
+
             Controller.takenote(noteDetails).then((res) => {
                 console.log("hiii...", res)
                 if (res.status === 200) {
@@ -114,6 +245,16 @@ export default class CreateNote extends Component {
 
             })
             this.setState({
+                title: '',
+                description: '',
+                createNote: false,
+                isArchived: false,
+                archivemsg: "",
+                isPinned: false,
+                color: "#FDFEFE",
+                reminder: "",
+                labelName: "",
+                createdTime: "",
                 openNote: false
             })
         }
@@ -121,125 +262,213 @@ export default class CreateNote extends Component {
 
 
     render() {
-        // const classes = useStyles();
+
+        const color1 = this.state.manycolor.map((color) => {
+            return (
+                <div>
+                    <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 800 }} title={color.name}>
+                        <IconButton style={{ background: color.colorCode }} value={color.colorCode} onClick={this.changeNoteColor} />
+                    </Tooltip>
+                </div>
+            )
+
+        })
 
         return (
 
             <div>
                 {!this.state.openNote ? (
+                    <div style={{
+                        marginTop: '58px',
+                        marginLeft: '40%',
+                        paddingLeft: '16px'
+                    }}>
+                        <Card className="note-button" style={{
+                            width: '35%',
+                            position: 'fixed',
+                        }} >
+                            <MuiThemeProvider >
+                                <InputBase className="inputbase" style={{ paddingLeft: '10px', fontWeight: 'bold' }}
+                                    multiline
+                                    spellCheck={true}
+                                    placeholder="Take a note...."
+                                    onClick={this.handleClickOpen}
+                                />
+                            </MuiThemeProvider>
 
-                    <Card className="note-button" style={{ margin: '7% 20% 0 37%' }}>
-                        <MuiThemeProvider >
-                            <InputBase className="inputbase" style={{ paddingLeft: '10px' }}
-                                multiline
-                                spellCheck={true}
-                                placeholder="Take a note...."
-                                onClick={this.handleClickOpen}
-                            />
-                        </MuiThemeProvider>
-
-                    </Card>
+                        </Card>
+                    </div>
                 )
 
 
                     :
-                    <Card style={{ margin: '7% 20% 0 37%' }}>
-                        <div>
-                            <div style={{ display: 'flex' }}>
-                                <InputBase className="inputbase" style={{ paddingLeft: '15px' }}
+                    <div style={{
+                        marginTop: '58px',
+                        marginLeft: '40%',
+                        paddingLeft: '16px'
+                    }}>
+                        <Card style={{ width: '35%', position: 'fixed', backgroundColor: this.state.color }}>
+                            <div>
+                                <div style={{ display: 'flex' }}>
+                                    <InputBase className="inputbase" style={{ paddingLeft: '15px', paddingRight: '32px', fontWeight: 'bolder', color: '#616161' }}
+                                        multiline
+                                        spellCheck={false}
+                                        placeholder="Title...."
+                                        value={this.state.title}
+                                        onChange={this.onChangeTitle}
+
+
+                                    />
+
+                                    {
+                                        !this.state.isPinned ?
+                                            <div style={{
+                                                marginRight: '-21px'
+                                            }}>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Pin" arrow>
+
+                                                    <IconButton aria-label="Pin"  >
+                                                        <img src={Pin} onClick={this.handleIsPinned} />
+                                                    </IconButton>
+                                                </Tooltip>
+
+                                            </div>
+
+                                            :
+                                            <div style={{
+                                                marginRight: '-21px'
+                                            }}>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Unpin" arrow>
+                                                    <IconButton aria-label="Unpin" >
+                                                        <img src={Unpin} onClick={this.handleIsPinned} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                    }
+
+                                </div>
+
+                                <InputBase className="inputbase" style={{ paddingLeft: '15px', paddingRight: '26px', color: '#616161' }}
                                     multiline
-                                    // spellCheck={true}
-                                    placeholder="Tittle...."
-                                    value={this.state.title}
-                                    onChange={this.onChangeTitle}
+                                    spellCheck={false}
+                                    placeholder="Description...."
+                                    value={this.state.description}
+                                    onChange={this.onChangeDescription}
 
                                 />
-                                {
-                                    !this.state.isPinned ?
-                                        <Tooltip title="Pin" arrow>
-                                            <IconButton aria-label="Pin" >
-                                                <img src={Pin} onClick={this.handleIsPinned} />
-                                            </IconButton>
-                                        </Tooltip>
-                                        :
-                                        <Tooltip title="Unpin" arrow>
-                                            <IconButton aria-label="Unpin" >
-                                                <img src={Unpin} onClick={this.handleIsPinned} />
-                                            </IconButton>
-                                        </Tooltip>
-                                }
-
                             </div>
 
-                            <InputBase className="inputbase" style={{ paddingLeft: '15px' }}
-                                multiline
-                                // spellCheck={true}
-                                placeholder="Description...."
-                                value={this.state.description}
-                                onChange={this.onChangeDescription}
+                            <MuiThemeProvider >
+                                <div>
+                                    <Toolbar>
+                                        <div className="buttons" style={{ display: 'flex' }}>
+                                            <div style={{ marginLeft: '6px' }}>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Reminder" arrow>
+                                                    <IconButton aria-label="Reminder" className="iconButtons">
+                                                        <AddAlertIcon style={{ fontSize: '20px' }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                            <div>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Collaborator" arrow>
+                                                    <IconButton aria-label="Collaborator">
+                                                        <PersonAddIcon style={{ fontSize: '20px' }} />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                            <div>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Color" arrow>
+                                                    <IconButton aria-label="Color" >
+                                                        <PaletteOutlinedIcon style={{ fontSize: '20px' }} onClick={this.changeColor} />
+                                                        <Menu id="simple-menu"
+                                                            open={this.state.colorOpen}
+                                                            anchorEl={this.state.colorAnchor}
+                                                            onClose={this.closeColorBox}
+                                                            transformOrigin={{ vertical: 'right', horizontal: 'right' }}
+                                                            className="colormenu"
+                                                        >
+                                                            <div style={{
+                                                                display: 'flex',
 
-                            />
-                        </div>
+                                                                marginBottom: '15px',
+                                                                marginLeft: '58px'
+                                                            }}>
+                                                                {color1}
+                                                            </div>
+                                                        </Menu>
 
-                        <MuiThemeProvider >
-                            <div>
-                                <div className="buttons" style={{ display: 'flex' }}>
-                                    <div>
-                                        <Tooltip title="Reminder" arrow>
-                                            <IconButton aria-label="Reminder" className="iconButtons">
-                                                <AddAlertIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                    <div>
-                                        <Tooltip title="Collaborator" arrow>
-                                            <IconButton aria-label="Collaborator">
-                                                <PersonAddIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                    <div>
-                                        <Tooltip title="color" arrow>
-                                            <IconButton aria-label="color" >
-                                                <PaletteOutlinedIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                    <div>
-                                        <Tooltip title="Archive" arrow>
-                                            <IconButton aria-label="Archive">
-                                                <ArchiveOutlinedIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                            <div>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Archive" arrow>
+                                                    <IconButton aria-label="Archive">
+                                                        <ArchiveOutlinedIcon style={{ fontSize: '20px' }} onClick={this.handleIsArchived} />
+                                                        <Snackbar
+                                                            anchorOrigin={{
+                                                                vertical: 'bottom',
+                                                                horizontal: 'center',
+                                                            }}
+                                                            open={this.state.open}
+                                                            autoHideDuration={4000}
+                                                            onClose={this.handleClose}
+                                                            message={this.state.archivemsg}
+                                                            action={
+                                                                <React.Fragment >
+                                                                    <div style={{
+                                                                        paddingBottom: '17px', marginRight: '-25px'
+                                                                    }}>
+                                                                        <IconButton size="small" aria-label="close" color="inherit" onClick={this.handleClose}>
+                                                                            <CloseIcon fontSize="small" />
+                                                                        </IconButton>
+                                                                    </div>
+                                                                </React.Fragment>
+                                                            }
+                                                        />
+                                                    </IconButton>
+                                                </Tooltip>
+
+                                            </div>
 
 
-                                    <div>
-                                        <Tooltip title="More" arrow>
-                                            <IconButton aria-label="More">
-                                                <MoreVertTwoToneIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </div>
-                                    <div className="CloseButton">
-                                        <Tooltip title={saveclose} arrow>
-                                            <Button onClick={this.onClose} >
-                                                Close
+                                            <div>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="More" arrow>
+                                                    <IconButton aria-label="More">
+                                                        <MoreVertTwoToneIcon style={{ fontSize: '20px' }} />
+                                                        <div >
+                                                            <Menu open={this.state.menu}
+                                                                transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                                                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                                            >
+
+                                                                <MenuItem onClick={this.MenuClose}>Add label
+                                                </MenuItem>
+                                                            </Menu>
+                                                        </div>
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
+                                            <div className="CloseButton">
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title={saveclose} arrow>
+                                                    <Button onClick={this.onClose} >
+                                                        Close
                                              </Button>
-                                        </Tooltip>
-                                    </div>
-                                </div>
-                                {/* <div className="CloseButton"> */}
-                                {/* onClick={this.handleClickClose }
+
+                                                </Tooltip>
+                                            </div>
+                                        </div>
+                                        {/* <div className="CloseButton"> */}
+                                        {/* onClick={this.handleClickClose }
                                     
                                     } */}
 
-                                {/* </div> */}
-                            </div>
-                        </MuiThemeProvider>
+                                        {/* </div> */}
+                                    </Toolbar>
+                                </div>
+                            </MuiThemeProvider>
 
-                    </Card>
-                }
+                        </Card>
+                    </div>}
 
             </div>
         )

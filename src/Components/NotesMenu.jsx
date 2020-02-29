@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen
         }),
-        marginLeft: -drawerWidth
+        marginLeft: -200
     },
     contentShift: {
         transition: theme.transitions.create("margin", {
@@ -40,7 +40,7 @@ export default function NotesMenu(props) {
         <main className={clsx(classes.content, {
             [classes.contentShift]: props.open,
         })}>
-            <CreateNote open={props.open} />
+            <CreateNote  />
         </main>
 
 

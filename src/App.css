@@ -28,8 +28,8 @@
 }
 .buttons {
   display: flex;
-  justify-content: space-evenly;
-  padding-bottom: 12px;
+  /* justify-content: ; */
+  padding-bottom: 10px;
 }
 .inputbase {
   width: 100%;
@@ -42,6 +42,6 @@
 }
 
 .CloseButton {
-  padding-left: 202px;
-  padding-bottom: 4px;
+  margin-left: 153px;
+  margin-top: 6px;
 }

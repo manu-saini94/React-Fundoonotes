@@ -3,6 +3,7 @@ import AppNavBar from './AppBar'
 import SideNavBar from './SideBar'
 import NotesMenu from './NotesMenu'
 import CreateNote from './CreateNote'
+import Problem from './ProblemEncounterd'
 
 
 class DashBoard extends Component {
@@ -11,7 +12,12 @@ class DashBoard extends Component {
 
         this.state = {
             open: true,
-            noteOpen: true
+            allNotes: [],
+            jwt: this.props.match.params.jwt,
+            notesOpen: true,
+            remindersOpen: false,
+
+
 
         }
     }
@@ -21,6 +27,9 @@ class DashBoard extends Component {
         this.setState({ open: !this.state.open })
     }
 
+    handleNotesMenu = () => {
+        this.setState({ notesOpen: true })
+    }
 
     componentDidMount() {
         //    this.notemenu();
@@ -30,22 +39,37 @@ class DashBoard extends Component {
     //     <NotesMenu open={this.state.open} />
 
     render() {
+        console.log("Dashboard component entered")
+        console.log("jwt = ", this.state.jwt)
+        console.log("token =", localStorage.getItem("logintoken"))
         return (
+
             <div>
-                <div>
-                    <AppNavBar handleDraweropen={this.handleDraweropen} />
-                </div>
+                {this.state.jwt === localStorage.getItem("logintoken") ?
+                    <div>
+                        <div>
+                            <AppNavBar handleDraweropen={this.handleDraweropen} />
+                        </div>
 
-                <div style={{ display: 'flex', background: '' }}>
-                    <SideNavBar show={this.state.open} />
-                </div>
-                <div style={{ background: '' }}>
-                    <NotesMenu open={this.state.open} />
-                </div>
+                        <div style={{ display: 'flex', background: '' }}>
+                            <SideNavBar handleNotesMenu={this.handleNotesMenu}
+                                show={this.state.open} />
+                        </div>
+                        <div>
+                            <NotesMenu notesOpen={this.state.notesOpen} open={this.state.open} />
+                        </div>
+                        <div>
 
-
+                        </div>
+                    </div>
+                    :
+                    <div>
+                        <Problem />
+                    </div>
+                }
 
             </div>
+
         )
     }
 }

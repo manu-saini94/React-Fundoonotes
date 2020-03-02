@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
@@ -14,6 +14,7 @@ import { fade, makeStyles } from '@material-ui/core/styles';
 import ArchiveOutlinedIcon from '@material-ui/icons/ArchiveOutlined';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
+import NotesMenu from '../Components/NotesMenu.jsx';
 
 const drawerWidth = 244;
 
@@ -117,9 +118,13 @@ const useStyles = makeStyles(theme => ({
 }));
 export default function SideNavBar(props) {
     const classes = useStyles();
-    { console.log(props.show) }
-    return (
+    // const [remindersOpen, setRemindersOpen] = useState(false);
+    // const [labelsOpen, setLabelsOpen] = useState(false);
+    // const [archiveOpen, setArchiveOpen] = useState(false);
+    // const [trashOpen, setTrashOpen] = useState(false);
 
+
+    return (
         <Drawer
             position="fixed"
             className={classes.drawer}
@@ -131,17 +136,22 @@ export default function SideNavBar(props) {
             }}
             style={{ display: 'flex', flexDirection: 'column' }}
         >
-
             <Divider />
 
-            <List>
+            <List onClick={props.handleNotesMenu}>
+
                 <ListItem style={{ marginTop: '-2%' }} button key="Notes">
                     <ListItemIcon style={{ paddingTop: '2%', fontWeight: 'bolder', marginBottom: '-2%', marginRight: '59%' }}>
-                        <NotesIcon  /> <ListItemText style={{ paddingLeft: '50%', paddingBottom: '2%', fontFamily: 'Arial', fontWeight: 'bolder', color: '#212121', marginBottom: '12%', fontSizeAdjust: 'inherit' }} >Notes</ListItemText>
+                        <NotesIcon /> <ListItemText style={{ paddingLeft: '50%', paddingBottom: '2%', fontFamily: 'Arial', fontWeight: 'bolder', color: '#212121', marginBottom: '12%', fontSizeAdjust: 'inherit' }} >Notes</ListItemText>
                     </ListItemIcon>
                 </ListItem>
 
             </List>
+
+
+
+
+
             <List>
                 <ListItem style={{ marginTop: '-6%' }} button key="Reminders">
                     <ListItemIcon
@@ -189,5 +199,4 @@ export default function SideNavBar(props) {
         </Drawer>
     )
 }
-
 

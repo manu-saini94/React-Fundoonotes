@@ -40,8 +40,11 @@ export default function NotesMenu(props) {
         <main className={clsx(classes.content, {
             [classes.contentShift]: props.open,
         })}>
-            <CreateNote  />
+            <CreateNote />
+
         </main>
+
+
 
 
 

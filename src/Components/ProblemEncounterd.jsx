@@ -7,7 +7,7 @@ import Controller from '../Controller/UserController';
 import TextField from "@material-ui/core/TextField";
 import "./User.css";
 import Box from '@material-ui/core/Box';
-
+import { withRouter } from 'react-router-dom'
 
 const defaultProps = {
     bgcolor: 'background.paper',
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-class Login extends Component {
+class Problem extends Component {
 
     constructor(props) {
         super(props);
@@ -41,7 +41,8 @@ class Login extends Component {
             err1: false,
             err2: false,
             error: false,
-            message: ""
+            message: "",
+
         };
     }
 
@@ -51,7 +52,16 @@ class Login extends Component {
 
         this.props.history.push('/register')
     }
-
+    helpermailMethod = () => {
+        if (this.state.err1) {
+            return "Not a valid mail id"
+        }
+    }
+    helperpasswordMethod = () => {
+        if (this.state.err5) {
+            return "enter between 8 to 20 characters "
+        }
+    }
     onchangeEmail = async event => {
 
         await this.setState({ Email: event.target.value });
@@ -65,7 +75,6 @@ class Login extends Component {
         }
 
     };
-
 
 
 
@@ -83,17 +92,6 @@ class Login extends Component {
     }
 
 
-    helpermailMethod = () => {
-        if (this.state.err1) {
-            return "Not a valid mail id"
-        }
-    }
-    helperpasswordMethod = () => {
-        if (this.state.err5) {
-            return "enter between 8 to 20 characters "
-        }
-    }
-
 
     onSubmit = () => {
         var loginDetails = {
@@ -108,10 +106,10 @@ class Login extends Component {
             if (res.status === 200) {
                 console.log("login....")
                 let token = res.data.object
-                console.log(token, "heello")
+                console.log(token, "hello")
                 localStorage.setItem("logintoken", token)
-                this.props.history.push("/dashboard/" + res.data.object)
 
+                this.props.history.push("/dashboard/" + res.data.object)
 
                 this.setState({
                     error: true,
@@ -144,11 +142,20 @@ class Login extends Component {
                         fundoo
                 </div>
                     <div style={{ width: '100%', marginTop: '-105px' }}>
-                        <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px', paddingBottom: '53px' }}>Login</div>
+
+                        <div style={{ marginTop: '130px' }} >
+                            <div style={{
+                                color: '#c62828', fontSize: '30px', fontFamily: 'serif', paddingTop: '54px',
+                                paddingLeft: '-26px',
+                                marginLeft: '-153px'
+                            }}>Oops! Something went wrong</div>
+                            <div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', paddingTop: '27px', marginLeft: '-175px', paddingBottom: '53px' }}>Login</div>
+
                             <div style={{ paddingBottom: '23px', paddingRight: '176px' }}>
                                 <TextField
                                     required={true}
-                                    error={this.state.err1} id="Email"
+                                    error={this.state.err1}
+                                    id="Email"
                                     label="Email"
                                     variant="outlined"
                                     value={this.state.Email}
@@ -210,7 +217,7 @@ class Login extends Component {
     }
 }
 
-export default Login
+export default withRouter(Problem)
 
 
 

@@ -32,7 +32,14 @@ var controller = {
         console.log(jwt)
         return axios.put(`http://localhost:8080/user/resetpassword/${jwt}`, resetDetails)
     },
+    verification(jwt) {
+        console.log("controller `verification method ")
+        console.log(jwt)
+        return axios.put(`http://localhost:8080/user/verifyemail/${jwt}`)
+    },
+    signout(jwt){
 
+    },
     takenote(noteDetails) {
         console.log("controller `takenote method ", noteDetails)
         console.log("Pin ", noteDetails.pinned)

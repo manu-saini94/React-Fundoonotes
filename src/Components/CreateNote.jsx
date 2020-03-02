@@ -276,13 +276,13 @@ export default class CreateNote extends Component {
 
         return (
 
-            <div>
+            <div style={{
+                marginTop: '58px',
+                marginLeft: '40%',
+                paddingLeft: '16px'
+            }}>
                 {!this.state.openNote ? (
-                    <div style={{
-                        marginTop: '58px',
-                        marginLeft: '40%',
-                        paddingLeft: '16px'
-                    }}>
+                    <div >
                         <Card className="note-button" style={{
                             width: '35%',
                             position: 'fixed',
@@ -302,11 +302,7 @@ export default class CreateNote extends Component {
 
 
                     :
-                    <div style={{
-                        marginTop: '58px',
-                        marginLeft: '40%',
-                        paddingLeft: '16px'
-                    }}>
+                    <div>
                         <Card style={{ width: '35%', position: 'fixed', backgroundColor: this.state.color }}>
                             <div>
                                 <div style={{ display: 'flex' }}>
@@ -459,7 +455,7 @@ export default class CreateNote extends Component {
                                         </div>
                                         {/* <div className="CloseButton"> */}
                                         {/* onClick={this.handleClickClose }
-                                    
+
                                     } */}
 
                                         {/* </div> */}

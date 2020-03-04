@@ -9,7 +9,7 @@ let headers = {
     'token': localStorage.getItem('logintoken')
 }
 
-
+const token = localStorage.getItem("logintoken")
 var controller = {
 
     register(registrationDetails) {
@@ -37,17 +37,25 @@ var controller = {
         console.log(jwt)
         return axios.put(`http://localhost:8080/user/verifyemail/${jwt}`)
     },
-    signout(jwt){
+    signout(jwt) {
 
     },
     takenote(noteDetails) {
-        console.log("controller `takenote method ", noteDetails)
-        console.log("Pin ", noteDetails.pinned)
-        console.log("Archive ", noteDetails.archived)
-        const token = localStorage.getItem("logintoken")
         console.log("gggggggggg ", token)
         return axios.post("http://localhost:8080/note/create/" + token, noteDetails)
 
+    },
+    async getNotes() {
+        let datas = []
+        await axios.get("http://localhost:8080/note/displayAll/" + token).then(res => {
+            console.log(res.data, "kjlk")
+            res.data.object.forEach(element => {
+                console.log(element.id, "jdhfkj");
+
+                datas.push(element)
+            });
+        })
+        return datas
     }
 
 }

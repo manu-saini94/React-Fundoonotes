@@ -30,7 +30,7 @@ class App extends Component {
             <Route path="/forgot" component={Forgotpassword}></Route>
             <Route path="/reset/:jwt" component={Resetpassword}></Route>
             <Route path="/dashboard/:jwt" component={DashBoard}></Route>
-            <Route path="/create" component={CreateNote}></Route>
+            {/* <Route path="/create" component={CreateNote}></Route> */}
           </Switch>
         </Router>
       </div>

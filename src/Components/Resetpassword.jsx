@@ -102,7 +102,7 @@ class ResetPassword extends Component {
                         fundoo
                 </div>
                     <div style={{ width: '100%', marginTop: '-105px' }}>
-                        <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px', paddingBottom: '53px',paddingTop:'91px' }}>Reset Password</div>
+                        <div style={{ marginTop: '130px' }} ><div style={{ color: '#616161', fontSize: '30px', fontFamily: 'serif', padding: '73px', marginLeft: '-175px', paddingBottom: '53px', paddingTop: '91px' }}>Reset Password</div>
                             <div style={{ paddingBottom: '23px', paddingRight: '176px' }}>
                                 < TextField
                                     required={true}
@@ -131,9 +131,9 @@ class ResetPassword extends Component {
                                 />
                             </div>
                         </div>
-                      
 
-                        <div style={{ marginLeft: '-264px' ,paddingLeft:'142px'}}>
+
+                        <div style={{ marginLeft: '-264px', paddingLeft: '142px' }}>
                             <Button
                                 variant="outlined"
                                 size="medium"

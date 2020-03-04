@@ -13,11 +13,18 @@ class VerifyEmail extends Component {
             jwt: this.props.match.params.jwt
         }
     }
+
+    componentDidMount() {
+        this.verificationMethod();
+    }
+
+
     verificationMethod = () => {
 
         Controller.verification(this.state.jwt).then((res) => {
             console.log("hiii...", res)
             if (res.status === 200) {
+                alert("Email has been verified")
                 this.props.history.push("/login")
                 this.setState({
                     error: true,

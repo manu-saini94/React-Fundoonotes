@@ -152,7 +152,7 @@ export default function SideNavBar(props) {
 
 
 
-            <List>
+            <List onClick={props.handleRemindersMenu}>
                 <ListItem style={{ marginTop: '-6%' }} button key="Reminders">
                     <ListItemIcon
                         style={{ paddingTop: '2%', fontWeight: 'bolder', marginBottom: '-2%', marginRight: '59%' }}>

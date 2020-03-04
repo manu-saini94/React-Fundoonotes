@@ -277,16 +277,14 @@ export default class CreateNote extends Component {
         return (
 
             <div style={{
-                marginTop: '58px',
-                marginLeft: '40%',
-                paddingLeft: '16px'
+                marginTop: '80px',
+
             }}>
                 {!this.state.openNote ? (
-                    <div >
-                        <Card className="note-button" style={{
-                            width: '35%',
-                            position: 'fixed',
-                        }} >
+                    <div className="note-button">
+                        <Card
+                            id="card_decor1"
+                        >
                             <MuiThemeProvider >
                                 <InputBase className="inputbase" style={{ paddingLeft: '10px', fontWeight: 'bold' }}
                                     multiline
@@ -302,8 +300,10 @@ export default class CreateNote extends Component {
 
 
                     :
-                    <div>
-                        <Card style={{ width: '35%', position: 'fixed', backgroundColor: this.state.color }}>
+                    <div className="note-button">
+                        <Card id="card_decor1" style={{
+                            backgroundColor: this.state.color
+                        }}>
                             <div>
                                 <div style={{ display: 'flex' }}>
                                     <InputBase className="inputbase" style={{ paddingLeft: '15px', paddingRight: '32px', fontWeight: 'bolder', color: '#616161' }}
@@ -444,7 +444,7 @@ export default class CreateNote extends Component {
                                                     </IconButton>
                                                 </Tooltip>
                                             </div>
-                                            <div className="CloseButton">
+                                            <div className="close_button">
                                                 <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title={saveclose} arrow>
                                                     <Button onClick={this.onClose} >
                                                         Close

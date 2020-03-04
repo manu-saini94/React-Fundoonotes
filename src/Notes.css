@@ -8,6 +8,105 @@
   display: flex;
 }
 .colormenu {
-  margin-left: "46px";
-  margin-bottom: "14px";
+  margin-left: 46px;
+  margin-bottom: 14px;
+}
+.shift-true {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20%;
+  transition: 0.15s;
+}
+
+.shift-false {
+  display: flex;
+  flex-direction: column;
+  margin-left: 11%;
+  transition: 0.15s;
+}
+.note-button {
+  /* width: "50%"; */
+  height: fit-content;
+  margin-left: 277px;
+}
+
+.create_note {
+  height: auto;
+}
+.others_heading{
+  margin-top: 5%;
+  display: flex;
+  justify-content: end;
+  margin-left: 82px;
+  font-size: 100%;
+  font-weight: lighter;
+  font-family: inherit;
+  font-size: 20px;
+  color: grey;
+}
+.pin_heading {
+  margin-top: 5%;
+  display: flex;
+  justify-content: end;
+  margin-left: 82px;
+  font-size: 100%;
+  font-weight: lighter;
+  font-family: inherit;
+  font-size: 20px;
+  color: grey;
+}
+
+.pin_notes {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+
+  margin-left: 40px;
+}
+.get_notes {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  margin-left: 40px;
+}
+/* .notes_align {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+} */
+#card_decor2 {
+  width: fit-content;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+  margin: 2%;
+}
+
+#card_decor1 {
+  width: fit-content;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+}
+.pin_getnotes {
+  margin-left: 0px;
+  padding-left: 1px;
+  margin-right: -43px;
+  margin-top: -6px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+}
+.menu_getnotes {
+  padding-left: 52px;
+  margin-right: -49px;
+}
+
+.close_button {
+  margin-left: 0px;
+  margin-top: 6px;
+  padding-right: 0px;
+  padding-left: 129px;
+  margin-right: -38px;
 }

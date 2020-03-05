@@ -95,13 +95,13 @@ class DashBoard extends Component {
                             <RemindersMenu remindersOpen={this.state.remindersOpen} open={this.state.open} />
                         </div>
                         <div>
-                            <LabelsMenu />
+                            {/* <LabelsMenu /> */}
                         </div>
                         <div>
-                            <ArchiveMenu />
+                            {/* <ArchiveMenu /> */}
                         </div>
                         <div>
-                            <TrashMenu />
+                            {/* <TrashMenu /> */}
                         </div>
                     </div>
                     :

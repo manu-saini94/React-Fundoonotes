@@ -41,7 +41,6 @@ var controller = {
 
     },
     takenote(noteDetails) {
-        console.log("gggggggggg ", token)
         return axios.post("http://localhost:8080/note/create/" + token, noteDetails)
 
     },
@@ -50,7 +49,6 @@ var controller = {
         await axios.get("http://localhost:8080/note/displayAll/" + token).then(res => {
             console.log(res.data, "kjlk")
             res.data.object.forEach(element => {
-                console.log(element.id, "jdhfkj");
 
                 datas.push(element)
             });

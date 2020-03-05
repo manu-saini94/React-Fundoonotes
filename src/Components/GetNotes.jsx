@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { PureComponent, Fragment } from 'react'
 import Card from '@material-ui/core/Card';
 import { InputBase, MuiThemeProvider, createMuiTheme, MenuItem, Tooltip, Grid, makeStyles, Menu } from '@material-ui/core';
 import AddAlertIcon from '@material-ui/icons/AddAlert';
@@ -21,7 +21,7 @@ import Fade from '@material-ui/core/Fade';
 
 const saveclose = "Save & Close";
 
-class GetNotes extends Component {
+class GetNotes extends PureComponent {
     constructor(props) {
         super(props)
 
@@ -59,21 +59,23 @@ class GetNotes extends Component {
             opencolourBox: false,
         }
     }
-
-
-    // componentWillReceiveProps(props) {
-
-    //     this.setState({
-    //         title: this.props.data.title,
-    //         description: this.props.data.description,
-    //         id: this.props.data.id,
-    //         isArchived: this.props.data.isArchived,
-    //         isPinned: this.props.data.isPinned,
-    //         isTrashed: this.props.data.isTrashed,
-    //         color: this.props.data.color,
-    //     })
-    // }
-
+    componentWillReceiveProps(props) {
+        this.setState({
+            title: props.data.title,
+            description: props.data.description,
+            id: props.data.id,
+            isArchived: props.data.isArchived,
+            isPinned: props.data.isPinned,
+            isTrashed: props.data.isTrashed,
+            color: props.data.color,
+        })
+    }
+    closeColorBox = () => {
+        this.setState({
+            colorOpen: false,
+            colorAnchor: null
+        })
+    }
     changeColor = (event) => {
         this.setState({
             colorOpen: true,
@@ -86,8 +88,7 @@ class GetNotes extends Component {
     }
 
     render() {
-        console.log("description is : ", this.props.data.takeanote)
-        console.log("title is :", this.state.title)
+
 
         const color1 = this.state.manycolor.map((color) => {
             return (
@@ -110,12 +111,10 @@ class GetNotes extends Component {
                                 placeholder="Title...."
                                 value={this.state.title}
                                 onChange={this.onChangeTitle}
-
-
                             />
                         </div>
                         {
-                            !this.state.isPinned ?
+                            !this.props.data.pinned ?
                                 <div className={"pin_getnotes"}>
                                     <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Pin" arrow>
 
@@ -158,7 +157,7 @@ class GetNotes extends Component {
                     <div>
                         <Toolbar>
                             <div className="buttons" style={{ display: 'flex' }}>
-                                <div style={{ marginLeft: '6px' }}>
+                                <div style={{ marginLeft: '9px' }}>
                                     <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Reminder" arrow>
                                         <IconButton aria-label="Reminder" className="iconButtons">
                                             <AddAlertIcon style={{ fontSize: '20px' }} />
@@ -185,7 +184,6 @@ class GetNotes extends Component {
                                             >
                                                 <div style={{
                                                     display: 'flex',
-
                                                     marginBottom: '15px',
                                                     marginLeft: '58px'
                                                 }}>

@@ -125,18 +125,13 @@ export default class CreateNote extends Component {
         console.log("in archive", this.state.isPinned + "   " + this.state.isArchived);
 
         if ((this.state.title !== " " || this.state.description !== " ") && this.state.isPinned === true) {
-            console.log("in if");
-            console.log("state a and p before ", this.state.isPinned + "   " + this.state.isArchived);
 
-            await this.setState({ isPinned: false })
-            this.setState({
-                isArchived: true
+            await this.setState({
+                isPinned: false,
+                isArchived: true,
+                archivemsg: "Note Unpinned and Archived",
+                open: true
             })
-            console.log("state a and p ", this.state.isPinned + "   " + this.state.isArchived);
-
-            this.setState({ archivemsg: "Note Unpinned and Archived" })
-            this.setState({ open: true })
-
 
             var noteDetails = {
                 title: this.state.title,
@@ -149,12 +144,12 @@ export default class CreateNote extends Component {
                 reminder: this.state.reminder,
                 labelName: this.state.labelName
             }
-            console.log("noteDta", noteDetails)
+
 
             await Controller.takenote(noteDetails).then((res) => {
-                console.log("hiiiii", res)
+
                 if (res.status === 200) {
-                    console.log(res.data.message)
+
                 }
 
             })
@@ -175,9 +170,41 @@ export default class CreateNote extends Component {
         }
         else
             if (this.state.title !== "" || this.state.description !== "") {
-                this.setState({ isArchived: true })
-                this.setState({ archivemsg: "Note Archived" })
-                this.setState({ open: true })
+                await this.setState({
+                    isArchived: true,
+                    archivemsg: "Note Archived",
+                    open: true
+                })
+
+                var noteDetails = {
+                    title: this.state.title,
+                    takeanote: this.state.description,
+                    createdtime: this.state.createdTime,
+                    trashed: this.state.isTrashed,
+                    archived: this.state.isArchived,
+                    pinned: this.state.isPinned,
+                    color: this.state.color,
+                    reminder: this.state.reminder,
+                    labelName: this.state.labelName
+                }
+                await Controller.takenote(noteDetails).then((res) => {
+
+                    if (res.status === 200) {
+
+                    }
+
+                })
+                await this.setState({
+                    title: '',
+                    description: '',
+                    createNote: false,
+                    isArchived: false,
+                    isPinned: false,
+                    color: "#FDFEFE",
+                    reminder: "",
+                    labelName: "",
+                    createdTime: "",
+                })
             }
             else {
                 this.setState({ archivemsg: "Cannot Archive" })
@@ -271,7 +298,7 @@ export default class CreateNote extends Component {
         const color1 = this.state.manycolor.map((color) => {
             return (
                 <div>
-                    <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 800 }} title={color.name}>
+                    <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title={color.name}>
                         <IconButton style={{ background: color.colorCode }} value={color.colorCode} onClick={this.changeNoteColor} />
                     </Tooltip>
                 </div>

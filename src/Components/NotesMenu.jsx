@@ -1,4 +1,4 @@
-import React, { useState, Fragment, Component } from 'react'
+import React, { useState, Fragment, Component, PureComponent } from 'react'
 import { makeStyles } from '@material-ui/core/styles';
 import SimpleExpansionPanel from './TakeNote'
 import clsx from 'clsx';
@@ -36,7 +36,7 @@ const drawerWidth = 244;
 // const handlenoteOpen = () => {
 
 // }
-class NotesMenu extends Component {
+class NotesMenu extends PureComponent {
 
     constructor(props) {
         super(props)
@@ -52,11 +52,10 @@ class NotesMenu extends Component {
         })
     }
 
-    // componentDidMount(props) {
-    //     this.setState({
-    //         obj: props.obj
-    //     })
-    // }
+    componentDidMount(props) {
+        this.props.getNote();
+    }
+
     render() {
         var pinflag = false;
         console.log(this.state.obj)

@@ -42,7 +42,8 @@ class NotesMenu extends Component {
         super(props)
 
         this.state = {
-            obj: this.props.obj
+            obj: this.props.obj,
+            pinnedStatus: false
         }
     }
     componentWillReceiveProps(props) {
@@ -51,7 +52,13 @@ class NotesMenu extends Component {
         })
     }
 
+    // componentDidMount(props) {
+    //     this.setState({
+    //         obj: props.obj
+    //     })
+    // }
     render() {
+        var pinflag = false;
         console.log(this.state.obj)
         // const classes = { useStyles };
         let othersnotes =
@@ -65,15 +72,20 @@ class NotesMenu extends Component {
             })
 
         let pinnednotes = this.state.obj.map(item => {
+
             if (!item.archived && !item.trashed && item.pinned) {
+                pinflag = true
                 return (
 
-                    <GetNotes getNote={this.props.getNote} data={item} />
+                    < GetNotes getNote={this.props.getNote} data={item} />
                 )
             }
+
         })
+
         console.log("pin notes ", pinnednotes)
         console.log("other notes ", othersnotes)
+        console.log("pinnedstatus : ", this.state.pinnedStatus)
         return (
 
             < div >
@@ -87,17 +99,31 @@ class NotesMenu extends Component {
                         >
                             <div className="create_note">
                                 <div>
-                                    <CreateNote />
+                                    <CreateNote getNote={this.props.getNote} />
                                 </div>
                             </div>
-                            <div className="pin_heading">PINNED</div>
-                            <div className="pin_notes"  >
-                                {pinnednotes}
-                            </div>
-                            <div className="others_heading">OTHERS</div>
-                            <div className="get_notes"  >
-                                {othersnotes}
-                            </div>
+
+                            {pinflag ?
+                                <div>
+                                    <div className="pin_heading">PINNED</div>
+                                    <div className="pin_notes"  >
+                                        {pinnednotes}
+                                    </div>
+
+                                    <div className="others_heading">OTHERS</div>
+                                    <div className="get_notes"  >
+                                        {othersnotes}
+                                    </div>
+                                </div>
+                                :
+                                <div>
+                                    <div className="get_notes"  >
+                                        {othersnotes}
+                                    </div>
+                                </div>
+
+                            }
+
                         </div>
 
 

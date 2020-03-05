@@ -59,17 +59,17 @@ class GetNotes extends PureComponent {
             opencolourBox: false,
         }
     }
-    componentWillReceiveProps(props) {
-        this.setState({
-            title: props.data.title,
-            description: props.data.description,
-            id: props.data.id,
-            isArchived: props.data.isArchived,
-            isPinned: props.data.isPinned,
-            isTrashed: props.data.isTrashed,
-            color: props.data.color,
-        })
-    }
+    // componentWillReceiveProps(props) {
+    //     this.setState({
+    //         title: props.data.title,
+    //         description: props.data.description,
+    //         id: props.data.id,
+    //         isArchived: props.data.isArchived,
+    //         isPinned: props.data.isPinned,
+    //         isTrashed: props.data.isTrashed,
+    //         color: props.data.color,
+    //     })
+    // }
     closeColorBox = () => {
         this.setState({
             colorOpen: false,

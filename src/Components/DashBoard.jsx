@@ -7,6 +7,9 @@ import Problem from './ProblemEncounterd'
 import RemindersMenu from './RemindersMenu'
 import Controller from '../Controller/UserController';
 import GetNotes from './GetNotes'
+import LabelsMenu from './LabelsMenu';
+import ArchiveMenu from './ArchiveMenu';
+import TrashMenu from './TrashMenu';
 
 class DashBoard extends Component {
     constructor(props) {
@@ -41,6 +44,7 @@ class DashBoard extends Component {
         this.getNote();
     }
     getNote = () => {
+
         // Controller.getNotes().th
 
         //     this.setState({ getNoteArr: res.data.object })
@@ -85,14 +89,19 @@ class DashBoard extends Component {
                         </div>
                         <div>
                             <NotesMenu obj={this.state.getNoteArr} getNote={this.getNote} notesOpen={this.state.notesOpen} open={this.state.open} />
-
-
                         </div>
 
                         <div>
-
                             <RemindersMenu remindersOpen={this.state.remindersOpen} open={this.state.open} />
-
+                        </div>
+                        <div>
+                            <LabelsMenu />
+                        </div>
+                        <div>
+                            <ArchiveMenu />
+                        </div>
+                        <div>
+                            <TrashMenu />
                         </div>
                     </div>
                     :

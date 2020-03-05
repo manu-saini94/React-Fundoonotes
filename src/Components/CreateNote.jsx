@@ -62,9 +62,11 @@ export default class CreateNote extends Component {
             reminder: "",
             labelName: "",
             createdTime: "",
+            colorTooltipOpen: false,
             colorAnchor: null,
             colorOpen: false,
             color: "#FDFEFE",
+            getNote: this.props.getNote,
             manycolor:
                 [{ name: "White", colorCode: "#FDFEFE" },
                 { name: "Red", colorCode: "#ef9a9a" },
@@ -82,7 +84,6 @@ export default class CreateNote extends Component {
 
         }
     }
-
 
 
 
@@ -157,7 +158,7 @@ export default class CreateNote extends Component {
                 }
 
             })
-            this.setState({
+            await this.setState({
                 title: '',
                 description: '',
                 createNote: false,
@@ -187,7 +188,8 @@ export default class CreateNote extends Component {
     changeColor = (event) => {
         this.setState({
             colorOpen: true,
-            colorAnchor: event.currentTarget
+            colorAnchor: event.currentTarget,
+            colorTooltipOpen: true
         })
     }
     changeNoteColor = (event) => {
@@ -197,7 +199,8 @@ export default class CreateNote extends Component {
     closeColorBox = () => {
         this.setState({
             colorOpen: false,
-            colorAnchor: null
+            colorAnchor: null,
+            colorTooltipOpen: false
         })
     }
 
@@ -207,10 +210,10 @@ export default class CreateNote extends Component {
     openMenu = () => {
         this.setState({ menu: true })
     }
-    onClose = () => {
+    onClose = async () => {
 
         if (this.state.title === '' && this.state.description === '') {
-            this.setState({
+            await this.setState({
                 title: '',
                 description: '',
                 createNote: false,
@@ -237,14 +240,15 @@ export default class CreateNote extends Component {
                 labelName: this.state.labelName
             }
 
-            Controller.takenote(noteDetails).then((res) => {
+            await Controller.takenote(noteDetails).then((res) => {
                 console.log("hiii...", res)
                 if (res.status === 200) {
                     console.log(res.data.message)
+
                 }
 
             })
-            this.setState({
+            await this.setState({
                 title: '',
                 description: '',
                 createNote: false,
@@ -258,6 +262,7 @@ export default class CreateNote extends Component {
                 openNote: false
             })
         }
+        this.props.getNote();
     }
 
 
@@ -277,7 +282,7 @@ export default class CreateNote extends Component {
         return (
 
             <div style={{
-                marginTop: '80px',
+                marginTop: '85px',
 
             }}>
                 {!this.state.openNote ? (
@@ -286,7 +291,9 @@ export default class CreateNote extends Component {
                             id="card_decor1"
                         >
                             <MuiThemeProvider >
-                                <InputBase className="inputbase" style={{ paddingLeft: '10px', fontWeight: 'bold' }}
+                                <InputBase className="inputbase" style={{
+                                    paddingLeft: '10px', paddingRight: '58%', fontWeight: 'bold'
+                                }}
                                     multiline
                                     spellCheck={true}
                                     placeholder="Take a note...."
@@ -321,7 +328,7 @@ export default class CreateNote extends Component {
                                             <div style={{
                                                 marginRight: '-21px'
                                             }}>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Pin" arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Pin" arrow>
 
                                                     <IconButton aria-label="Pin"  >
                                                         <img src={Pin} onClick={this.handleIsPinned} />
@@ -334,7 +341,7 @@ export default class CreateNote extends Component {
                                             <div style={{
                                                 marginRight: '-21px'
                                             }}>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Unpin" arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Unpin" arrow>
                                                     <IconButton aria-label="Unpin" >
                                                         <img src={Unpin} onClick={this.handleIsPinned} />
                                                     </IconButton>
@@ -359,46 +366,25 @@ export default class CreateNote extends Component {
                                     <Toolbar>
                                         <div className="buttons" style={{ display: 'flex' }}>
                                             <div style={{ marginLeft: '6px' }}>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Reminder" arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Reminder" arrow>
                                                     <IconButton aria-label="Reminder" className="iconButtons">
                                                         <AddAlertIcon style={{ fontSize: '20px' }} />
                                                     </IconButton>
                                                 </Tooltip>
                                             </div>
                                             <div>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Collaborator" arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Collaborator" arrow>
                                                     <IconButton aria-label="Collaborator">
                                                         <PersonAddIcon style={{ fontSize: '20px' }} />
                                                     </IconButton>
                                                 </Tooltip>
                                             </div>
-                                            <div>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Color" arrow>
-                                                    <IconButton aria-label="Color" >
-                                                        <PaletteOutlinedIcon style={{ fontSize: '20px' }} onClick={this.changeColor} />
-                                                        <Menu id="simple-menu"
-                                                            open={this.state.colorOpen}
-                                                            anchorEl={this.state.colorAnchor}
-                                                            onClose={this.closeColorBox}
-                                                            transformOrigin={{ vertical: 'right', horizontal: 'right' }}
-                                                            className="colormenu"
-                                                        >
-                                                            <div style={{
-                                                                display: 'flex',
 
-                                                                marginBottom: '15px',
-                                                                marginLeft: '58px'
-                                                            }}>
-                                                                {color1}
-                                                            </div>
-                                                        </Menu>
-
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </div>
                                             <div>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="Archive" arrow>
-                                                    <IconButton aria-label="Archive">
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }}
+                                                    open={this.state.colorTooltipOpen}
+                                                    title="Archive" arrow>
+                                                    <IconButton aria-label="Archive" >
                                                         <ArchiveOutlinedIcon style={{ fontSize: '20px' }} onClick={this.handleIsArchived} />
                                                         <Snackbar
                                                             anchorOrigin={{
@@ -425,10 +411,32 @@ export default class CreateNote extends Component {
                                                 </Tooltip>
 
                                             </div>
+                                            <div>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Color" arrow>
+                                                    <IconButton aria-label="Color" >
+                                                        <PaletteOutlinedIcon style={{ fontSize: '20px' }} onClick={this.changeColor} />
+                                                        <Menu id="simple-menu"
+                                                            open={this.state.colorOpen}
+                                                            anchorEl={this.state.colorAnchor}
+                                                            onClose={this.closeColorBox}
+                                                            transformOrigin={{ vertical: 'right', horizontal: 'right' }}
+                                                            className="colormenu"
+                                                        >
+                                                            <div style={{
+                                                                display: 'flex',
+                                                                marginBottom: '15px',
+                                                                marginLeft: '58px'
+                                                            }}>
+                                                                {color1}
+                                                            </div>
+                                                        </Menu>
 
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </div>
 
                                             <div>
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title="More" arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="More" arrow>
                                                     <IconButton aria-label="More">
                                                         <MoreVertTwoToneIcon style={{ fontSize: '20px' }} />
                                                         <div >
@@ -445,7 +453,7 @@ export default class CreateNote extends Component {
                                                 </Tooltip>
                                             </div>
                                             <div className="close_button">
-                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 1000 }} title={saveclose} arrow>
+                                                <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title={saveclose} arrow>
                                                     <Button onClick={this.onClose} >
                                                         Close
                                              </Button>

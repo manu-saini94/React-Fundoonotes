@@ -358,7 +358,11 @@ export default class CreateNote extends Component {
                                                 <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Pin" arrow>
 
                                                     <IconButton aria-label="Pin"  >
-                                                        <img src={Pin} onClick={this.handleIsPinned} />
+                                                        <img style={{
+                                                            height: "0.54cm",
+                                                            width: "0.54cm"
+                                                        }}
+                                                            src={Pin} onClick={this.handleIsPinned} />
                                                     </IconButton>
                                                 </Tooltip>
 
@@ -370,7 +374,12 @@ export default class CreateNote extends Component {
                                             }}>
                                                 <Tooltip TransitionComponent={Fade} TransitionProps={{ timeout: 100 }} title="Unpin" arrow>
                                                     <IconButton aria-label="Unpin" >
-                                                        <img src={Unpin} onClick={this.handleIsPinned} />
+                                                        <img
+                                                            style={{
+                                                                height: "0.54cm",
+                                                                width: "0.54cm"
+                                                            }}
+                                                            src={Unpin} onClick={this.handleIsPinned} />
                                                     </IconButton>
                                                 </Tooltip>
                                             </div>

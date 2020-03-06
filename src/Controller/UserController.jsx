@@ -4,10 +4,7 @@ import Forgotpassword from '../Components/Forgotpassword';
 
 //require('dotenv').config()
 
-let headers = {
-    'Content-Type': 'application/json',
-    'token': localStorage.getItem('logintoken')
-}
+let jwt = localStorage.getItem("logintoken")
 
 const token = localStorage.getItem("logintoken")
 var controller = {
@@ -54,7 +51,9 @@ var controller = {
             });
         })
         return datas
-    }
+    },
+
+
 
 }
 

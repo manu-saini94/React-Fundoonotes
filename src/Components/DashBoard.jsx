@@ -43,14 +43,14 @@ class DashBoard extends Component {
     componentDidMount() {
         this.getNote();
     }
-    getNote = () => {
+    getNote = async () => {
 
         // Controller.getNotes().th
 
         //     this.setState({ getNoteArr: res.data.object })
         //     console.log("Notes...", this.state.getNoteArr)
         // })
-        let data = Controller.getNotes().then(res => {
+        let data = await Controller.getNotes().then(res => {
             this.setState({
                 getNoteArr: res
             })

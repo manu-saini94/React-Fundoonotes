@@ -24,6 +24,9 @@ var controller = {
 
     colornote(id, color) {
         return axios.put(`http://localhost:8080/note/update/color/${id}`, null, { headers: { "jwt": token, "Content-type": "application/json ", "color": color } })
+    },
+    setTitleDesc(noteDetails) {
+        return axios.put(`http://localhost:8080/note/update/title&takeanote/${noteDetails.id}`, noteDetails, { headers: { "jwt": token, "Content-type": "application/json " } })
     }
 
 }

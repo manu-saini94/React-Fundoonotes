@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import AppNavBar from './AppBar'
 import SideNavBar from './SideBar'
 import NotesMenu from './NotesMenu'
@@ -11,7 +11,7 @@ import LabelsMenu from './LabelsMenu';
 import ArchiveMenu from './ArchiveMenu';
 import TrashMenu from './TrashMenu';
 
-class DashBoard extends Component {
+class DashBoard extends PureComponent {
     constructor(props) {
         super(props)
 
@@ -32,7 +32,10 @@ class DashBoard extends Component {
     }
 
     handleNotesMenu = () => {
-        this.setState({ notesOpen: true })
+        this.setState({
+            notesOpen: true,
+            remindersOpen: false
+        })
     }
     handleRemindersMenu = () => {
         this.setState({
@@ -55,15 +58,7 @@ class DashBoard extends Component {
                 getNoteArr: res
             })
         })
-        // console.log(data.id, "opipoipoi");
 
-        // let datas = [];
-        // data.forEach(el => {
-        //     datas.push(el)
-        // });
-        // this.setState({
-        //     getNoteArr: datas
-        // })
     }
 
     render() {

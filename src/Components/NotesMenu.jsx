@@ -10,32 +10,7 @@ import '../Notes.css';
 
 const drawerWidth = 244;
 
-// const useStyles = makeStyles(theme => ({
-//     content: {
-//         flexGrow: 1,
-//         padding: theme.spacing(3),
-//         transition: theme.transitions.create("margin", {
-//             easing: theme.transitions.easing.sharp,
-//             duration: theme.transitions.duration.leavingScreen
-//         }),
-//         marginLeft: -200
-//     },
-//     contentShift: {
-//         transition: theme.transitions.create("margin", {
-//             easing: theme.transitions.easing.easeOut,
-//             duration: theme.transitions.duration.enteringScreen
-//         }),
-//         marginLeft: 0
-//     }
-// }))
 
-
-
-// const theme = useTheme();
-// const val = props.noteOpen;
-// const handlenoteOpen = () => {
-
-// }
 class NotesMenu extends PureComponent {
 
     constructor(props) {
@@ -43,26 +18,30 @@ class NotesMenu extends PureComponent {
 
         this.state = {
             obj: this.props.obj,
+            getNote: this.props.getNote,
             pinnedStatus: false
         }
     }
     componentWillReceiveProps(props) {
         this.setState({
-            obj: props.obj
+            obj: props.obj,
+            getNote: props.getNote
         })
     }
 
-    componentDidMount(props) {
-        this.props.getNote();
-    }
+
 
     render() {
+
+
+
         var pinflag = false;
         console.log(this.state.obj)
-        // const classes = { useStyles };
         let othersnotes =
             this.state.obj.map(item => {
+                console.log(item.title)
                 if (!item.archived && !item.trashed && !item.pinned) {
+
                     return (
 
                         <GetNotes getNote={this.props.getNote} data={item} />
@@ -82,17 +61,14 @@ class NotesMenu extends PureComponent {
 
         })
 
-        console.log("pin notes ", pinnednotes)
-        console.log("other notes ", othersnotes)
-        console.log("pinnedstatus : ", this.state.pinnedStatus)
+
+
         return (
 
             < div >
                 {
                     this.props.notesOpen ?
-                        // <main className={clsx(classes.content, {
-                        //     [classes.contentShift]: this.props.open,
-                        // })}>
+
                         <div
                             className={this.props.open ? "shift-true" : "shift-false"}
                         >
@@ -144,19 +120,7 @@ class NotesMenu extends PureComponent {
 
 
 
-            //         <main className={clsx(classes.content, {
-            //             [classes.contentShift]: props.open,
-            //         })}>
 
-            // {/* 
-            //             <SimpleExpansionPanel 
-            //                 value={props.noteOpen}
-            //                 open={props.open}
-            //              />
-            //  */}
-
-
-            //         </main>
         )
     }
 

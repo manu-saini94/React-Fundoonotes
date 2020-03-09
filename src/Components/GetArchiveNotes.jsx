@@ -1,4 +1,4 @@
-import React, { PureComponent, Fragment } from "react";
+import React, { Component, PureComponent } from "react";
 import Card from "@material-ui/core/Card";
 import {
   InputBase,
@@ -16,7 +16,7 @@ import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
-import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
+import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
 import Button from "@material-ui/core/Button";
 import MoreVertTwoToneIcon from "@material-ui/icons/MoreVertTwoTone";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -29,11 +29,8 @@ import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
 import NoteController from "../Controller/NoteController";
 import Controller from "../Controller/UserController";
-import DialogCard from "../Components/DialogCard";
-
-const saveclose = "Save & Close";
-
-class GetNotes extends PureComponent {
+import DialogCardArchive from "../Components/DialogCardArchive";
+class GetArchiveNotes extends PureComponent {
   constructor(props) {
     super(props);
 
@@ -85,29 +82,6 @@ class GetNotes extends PureComponent {
     });
   }
 
-  handleDeleteNote = async () => {
-    await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(
-      res => {
-        if (res.status === 200) {
-          console.log("Note Deleted Successfully");
-        }
-      }
-    );
-    this.props.getNote();
-  }
-
-  MenuClose = () => {
-    this.setState({ menu: false });
-  };
-
-  changeLabel = event => {
-    this.setState({
-      menu: true,
-      labelAnchor: event.currentTarget
-    })
-  }
-
   handleClose = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -133,6 +107,14 @@ class GetNotes extends PureComponent {
   handleDialogClose = data => {
     this.setState({ openDialog: false });
   };
+
+  changeLabel = event => {
+    this.setState({
+      menu: true,
+      labelAnchor: event.currentTarget
+    })
+  }
+
 
   closeColorBox = () => {
     this.setState({
@@ -160,9 +142,15 @@ class GetNotes extends PureComponent {
 
   handleIsPinned = async () => {
     await this.setState({ isPinned: true });
+    await this.setState({
+      isPinned: true,
+      isArchived: false,
+      archivemsg: "Note Unarchived and Pinned",
+      openSnack: true
+    });
     await NoteController.pinnote(this.state.id).then(res => {
       if (res.status === 200) {
-        console.log("Successfully pinned");
+        console.log("Successfully Unarchived and pinned");
       }
     });
 
@@ -171,6 +159,7 @@ class GetNotes extends PureComponent {
 
   handleIsUnpinned = async () => {
     await this.setState({ isPinned: false });
+
     await NoteController.pinnote(this.state.id).then(res => {
       if (res.status === 200) {
         console.log("Successfully Unpinned");
@@ -180,38 +169,19 @@ class GetNotes extends PureComponent {
   };
 
   handleIsArchived = async () => {
-    console.log(
-      "in archive",
-      this.state.isPinned + "   " + this.state.isArchived
-    );
+    await this.setState({
+      isPinned: false,
+      isArchived: false,
+      archivemsg: "Note Unarchived ",
+      openSnack: true
+    });
 
-    if (this.state.isPinned === true) {
-      await this.setState({
-        isPinned: false,
-        isArchived: true,
-        archivemsg: "Note Unpinned and Archived",
-        openSnack: true
-      });
-
-      await NoteController.archivenote(this.state.id).then(res => {
-        if (res.status === 200) {
-          console.log("Successfully unpinned and archived");
-        }
-      });
-      this.props.getNote();
-    } else {
-      await this.setState({
-        isArchived: true,
-        archivemsg: "Note Archived",
-        openSnack: true
-      });
-      await NoteController.archivenote(this.state.id).then(res => {
-        if (res.status === 200) {
-          console.log("successfully archived");
-        }
-      });
-      this.props.getNote();
-    }
+    await NoteController.archivenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Successfully Unarchived");
+      }
+    });
+    this.props.getNote();
   };
 
   render() {
@@ -393,11 +363,11 @@ class GetNotes extends PureComponent {
                   <Tooltip
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
-                    title="Archive"
+                    title="Unarchive"
                     arrow
                   >
-                    <IconButton aria-label="Archive">
-                      <ArchiveOutlinedIcon
+                    <IconButton aria-label="UnArchive">
+                      <UnarchiveOutlinedIcon
                         style={{ fontSize: "20px" }}
                         onClick={this.handleIsArchived}
                       />
@@ -449,15 +419,13 @@ class GetNotes extends PureComponent {
                           open={this.state.menu}
                           anchorEl={this.state.labelAnchor}
                           transformOrigin={{
-                            vertical: "top",
+                            vertical: "right",
                             horizontal: "right"
                           }}
+
                         >
                           <MenuItem onClick={this.MenuClose}>
                             Add label
-                          </MenuItem>
-                          <MenuItem onClick={this.handleDeleteNote}>
-                            Delete note
                           </MenuItem>
                         </Menu>
                       </div>
@@ -475,7 +443,7 @@ class GetNotes extends PureComponent {
           </div>
         </MuiThemeProvider>
 
-        <DialogCard
+        <DialogCardArchive
           openDialog={this.state.openDialog}
           handleDialogClose={this.handleDialogClose}
           data={item}
@@ -486,4 +454,4 @@ class GetNotes extends PureComponent {
   }
 }
 
-export default GetNotes;
+export default GetArchiveNotes;

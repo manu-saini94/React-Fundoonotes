@@ -2,11 +2,19 @@
   "name": "fundoonotes-app",
   "version": "0.1.0",
   "private": true,
+  "browserslist": [
+    "last 1 Chrome versions"
+  ],
   "dependencies": {
+    "@material-ui/core": "^4.9.5",
+    "@material-ui/icons": "^4.9.1",
+    "axios": "^0.19.2",
+    "install": "^0.13.0",
     "material-ui-search-bar": "^0.4.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-scripts": "0.9.5"
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.4.0"
   },
   "devDependencies": {},
   "scripts": {

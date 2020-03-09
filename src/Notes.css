@@ -82,12 +82,22 @@
   margin: 0px 0px 0px 0px;
   height: fit-content;
   margin: 2%;
+  border-radius: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
+#card_decor3 {
+  width: fit-content;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
 #card_decor1 {
   width: fit-content;
   margin: 0px 0px 0px 0px;
   height: fit-content;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .pin_getnotes {
   margin-left: 0px;
@@ -112,4 +122,41 @@
 }
 .dialog_note {
   padding-left: 1px;
+}
+.noarchive_head {
+  font-size: 140%;
+  margin-top: 18px;
+  color: grey;
+  font-family: cursive;
+  margin-left: -3px;
+}
+.notrash_head {
+  font-size: 140%;
+  margin-top: 11px;
+  color: grey;
+  font-family: cursive;
+  margin-left: -20px;
+}
+.archive_notes {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 30px;
+  margin-top: 45px;
+}
+.trash_notes {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 62px;
+  margin-top: 41px;
+}
+.delete_icon {
+  font-size: 115px;
+  margin-top: 100px;
+  color: lightgrey;
+  margin-left: -27px;
+}
+.empty_trash {
+  color: "blue";
 }

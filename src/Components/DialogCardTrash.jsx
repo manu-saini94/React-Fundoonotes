@@ -60,9 +60,15 @@ class DialogCardTrash extends Component {
   render() {
     return (
       <div className="dialog_note">
-        <Dialog open={this.props.openDialog} onClose={this.handleDialogClickaway}>
+        <Dialog
+          open={this.props.openDialog}
+          onClose={this.handleDialogClickaway}
+        >
           <div>
-            <Card id="card_decor1" style={{ backgroundColor: this.state.color }}>
+            <Card
+              id="card_decordialog"
+              style={{ backgroundColor: this.state.color }}
+            >
               <div>
                 <div style={{ display: "flex" }}>
                   <div>
@@ -114,8 +120,14 @@ class DialogCardTrash extends Component {
                           title="Delete forever"
                           arrow
                         >
-                          <IconButton aria-label="Delete" className="iconButtons">
-                            <DeleteForeverIcon style={{ fontSize: "20px" }} onClick={this.props.handleDeleteForever} />
+                          <IconButton
+                            aria-label="Delete"
+                            className="iconButtons"
+                          >
+                            <DeleteForeverIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.props.handleDeleteForever}
+                            />
                           </IconButton>
                         </Tooltip>
                       </div>
@@ -127,7 +139,10 @@ class DialogCardTrash extends Component {
                           arrow
                         >
                           <IconButton aria-label="Restore">
-                            <RestoreFromTrashIcon style={{ fontSize: "20px" }} onClick={this.props.handleRestore} />
+                            <RestoreFromTrashIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.props.handleRestore}
+                            />
                           </IconButton>
                         </Tooltip>
                       </div>

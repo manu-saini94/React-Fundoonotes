@@ -99,6 +99,9 @@
   border-radius: 12px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+/* #card_decordialog {
+ 
+} */
 .pin_getnotes {
   margin-left: 0px;
   padding-left: 1px;
@@ -120,9 +123,12 @@
   padding-left: 129px;
   margin-right: -38px;
 }
-.dialog_note {
+/* .dialog_note {
   padding-left: 1px;
-}
+  width: fit-content;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+} */
 .noarchive_head {
   font-size: 140%;
   margin-top: 18px;
@@ -159,4 +165,37 @@
 }
 .empty_trash {
   color: "blue";
+}
+#createLabel_toolbar {
+  width: fit-content;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.input_createlabel {
+  margin-top: 16px;
+  margin-left: -27px;
+}
+.cancel_labeltext {
+  margin-left: 10px;
+}
+.done_icon {
+  margin-left: 27px;
+  margin-top: -2px;
+  margin-right: -42px;
+}
+#createlabel_field {
+  min-height: 54px;
+  margin-top: -13px;
+  margin-bottom: -3px;
+}
+#inputBase_margin {
+  margin-left: 3px;
+}
+.label_list_align {
+}
+#simple-menu {
+  top: 334px;
+  left: 171px;
 }

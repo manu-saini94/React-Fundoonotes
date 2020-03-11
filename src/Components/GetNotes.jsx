@@ -115,7 +115,17 @@ class GetNotes extends PureComponent {
 
     await this.setState({ openSnack: false });
   };
+  handleTooltipClose = async => {
+    this.setState({
+      openTooltip: false
+    })
+  }
+  handleTooltipOpen = async => {
+    this.setState({
+      openTooltip: true
 
+    })
+  }
   onChangeTitle = event => {
     this.setState({
       title: event.target.value
@@ -147,7 +157,8 @@ class GetNotes extends PureComponent {
     });
   };
   changeNoteColor = async event => {
-    await this.setState({ color: event.target.value });
+    await this.setState({ color: event.target.value, openTooltip: false });
+
     await NoteController.colornote(this.state.id, this.state.color).then(
       res => {
         if (res.status === 200) {
@@ -358,6 +369,11 @@ class GetNotes extends PureComponent {
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
                     title="Color"
+                    placement="right"
+
+                    onClose={this.handleTooltipClose}
+                    onOpen={this.handleTooltipOpen}
+                    open={this.state.openTooltip}
                     arrow
                   >
                     <IconButton aria-label="Color">

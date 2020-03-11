@@ -56,6 +56,7 @@ export default class CreateNote extends Component {
       open: false,
       menu: false,
       openNote: false,
+      openTooltip: false,
       title: "",
       description: "",
       createNote: false,
@@ -88,6 +89,7 @@ export default class CreateNote extends Component {
       ]
     };
   }
+
   MenuClose = () => {
     this.setState({ menu: false });
   };
@@ -102,8 +104,8 @@ export default class CreateNote extends Component {
     this.setState({
       menu: true,
       labelAnchor: event.currentTarget
-    })
-  }
+    });
+  };
 
   handleClickOpen = () => {
     this.setState({
@@ -205,6 +207,18 @@ export default class CreateNote extends Component {
       this.setState({ open: true });
     }
   };
+
+  handleTooltipClose = async => {
+    this.setState({
+      openTooltip: false
+    })
+  }
+  handleTooltipOpen = async => {
+    this.setState({
+      openTooltip: true
+
+    })
+  }
   changeColor = event => {
     this.setState({
       colorOpen: true,
@@ -307,7 +321,7 @@ export default class CreateNote extends Component {
       >
         {!this.state.openNote ? (
           <div className="note-button">
-            <Card id="card_decor3" >
+            <Card id="card_decor3">
               <MuiThemeProvider>
                 <InputBase
                   className="inputbase"
@@ -451,7 +465,7 @@ export default class CreateNote extends Component {
                           <Tooltip
                             TransitionComponent={Fade}
                             TransitionProps={{ timeout: 100 }}
-                            open={this.state.colorTooltipOpen}
+
                             title="Archive"
                             arrow
                           >
@@ -497,6 +511,25 @@ export default class CreateNote extends Component {
                             TransitionComponent={Fade}
                             TransitionProps={{ timeout: 100 }}
                             title="Color"
+                            placement="right"
+                            onClose={this.handleTooltipClose}
+                            onOpen={this.handleTooltipOpen}
+                            open={this.state.openTooltip}
+                            // onMouseLeave={() => {
+                            //   this.setState({ openTooltip: false })
+
+                            // }}
+                            // onMouseOutCapture={() => {
+                            //   this.setState({ openTooltip: false })
+
+                            // }}
+                            // onMouseOverCapture={() => {
+                            //   this.setState({ openTooltip: false })
+
+                            // }}
+
+
+
                             arrow
                           >
                             <IconButton aria-label="Color">
@@ -537,7 +570,10 @@ export default class CreateNote extends Component {
                             arrow
                           >
                             <IconButton aria-label="More">
-                              <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
+                              <MoreVertTwoToneIcon
+                                style={{ fontSize: "20px" }}
+                                onClick={this.changeLabel}
+                              />
                               <div>
                                 <Menu
                                   id="label-menu"

@@ -115,7 +115,17 @@ class GetArchiveNotes extends PureComponent {
     })
   }
 
+  handleTooltipClose = async => {
+    this.setState({
+      openTooltip: false
+    })
+  }
+  handleTooltipOpen = async => {
+    this.setState({
+      openTooltip: true
 
+    })
+  }
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
@@ -328,6 +338,11 @@ class GetArchiveNotes extends PureComponent {
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
                     title="Color"
+                    placement="right"
+
+                    onClose={this.handleTooltipClose}
+                    onOpen={this.handleTooltipOpen}
+                    open={this.state.openTooltip}
                     arrow
                   >
                     <IconButton aria-label="Color">

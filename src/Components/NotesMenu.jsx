@@ -27,9 +27,10 @@ class NotesMenu extends PureComponent {
 
   render() {
     var pinflag = false;
-
+    var othersflag = false;
     let othersnotes = this.state.obj.map(item => {
       if (!item.archived && !item.trashed && !item.pinned) {
+        othersflag = true;
         return <GetNotes getNote={this.props.getNote} data={item} />;
       }
     });
@@ -55,9 +56,14 @@ class NotesMenu extends PureComponent {
               <div>
                 <div className="pin_heading">PINNED</div>
                 <div className="pin_notes">{pinnednotes}</div>
-
-                <div className="others_heading">OTHERS</div>
-                <div className="get_notes">{othersnotes}</div>
+                {othersflag ? (
+                  <div>
+                    <div className="others_heading">OTHERS</div>
+                    <div className="get_notes">{othersnotes}</div>
+                  </div>
+                ) : (
+                  <div></div>
+                )}
               </div>
             ) : (
               <div>

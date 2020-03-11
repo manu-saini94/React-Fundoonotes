@@ -110,9 +110,6 @@ class DialogCardArchive extends Component {
     //await this.setState({ openDialog: false })
     this.props.getNote();
     this.props.handleDialogClose();
-
-
-
   };
 
   handleClose = (event, reason) => {
@@ -242,11 +239,15 @@ class DialogCardArchive extends Component {
       );
     });
     return (
-      <div className="dialog_note">
-        <Dialog open={this.props.openDialog} onClose={this.handleDialogClickaway}>
+      <div>
+        <Dialog
+          id="dialog_note"
+          open={this.props.openDialog}
+          onClose={this.handleDialogClickaway}
+        >
           <div>
             <Card
-              id="card_decor1"
+              id="card_decordialog"
               style={{
                 backgroundColor: this.state.color
               }}

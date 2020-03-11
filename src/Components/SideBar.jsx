@@ -134,7 +134,8 @@ export default function SideNavBar(props) {
         paper: classes.drawerPaper
       }}
       style={{
-        display: "flex", flexDirection: "column"
+        display: "flex",
+        flexDirection: "column"
       }}
     >
       <Divider />
@@ -185,7 +186,7 @@ export default function SideNavBar(props) {
         </ListItem>
       </List>
       <Divider />
-      <List onClick={props.handleLabelsMenu}>
+      <List onClick={props.handleEditLabelsMenu}>
         <h5 style={{ fontWeight: "20", paddingRight: "64%", marginTop: "5%" }}>
           LABELS
         </h5>
@@ -200,7 +201,7 @@ export default function SideNavBar(props) {
           >
             <EditOutlinedIcon />
           </ListItemIcon>
-          <ListItemText style={{ width: "100%" }}>Edit Labels</ListItemText>
+          <ListItemText style={{ width: "100%" }}>Edit labels</ListItemText>
         </ListItem>
       </List>
 
@@ -245,6 +246,6 @@ export default function SideNavBar(props) {
           </ListItemText>
         </ListItem>
       </List>
-    </Drawer >
+    </Drawer>
   );
 }

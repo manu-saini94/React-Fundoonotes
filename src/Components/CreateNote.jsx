@@ -8,7 +8,8 @@ import {
   Tooltip,
   Grid,
   makeStyles,
-  Menu
+  Menu,
+  Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -43,11 +44,15 @@ const bgcolor = "";
 //     }
 // })
 
-const useStyles = makeStyles(theme => ({
-  menuButton: {
-    marginRight: theme.spacing(2)
-  }
-}));
+// const useStyles = createMuiTheme({
+//   overrides: {
+//     MuiMenu: {
+//       paper: {
+//         marginTop: "44px"
+//       }
+//     }
+//   }
+// })
 
 export default class CreateNote extends Component {
   constructor(props) {
@@ -67,10 +72,13 @@ export default class CreateNote extends Component {
       labelName: "",
       createdTime: "",
       menu: false,
+      labelMenu: false,
       labelAnchor: null,
       colorTooltipOpen: false,
       colorAnchor: null,
       colorOpen: false,
+      hoverColorTooltip: false,
+      hoverMoreTooltip: false,
       color: "#FDFEFE",
       getNote: this.props.getNote,
       manycolor: [
@@ -89,6 +97,20 @@ export default class CreateNote extends Component {
       ]
     };
   }
+  handleMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    await this.setState({
+      menu: false,
+      labelMenu: false,
+      hoverColorTooltip: false,
+      hoverMoreTooltip: false
+    });
+
+
+  }
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -103,7 +125,8 @@ export default class CreateNote extends Component {
   changeLabel = event => {
     this.setState({
       menu: true,
-      labelAnchor: event.currentTarget
+      labelAnchor: event.currentTarget,
+      hoverMoreTooltip: true
     });
   };
 
@@ -208,35 +231,39 @@ export default class CreateNote extends Component {
     }
   };
 
-  handleTooltipClose = async => {
-    this.setState({
-      openTooltip: false
-    })
-  }
-  handleTooltipOpen = async => {
-    this.setState({
-      openTooltip: true
 
-    })
-  }
   changeColor = event => {
     this.setState({
       colorOpen: true,
       colorAnchor: event.currentTarget,
-      colorTooltipOpen: true
+      colorTooltipOpen: true,
+      hoverColorTooltip: true
     });
   };
   changeNoteColor = event => {
-    this.setState({ color: event.target.value });
+    this.setState({
+      color: event.target.value,
+      hoverColorTooltip: false
+
+    });
   };
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
       colorAnchor: null,
-      colorTooltipOpen: false
+      colorTooltipOpen: false,
+      hoverColorTooltip: false
+
     });
   };
 
+  handleLabelMenuOpen = () => {
+    this.setState({
+      labelMenu: true,
+      menu: false,
+      hoverMoreTooltip: true
+    })
+  }
   MenuClose = () => {
     this.setState({ menu: false });
   };
@@ -429,7 +456,7 @@ export default class CreateNote extends Component {
                   />
                 </div>
 
-                <MuiThemeProvider>
+                <MuiThemeProvider >
                   <div>
                     <Toolbar>
                       <div className="buttons" style={{ display: "flex" }}>
@@ -512,9 +539,8 @@ export default class CreateNote extends Component {
                             TransitionProps={{ timeout: 100 }}
                             title="Color"
                             placement="right"
-                            onClose={this.handleTooltipClose}
-                            onOpen={this.handleTooltipOpen}
-                            open={this.state.openTooltip}
+
+                            disableHoverListener={this.state.hoverColorTooltip}
                             // onMouseLeave={() => {
                             //   this.setState({ openTooltip: false })
 
@@ -567,6 +593,7 @@ export default class CreateNote extends Component {
                             TransitionComponent={Fade}
                             TransitionProps={{ timeout: 100 }}
                             title="More"
+                            disableHoverListener={this.state.hoverMoreTooltip}
                             arrow
                           >
                             <IconButton aria-label="More">
@@ -575,19 +602,44 @@ export default class CreateNote extends Component {
                                 onClick={this.changeLabel}
                               />
                               <div>
-                                <Menu
+                                <Popover
                                   id="label-menu"
                                   open={this.state.menu}
                                   anchorEl={this.state.labelAnchor}
+                                  anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "center"
+                                  }}
                                   transformOrigin={{
                                     vertical: "top",
-                                    horizontal: "right"
+                                    horizontal: "center"
                                   }}
+                                  onClose={this.handleMenuClickAway}
                                 >
-                                  <MenuItem onClick={this.MenuClose}>
+                                  <MenuItem onClick={this.handleLabelMenuOpen}>
                                     Add label
                                 </MenuItem>
-                                </Menu>
+                                </Popover>
+                              </div>
+                              <div>
+                                <Popover
+                                  id="addlabel-menu"
+                                  open={this.state.labelMenu}
+                                  anchorEl={this.state.labelAnchor}
+                                  anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'center',
+                                  }}
+                                  onClose={this.handleMenuClickAway}
+                                >
+                                  <MenuItem id="labelnote_menu">
+                                    Label Note
+                                </MenuItem>
+                                </Popover>
                               </div>
                             </IconButton>
                           </Tooltip>

@@ -11,7 +11,8 @@ import {
   Menu,
   Dialog,
   ReactFragment,
-  Card
+  Card,
+  Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -50,7 +51,7 @@ class DialogCardArchive extends Component {
       openSnack: false,
       open: false,
       menu: false,
-
+      hoverMoreTooltip: false,
       manycolor: [
         { name: "default", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
@@ -84,6 +85,17 @@ class DialogCardArchive extends Component {
       color: props.data.color
     });
   }
+  handleMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    await this.setState({
+      menu: false,
+      hoverMoreTooltip: false
+    });
+
+  }
   handleDialogClickaway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -111,7 +123,29 @@ class DialogCardArchive extends Component {
     this.props.getNote();
     this.props.handleDialogClose();
   };
+  handleDeleteNote = async () => {
+    await this.setState({ isTrashed: true });
+    await NoteController.deletenote(this.state.id).then(
+      res => {
+        if (res.status === 200) {
+          console.log("Note Deleted Successfully");
+        }
+      }
+    );
+    this.props.getNote();
+  }
 
+  MenuClose = () => {
+    this.setState({ menu: false });
+  };
+
+  changeLabel = event => {
+    this.setState({
+      menu: true,
+      labelAnchor: event.currentTarget,
+      hoverMoreTooltip: true
+    })
+  }
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -193,6 +227,34 @@ class DialogCardArchive extends Component {
       }
     });
     this.props.getNote();
+  };
+  handleDialogClickaway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    var noteDetails = {
+      id: this.state.id,
+      title: this.state.title,
+      takeanote: this.state.description,
+      createdtime: this.state.createdTime,
+      trashed: this.state.isTrashed,
+      archived: this.state.isArchived,
+      pinned: this.state.isPinned,
+      color: this.state.color,
+      reminder: this.state.reminder,
+      labelName: this.state.labelName
+    };
+
+    await NoteController.setTitleDesc(noteDetails).then(res => {
+      console.log("hiii...", res);
+      if (res.status === 200) {
+        console.log(res.data.message);
+      }
+    });
+    //await this.setState({ openDialog: false })
+    this.props.getNote();
+    this.props.handleDialogClose();
   };
 
   onCloseDialog = async () => {
@@ -449,31 +511,39 @@ class DialogCardArchive extends Component {
                         </Tooltip>
                       </div>
 
-                      <div>
+                      <div className="menu_getnotes">
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="More"
+                          disableHoverListener={this.state.hoverMoreTooltip}
+
                           arrow
                         >
                           <IconButton aria-label="More">
-                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} />
+                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
                             <div>
-                              <Menu
+                              <Popover
+                                id="label-menu"
                                 open={this.state.menu}
-                                transformOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "left"
-                                }}
+                                anchorEl={this.state.labelAnchor}
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "right"
+                                  horizontal: "center"
                                 }}
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "center"
+                                }}
+                                onClick={this.handleMenuClickAway}
                               >
                                 <MenuItem onClick={this.MenuClose}>
                                   Add label
-                                </MenuItem>
-                              </Menu>
+                          </MenuItem>
+                                <MenuItem onClick={this.handleDeleteNote}>
+                                  Delete note
+                          </MenuItem>
+                              </Popover>
                             </div>
                           </IconButton>
                         </Tooltip>

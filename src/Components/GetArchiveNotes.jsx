@@ -42,6 +42,7 @@ class GetArchiveNotes extends PureComponent {
       isPinned: this.props.data.pinned,
       isTrashed: this.props.data.trashed,
       color: this.props.data.color,
+      hoverMoreTooltip: false,
 
       colorAnchor: null,
       openSnack: false,
@@ -81,6 +82,32 @@ class GetArchiveNotes extends PureComponent {
       color: props.data.color
     });
   }
+  handleMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    await this.setState({
+      menu: false,
+      hoverMoreTooltip: false
+    });
+
+  }
+  handleDeleteNote = async () => {
+    await this.setState({ isTrashed: true });
+    await NoteController.deletenote(this.state.id).then(
+      res => {
+        if (res.status === 200) {
+          console.log("Note Deleted Successfully");
+        }
+      }
+    );
+    this.props.getNote();
+  }
+
+  MenuClose = () => {
+    this.setState({ menu: false });
+  };
 
   handleClose = async (event, reason) => {
     if (reason === "clickaway") {
@@ -111,7 +138,8 @@ class GetArchiveNotes extends PureComponent {
   changeLabel = event => {
     this.setState({
       menu: true,
-      labelAnchor: event.currentTarget
+      labelAnchor: event.currentTarget,
+      hoverMoreTooltip: true
     })
   }
 
@@ -424,6 +452,8 @@ class GetArchiveNotes extends PureComponent {
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
                     title="More"
+                    disableHoverListener={this.state.hoverMoreTooltip}
+
                     arrow
                   >
                     <IconButton aria-label="More">
@@ -433,14 +463,21 @@ class GetArchiveNotes extends PureComponent {
                           id="label-menu"
                           open={this.state.menu}
                           anchorEl={this.state.labelAnchor}
-                          transformOrigin={{
-                            vertical: "right",
-                            horizontal: "right"
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center"
                           }}
-
+                          transformOrigin={{
+                            vertical: "top",
+                            horizontal: "center"
+                          }}
+                          onClick={this.handleMenuClickAway}
                         >
                           <MenuItem onClick={this.MenuClose}>
                             Add label
+                          </MenuItem>
+                          <MenuItem onClick={this.handleDeleteNote}>
+                            Delete note
                           </MenuItem>
                         </Menu>
                       </div>

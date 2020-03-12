@@ -14,7 +14,9 @@ import { fade, makeStyles } from "@material-ui/core/styles";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
-import NotesMenu from "../Components/NotesMenu.jsx";
+import LabelTwoToneIcon from "@material-ui/icons/LabelTwoTone";
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core';
+import CreateLabelNote from "../Components/CreateLabelNote";
 
 const drawerWidth = 244;
 
@@ -43,7 +45,8 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0
   },
   drawerPaper: {
-    top: "64px",
+    top: "10vh",
+    height: "90vh",
     width: drawerWidth
   },
   drawerHeader: {
@@ -116,12 +119,50 @@ const useStyles = makeStyles(theme => ({
     }
   }
 }));
+
 export default function SideNavBar(props) {
   const classes = useStyles();
   // const [remindersOpen, setRemindersOpen] = useState(false);
   // const [labelsOpen, setLabelsOpen] = useState(false);
   // const [archiveOpen, setArchiveOpen] = useState(false);
-  // const [trashOpen, setTrashOpen] = useState(false);
+  const [obj3, setObj3] = useState(props.obj3);
+  const [labelNoteOpen, setLabelNoteOpen] = useState(false);
+
+  // useEffect(() => {
+  //   if (props.obj3) {
+  //     setObj3(props.obj3)
+  //   }
+  //   console.log('property :', props.obj3);
+  // }, [props.obj3]);
+  const handleLabelNoteOpen = () => {
+    setLabelNoteOpen(true)
+  }
+
+  let getUserLabels = props.obj3.map(item3 => {
+    return (
+      <div>
+        <List onClick={handleLabelNoteOpen} key={item3.id} >
+          <ListItem style={{ marginTop: "-9%" }} button key={item3.id}>
+            <ListItemIcon
+              className
+              style={{
+                paddingTop: "-2%",
+                fontWeight: "bolder",
+                marginBottom: "0.9%"
+              }}
+            >
+              <LabelTwoToneIcon />
+              <CreateLabelNote open={labelNoteOpen} />
+            </ListItemIcon>
+            <ListItemText style={{ width: "100%", fontWeight: 'bolder', color: 'black' }}>{item3.labelname}</ListItemText>
+          </ListItem>
+        </List>
+      </div>
+
+    );
+
+  });
+
 
   return (
     <Drawer
@@ -135,7 +176,7 @@ export default function SideNavBar(props) {
       }}
       style={{
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
       }}
     >
       <Divider />
@@ -186,10 +227,13 @@ export default function SideNavBar(props) {
         </ListItem>
       </List>
       <Divider />
-      <List onClick={props.handleEditLabelsMenu}>
-        <h5 style={{ fontWeight: "20", paddingRight: "64%", marginTop: "5%" }}>
-          LABELS
+      <h5 style={{ fontWeight: "20", paddingRight: "64%", marginTop: "5%" }}>
+        LABELS
         </h5>
+      <div>{getUserLabels}</div>
+      <List onClick={props.handleEditLabelsMenu}>
+
+
         <ListItem style={{ marginTop: "-6%" }} button key="Edit Labels">
           <ListItemIcon
             className
@@ -240,8 +284,7 @@ export default function SideNavBar(props) {
             <DeleteOutlineIcon />
           </ListItemIcon>
           <ListItemText
-            style={{ width: "100%", marginLeft: "-59%", marginTop: "4%" }}
-          >
+            style={{ width: "100%", marginLeft: "-59%", marginTop: "4%" }}>
             Trash
           </ListItemText>
         </ListItem>

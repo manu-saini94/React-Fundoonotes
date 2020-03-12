@@ -10,7 +10,8 @@ import {
   makeStyles,
   Menu,
   Dialog,
-  ReactFragment
+  ReactFragment,
+  Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -52,6 +53,7 @@ class GetNotes extends PureComponent {
       openDialog: false,
       menu: false,
       labelAnchor: null,
+      hoverMoreTooltip: false,
 
       manycolor: [
         { name: "default", colorCode: "#FDFEFE" },
@@ -85,6 +87,17 @@ class GetNotes extends PureComponent {
     });
   }
 
+  handleMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    await this.setState({
+      menu: false,
+      hoverMoreTooltip: false
+    });
+
+  }
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
     await NoteController.deletenote(this.state.id).then(
@@ -104,7 +117,8 @@ class GetNotes extends PureComponent {
   changeLabel = event => {
     this.setState({
       menu: true,
-      labelAnchor: event.currentTarget
+      labelAnchor: event.currentTarget,
+      hoverMoreTooltip: true
     })
   }
 
@@ -455,18 +469,25 @@ class GetNotes extends PureComponent {
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
                     title="More"
+                    disableHoverListener={this.state.hoverMoreTooltip}
+
                     arrow
                   >
                     <IconButton aria-label="More">
                       <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
                       <div>
-                        <Menu
+                        <Popover
                           id="label-menu"
                           open={this.state.menu}
                           anchorEl={this.state.labelAnchor}
+                          onClick={this.handleMenuClickAway}
+                          anchorOrigin={{
+                            vertical: "bottom",
+                            horizontal: "center"
+                          }}
                           transformOrigin={{
                             vertical: "top",
-                            horizontal: "right"
+                            horizontal: "center"
                           }}
                         >
                           <MenuItem onClick={this.MenuClose}>
@@ -475,7 +496,7 @@ class GetNotes extends PureComponent {
                           <MenuItem onClick={this.handleDeleteNote}>
                             Delete note
                           </MenuItem>
-                        </Menu>
+                        </Popover>
                       </div>
                     </IconButton>
                   </Tooltip>

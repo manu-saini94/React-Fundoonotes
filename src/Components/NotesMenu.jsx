@@ -31,14 +31,14 @@ class NotesMenu extends PureComponent {
     let othersnotes = this.state.obj.map(item => {
       if (!item.archived && !item.trashed && !item.pinned) {
         othersflag = true;
-        return <GetNotes getNote={this.props.getNote} data={item} />;
+        return <GetNotes getNote={this.props.getNote} data={item} key={item.id} />;
       }
     });
 
     let pinnednotes = this.state.obj.map(item => {
       if (!item.archived && !item.trashed && item.pinned) {
         pinflag = true;
-        return <GetNotes getNote={this.props.getNote} data={item} />;
+        return <GetNotes getNote={this.props.getNote} data={item} key={item.id} />;
       }
     });
 
@@ -62,18 +62,18 @@ class NotesMenu extends PureComponent {
                     <div className="get_notes">{othersnotes}</div>
                   </div>
                 ) : (
-                  <div></div>
-                )}
+                    <div></div>
+                  )}
               </div>
             ) : (
-              <div>
-                <div className="get_notes">{othersnotes}</div>
-              </div>
-            )}
+                <div>
+                  <div className="get_notes">{othersnotes}</div>
+                </div>
+              )}
           </div>
         ) : (
-          <div></div>
-        )}
+            <div></div>
+          )}
       </div>
     );
   }

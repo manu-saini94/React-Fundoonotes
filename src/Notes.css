@@ -199,3 +199,12 @@
   top: 334px;
   left: 171px;
 }
+#addlabel-menu {
+  top: 215px;
+  left: 673px;
+}
+#labelnote_menu {
+  display: flex;
+  flex-direction: column;
+  margin-right: 147px;
+}

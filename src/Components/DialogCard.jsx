@@ -10,7 +10,7 @@ import {
   Menu,
   Dialog,
   ReactFragment,
-  Card
+  Card, Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -48,6 +48,8 @@ class DialogCard extends Component {
       openSnack: false,
       open: false,
       menu: false,
+      hoverMoreTooltip: false,
+      labelAnchor: null,
 
       manycolor: [
         { name: "default", colorCode: "#FDFEFE" },
@@ -83,6 +85,39 @@ class DialogCard extends Component {
     });
   }
 
+  handleMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    await this.setState({
+      menu: false,
+      hoverMoreTooltip: false
+    });
+
+  }
+  handleDeleteNote = async () => {
+    await this.setState({ isTrashed: true });
+    await NoteController.deletenote(this.state.id).then(
+      res => {
+        if (res.status === 200) {
+          console.log("Note Deleted Successfully");
+        }
+      }
+    );
+    this.props.getNote();
+  }
+
+  MenuClose = () => {
+    this.setState({ menu: false });
+  };
+  changeLabel = event => {
+    this.setState({
+      menu: true,
+      labelAnchor: event.currentTarget,
+      hoverMoreTooltip: true
+    })
+  }
   handleDialogClickaway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -302,30 +337,30 @@ class DialogCard extends Component {
                       </Tooltip>
                     </div>
                   ) : (
-                    <div
-                      style={{
-                        marginRight: "-21px"
-                      }}
-                    >
-                      <Tooltip
-                        TransitionComponent={Fade}
-                        TransitionProps={{ timeout: 100 }}
-                        title="Unpin"
-                        arrow
+                      <div
+                        style={{
+                          marginRight: "-21px"
+                        }}
                       >
-                        <IconButton aria-label="Unpin">
-                          <img
-                            style={{
-                              height: "0.54cm",
-                              width: "0.54cm"
-                            }}
-                            src={Unpin}
-                            onClick={this.handleIsUnpinned}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  )}
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Unpin"
+                          arrow
+                        >
+                          <IconButton aria-label="Unpin">
+                            <img
+                              style={{
+                                height: "0.54cm",
+                                width: "0.54cm"
+                              }}
+                              src={Unpin}
+                              onClick={this.handleIsUnpinned}
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    )}
                 </div>
 
                 <InputBase
@@ -457,31 +492,39 @@ class DialogCard extends Component {
                         </Tooltip>
                       </div>
 
-                      <div>
+                      <div className="menu_getnotes">
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="More"
+                          disableHoverListener={this.state.hoverMoreTooltip}
+
                           arrow
                         >
                           <IconButton aria-label="More">
-                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} />
+                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
                             <div>
-                              <Menu
+                              <Popover
+                                id="label-menu"
                                 open={this.state.menu}
-                                transformOrigin={{
-                                  vertical: "bottom",
-                                  horizontal: "left"
-                                }}
+                                anchorEl={this.state.labelAnchor}
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "right"
+                                  horizontal: "center"
                                 }}
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "center"
+                                }}
+                                onClick={this.handleMenuClickAway}
                               >
                                 <MenuItem onClick={this.MenuClose}>
                                   Add label
-                                </MenuItem>
-                              </Menu>
+                          </MenuItem>
+                                <MenuItem onClick={this.handleDeleteNote}>
+                                  Delete note
+                          </MenuItem>
+                              </Popover>
                             </div>
                           </IconButton>
                         </Tooltip>

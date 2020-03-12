@@ -91,11 +91,6 @@ class DashBoard extends PureComponent {
     this.getLabel();
   }
   getNote = async () => {
-    // Controller.getNotes().th
-
-    //     this.setState({ getNoteArr: res.data.object })
-    //     console.log("Notes...", this.state.getNoteArr)
-    // })
     let data = await Controller.getNotes().then(res => {
       this.setState({
         getNoteArr: res
@@ -133,7 +128,7 @@ class DashBoard extends PureComponent {
                 handleEditLabelsMenu={this.handleEditLabelsMenu}
                 handleDialogOpen={this.handleDialogOpen}
                 show={this.state.open}
-                obj2={this.state.getLabelArr}
+                obj3={this.state.getLabelArr}
                 getLabel={this.getLabel}
               />
             </div>

@@ -9,7 +9,8 @@ import {
   Grid,
   makeStyles,
   Menu,
-  Popover
+  Popover,
+
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -22,42 +23,29 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Pin from "../IMG/pin.svg";
 import Unpin from "../IMG/unpin.svg";
 import Controller from "../Controller/UserController";
+import LabelController from "../Controller/LabelController";
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import Input from "@material-ui/core/Input";
+import DoneIcon from "@material-ui/icons/Done";
+
 import "../App.css";
 import "../Notes.css";
 import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
+import GetLabelsInMenu from "../Components/GetLabelsInMenu";
+import Chip from '@material-ui/core/Chip';
+
+
 
 const saveclose = "Save & Close";
 const bgcolor = "";
-// const theme = createMuiTheme({
-//     overrides: {
-//         MuiInputBase: {
-//             // padding: "12px 8px 7px"
-
-//         },
-//         MuiSvgIcon: {
-//             root: {
-//                 // fontSize: "1.2rem"
-//             }
-//         }
-//     }
-// })
-
-// const useStyles = createMuiTheme({
-//   overrides: {
-//     MuiMenu: {
-//       paper: {
-//         marginTop: "44px"
-//       }
-//     }
-//   }
-// })
-
-export default class CreateNote extends Component {
+let array = [];
+class CreateNote extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      obj3: this.props.obj3,
       open: false,
       menu: false,
       openNote: false,
@@ -71,6 +59,7 @@ export default class CreateNote extends Component {
       reminder: "",
       labelName: "",
       createdTime: "",
+      checkedLabel: false,
       menu: false,
       labelMenu: false,
       labelAnchor: null,
@@ -81,6 +70,10 @@ export default class CreateNote extends Component {
       hoverMoreTooltip: false,
       color: "#FDFEFE",
       getNote: this.props.getNote,
+      allLabels: [],
+      labelpresent: false,
+      collabpresent: false,
+
       manycolor: [
         { name: "White", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
@@ -97,6 +90,31 @@ export default class CreateNote extends Component {
       ]
     };
   }
+  componentWillReceiveProps(props) {
+    this.setState({ obj3: props.obj3 })
+  }
+
+  handleLabel = async (data) => {
+
+    array.push(data)
+    await this.setState({
+      allLabels: array,
+      labelpresent: true,
+
+    })
+    console.log(this.state.allLabels)
+  }
+  handleLabelRemove = async (data) => {
+
+    array.pop(data)
+    await this.setState({
+      allLabels: array
+    })
+    console.log(this.state.allLabels)
+    if (this.state.allLabels.length === 0) {
+      this.setState({ labelpresent: false })
+    }
+  }
   handleMenuClickAway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -111,6 +129,39 @@ export default class CreateNote extends Component {
 
 
   }
+  onChangeLabelName = async event => {
+    await this.setState({ labelName: event.target.value });
+    console.log(this.state.labelName);
+  }
+
+  handleDoneClick = async () => {
+    if (this.state.labelName !== "") {
+      var labelDetails = {
+        labelname: this.state.labelName
+      };
+
+      await LabelController.newlabelforuser(labelDetails).then(res => {
+        if (res.status === 200) {
+          console.log("Successfully added label for user");
+        }
+
+      });
+
+    }
+    await this.setState({ labelName: "" })
+    this.props.getLabel();
+
+  }
+
+  handleCancel = async () => {
+    console.log("bef", this.state.labelName)
+    await this.setState({ labelName: "" })
+    console.log("aft", this.state.labelName)
+
+  }
+
+
+
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -322,6 +373,33 @@ export default class CreateNote extends Component {
   };
 
   render() {
+
+
+    const label = this.state.obj3.map(item => {
+      return (
+        <GetLabelsInMenu
+          handleLabel={this.handleLabel}
+          handleLabelRemove={this.handleLabelRemove}
+          getLabel={this.props.getLabel}
+          item={item}
+        />
+      )
+    })
+    let displaylabels;
+    if (this.state.allLabels.length !== 0) {
+      console.log(this.state.allLabels, "all Labels");
+      displaylabels = this.state.allLabels.map(el => {
+        console.log(el)
+        return (
+          <div>
+            <Chip
+              label={el}
+              onDelete={this.handleDeleteLabelInNote}
+            />
+          </div>
+        )
+      })
+    }
     const color1 = this.state.manycolor.map(color => {
       return (
         <div>
@@ -455,7 +533,15 @@ export default class CreateNote extends Component {
                     onChange={this.onChangeDescription}
                   />
                 </div>
-
+                {this.state.labelpresent || this.state.collabpresent ? (
+                  <Toolbar>
+                    {displaylabels}
+                  </Toolbar>
+                ) :
+                  (
+                    null
+                  )
+                }
                 <MuiThemeProvider >
                   <div>
                     <Toolbar>
@@ -622,24 +708,7 @@ export default class CreateNote extends Component {
                                 </Popover>
                               </div>
                               <div>
-                                <Popover
-                                  id="addlabel-menu"
-                                  open={this.state.labelMenu}
-                                  anchorEl={this.state.labelAnchor}
-                                  anchorOrigin={{
-                                    vertical: 'bottom',
-                                    horizontal: 'center',
-                                  }}
-                                  transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'center',
-                                  }}
-                                  onClose={this.handleMenuClickAway}
-                                >
-                                  <MenuItem id="labelnote_menu">
-                                    Label Note
-                                </MenuItem>
-                                </Popover>
+
                               </div>
                             </IconButton>
                           </Tooltip>
@@ -665,9 +734,105 @@ export default class CreateNote extends Component {
                   </div>
                 </MuiThemeProvider>
               </Card>
+
             </div>
           )}
+        <Popover
+          id="addlabel-menu"
+          open={this.state.labelMenu}
+          anchorEl={this.state.labelAnchor}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          onClose={this.handleMenuClickAway}
+        >
+          <div id="labelnote_menu" style={{}}>
+            Label Note
+                                </div>
+          <MenuItem>
+            <Toolbar id="createlabelnote_field">
+              <div
+                className="buttons"
+                style={{ display: "flex", marginLeft: "1px" }}
+              >
+                <div className="cancel_labeltext">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Cancel"
+                    placement="left"
+                    arrow
+                  >
+                    <IconButton aria-label="Cancel">
+                      <CloseOutlinedIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.handleCancel}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <div className="input_createlabelnote">
+                  <Input
+                    placeholder="Add new label"
+                    inputProps={{ "aria-label": "description" }}
+                    spellCheck={false}
+                    value={this.state.labelName}
+                    onChange={this.onChangeLabelName}
+                  />
+                </div>
+                <div className="done_icon">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Create label"
+                    placement="right"
+                    arrow
+                  >
+                    <IconButton aria-label="Create label">
+                      <DoneIcon onClick={this.handleDoneClick} />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
+            </Toolbar>
+          </MenuItem>
+          {label}
+
+        </Popover>
       </div>
     );
+
   }
 }
+
+export default CreateNote;
+
+
+// const theme = createMuiTheme({
+//     overrides: {
+//         MuiInputBase: {
+//             // padding: "12px 8px 7px"
+
+//         },
+//         MuiSvgIcon: {
+//             root: {
+//                 // fontSize: "1.2rem"
+//             }
+//         }
+//     }
+// })
+
+// const useStyles = createMuiTheme({
+//   overrides: {
+//     MuiMenu: {
+//       paper: {
+//         marginTop: "44px"
+//       }
+//     }
+//   }
+// })

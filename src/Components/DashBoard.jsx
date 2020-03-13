@@ -138,6 +138,8 @@ class DashBoard extends PureComponent {
                 getNote={this.getNote}
                 notesOpen={this.state.notesOpen}
                 open={this.state.open}
+                getLabel={this.getLabel}
+                obj3={this.state.getLabelArr}
               />
             </div>
 

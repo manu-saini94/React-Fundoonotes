@@ -16,12 +16,14 @@ class NotesMenu extends PureComponent {
     this.state = {
       obj: this.props.obj,
       getNote: this.props.getNote,
-      pinnedStatus: false
+      pinnedStatus: false,
+      obj3: this.props.obj3
     };
   }
   componentWillReceiveProps(props) {
     this.setState({
-      obj: props.obj
+      obj: props.obj,
+      obj3: props.obj3
     });
   }
 
@@ -48,7 +50,7 @@ class NotesMenu extends PureComponent {
           <div className={this.props.open ? "shift-true" : "shift-false"}>
             <div className="create_note">
               <div>
-                <CreateNote getNote={this.props.getNote} />
+                <CreateNote getNote={this.props.getNote} getLabel={this.props.getLabel} obj3={this.props.obj3} />
               </div>
             </div>
 

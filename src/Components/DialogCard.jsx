@@ -380,7 +380,7 @@ class DialogCard extends Component {
 
               <MuiThemeProvider>
                 <div>
-                  <Toolbar>
+                  <Toolbar id="dialog_tool">
                     <div className="buttons" style={{ display: "flex" }}>
                       <div style={{ marginLeft: "6px" }}>
                         <Tooltip
@@ -492,7 +492,7 @@ class DialogCard extends Component {
                         </Tooltip>
                       </div>
 
-                      <div className="menu_getnotes">
+                      <div >
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
@@ -529,16 +529,7 @@ class DialogCard extends Component {
                           </IconButton>
                         </Tooltip>
                       </div>
-                      <div className="close_button">
-                        <Tooltip
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 100 }}
-                          title={saveclose}
-                          arrow
-                        >
-                          <Button onClick={this.onCloseDialog}>Close</Button>
-                        </Tooltip>
-                      </div>
+
                     </div>
                     {/* <div className="CloseButton"> */}
                     {/* onClick={this.handleClickClose }
@@ -546,6 +537,16 @@ class DialogCard extends Component {
                                     } */}
 
                     {/* </div> */}
+                    <div className="button_close" >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title={saveclose}
+                        arrow
+                      >
+                        <Button onClick={this.onCloseDialog}>Close</Button>
+                      </Tooltip>
+                    </div>
                   </Toolbar>
                 </div>
               </MuiThemeProvider>

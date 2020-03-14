@@ -56,6 +56,13 @@ var controller = {
     return axios.put(`http://localhost:8080/note/emptytrash/${token}`, null, {
       headers: { "Content-type": "application/json " }
     });
+  },
+  addlabeltonote(noteDetails, id) {
+    return axios.put(
+      `http://localhost:8080/note/update/label/${id}`,
+      noteDetails,
+      { headers: { jwt: token, "Content-type": "application/json " } }
+    );
   }
 };
 export default controller;

@@ -12,14 +12,18 @@ class GetLabelsInMenu extends Component {
             labelName: this.props.item.labelname,
             id: this.props.item.id,
             checkedLabel: false,
-            allLabels: []
+            allLabels: this.props.allLabels,
+            labelIschecked: false,
+            tick: this.props.tick
         }
     }
 
     componentWillReceiveProps(props) {
         this.setState({
             labelName: props.item.labelname,
-            id: props.item.id
+            id: props.item.id,
+            allLabels: this.props.allLabels,
+            tick: this.props.tick
         })
     }
 
@@ -61,7 +65,26 @@ class GetLabelsInMenu extends Component {
         //     }
 
     }
+
+    // componentDidUpdate(props) {
+    //     props.getLabel();
+    // }
+
+
     render() {
+        // console.log("My array is ", this.state.allLabels)
+        // if (this.props.allLabels !== undefined) {
+        //     let mat = this.state.allLabels.map(element => {
+        //         if (this.state.labelName === element) {
+        //             this.setState({
+        //                 labelIschecked: true,
+        //                 checkedLabel: true
+        //             })
+        //         }
+
+
+        //     });
+        // }
         return (
             <div>
                 <div style={{
@@ -80,20 +103,35 @@ class GetLabelsInMenu extends Component {
 
                     }}>
                         <div className="checkbox_label">
-                            <Checkbox
-                                checked={this.state.checkedLabel}
-                                onClick={this.handleCheckLabel}
-                                // defaultChecked
-                                color="default"
-                                value="default"
-                                inputProps={{ 'aria-label': 'checkbox with default color' }}
-                            />
+                            {this.state.tick ? (
+                                <div>
+                                    <Checkbox
+                                        checked={this.state.tick}
+                                        onClick={this.handleCheckLabel}
+                                        //defaultChecked
+                                        color="default"
+                                        value="default"
+                                        inputProps={{ 'aria-label': 'checkbox with default color' }}
+                                    />
+                                </div>
+
+                            ) : (<div>
+                                <Checkbox
+                                    checked={this.state.tick}
+                                    onClick={this.handleCheckLabel}
+                                    // defaultChecked
+                                    color="default"
+                                    value="default"
+                                    inputProps={{ 'aria-label': 'checkbox with default color' }}
+                                />
+                            </div>)
+                            }
                         </div>
                         <span className="labelname_field">{this.state.labelName}</span>
                     </div>
 
                 </div>
-            </div>
+            </div >
         )
     }
 }

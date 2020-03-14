@@ -20,14 +20,15 @@
 
 .shift-false {
   display: flex;
-  flex-direction: column;
   margin-left: 11%;
+  flex-direction: column;
   transition: 0.15s;
 }
 .note-button {
   /* width: "50%"; */
   height: fit-content;
-  margin-left: 277px;
+  display: flex;
+  justify-content: center;
 }
 
 .create_note {
@@ -93,7 +94,7 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 #card_decor1 {
-  width: fit-content;
+  width: 400px;
   margin: 0px 0px 0px 0px;
   height: fit-content;
   border-radius: 12px;
@@ -116,13 +117,13 @@
   margin-right: -49px;
 }
 
-.close_button {
+/* .close_button {
   margin-left: 0px;
   margin-top: 6px;
   padding-right: 0px;
   padding-left: 129px;
   margin-right: -38px;
-}
+} */
 /* .dialog_note {
   padding-left: 1px;
   width: fit-content;
@@ -195,6 +196,12 @@
   margin-top: -13px;
   margin-bottom: -3px;
 }
+#toolbaricons {
+  min-height: 59px;
+  margin-top: -8px;
+  margin-bottom: -1px;
+  margin-left: 3px;
+}
 #createlabelnote_field {
   min-height: 58px;
   margin-top: -22px;
@@ -228,4 +235,19 @@
 .labelname_field {
   margin-left: 7px;
   margin-top: 3px;
+}
+#display_labels {
+  display: flex;
+  flex-direction: row;
+  /* width: fit-content; */
+  height: auto;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.close_button_createnote {
+  margin-left: "95px";
+  margin-top: "-14px";
+}
+#dialog_tool {
+  padding-right: 0px;
 }

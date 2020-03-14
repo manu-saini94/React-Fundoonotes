@@ -126,9 +126,9 @@ class GetNotes extends PureComponent {
     if (reason === "clickaway") {
       return;
     }
-
     await this.setState({ openSnack: false });
   };
+
   handleTooltipClose = async => {
     this.setState({
       openTooltip: false
@@ -145,6 +145,8 @@ class GetNotes extends PureComponent {
       title: event.target.value
     });
   };
+
+
   onChangeDescription = event => {
     this.setState({
       description: event.target.value
@@ -352,7 +354,7 @@ class GetNotes extends PureComponent {
 
         <MuiThemeProvider>
           <div>
-            <Toolbar>
+            <Toolbar >
               <div className="buttons" style={{ display: "flex" }}>
                 <div style={{ marginLeft: "9px" }}>
                   <Tooltip

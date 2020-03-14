@@ -511,7 +511,7 @@ class DialogCardArchive extends Component {
                         </Tooltip>
                       </div>
 
-                      <div className="menu_getnotes">
+                      <div >
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}

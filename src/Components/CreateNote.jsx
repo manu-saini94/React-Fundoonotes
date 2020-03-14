@@ -35,6 +35,7 @@ import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
 import GetLabelsInMenu from "../Components/GetLabelsInMenu";
 import Chip from '@material-ui/core/Chip';
+import NoteController from "../Controller/NoteController";
 
 
 
@@ -226,8 +227,19 @@ class CreateNote extends Component {
         labelName: this.state.labelName
       };
 
+
+
       await Controller.takenote(noteDetails).then(res => {
         if (res.status === 200) {
+          console.log("Note created successfully")
+          this.state.allLabels.map(items => {
+            let noteDetails = { labelname: items }
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
+              if (reso.status === 200) {
+                console.log("Label added to note")
+              }
+            })
+          })
         }
       });
       this.props.getNote();
@@ -240,7 +252,9 @@ class CreateNote extends Component {
         color: "#FDFEFE",
         reminder: "",
         labelName: "",
-        createdTime: ""
+        createdTime: "",
+        allLabels: [],
+        labelpresent: false,
       });
     } else if (this.state.title !== "" || this.state.description !== "") {
       await this.setState({
@@ -262,6 +276,15 @@ class CreateNote extends Component {
       };
       await Controller.takenote(noteDetails).then(res => {
         if (res.status === 200) {
+          console.log("Note created successfully")
+          this.state.allLabels.map(items => {
+            let noteDetails = { labelname: items }
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
+              if (reso.status === 200) {
+                console.log("Label added to note")
+              }
+            })
+          })
         }
       });
       this.props.getNote();
@@ -274,11 +297,13 @@ class CreateNote extends Component {
         color: "#FDFEFE",
         reminder: "",
         labelName: "",
-        createdTime: ""
+        createdTime: "",
+        allLabels: [],
+        labelpresent: false
       });
     } else {
       this.setState({ archivemsg: "Cannot Archive" });
-      this.setState({ open: true });
+      this.setState({ open: true, labelpresent: false, collabpresent: false });
     }
   };
 
@@ -334,9 +359,15 @@ class CreateNote extends Component {
         reminder: "",
         labelName: "",
         createdTime: "",
-        openNote: false
+        openNote: false,
+        allLabels: [],
+        labelpresent: false,
+        collabpresent: false,
       });
-    } else {
+    }
+
+
+    else {
       var noteDetails = {
         title: this.state.title,
         takeanote: this.state.description,
@@ -353,7 +384,21 @@ class CreateNote extends Component {
         console.log("hiii...", res);
         if (res.status === 200) {
           console.log(res.data.message);
+          console.log("Note created successfully")
+          this.state.allLabels.map(items => {
+
+            let noteDetails = { labelname: items }
+            console.log(noteDetails.labelname, "hello pppp")
+            console.log(res.data.object.id, "jsssssssssss")
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
+              if (reso.status === 200) {
+                console.log("Label added to note")
+              }
+            })
+          })
+
         }
+
       });
       await this.setState({
         title: "",
@@ -366,24 +411,65 @@ class CreateNote extends Component {
         reminder: "",
         labelName: "",
         createdTime: "",
-        openNote: false
+        openNote: false,
+        allLabels: [],
+        labelpresent: false
       });
     }
+
     this.props.getNote();
+
   };
 
   render() {
 
 
     const label = this.state.obj3.map(item => {
-      return (
-        <GetLabelsInMenu
-          handleLabel={this.handleLabel}
-          handleLabelRemove={this.handleLabelRemove}
-          getLabel={this.props.getLabel}
-          item={item}
-        />
-      )
+      console.log(this.state.allLabels, 'all labels');
+      if (this.state.allLabels.length !== 0) {
+        for (let i = 0; i < this.state.allLabels.length; i++) {
+          console.log(this.state.allLabels[i], "labels");
+          console.log(item, "item");
+
+
+          if (this.state.allLabels[i] === item.labelname) {
+            return (
+              <GetLabelsInMenu
+                handleLabel={this.handleLabel}
+                handleLabelRemove={this.handleLabelRemove}
+                getLabel={this.props.getLabel}
+                item={item}
+                allLabels={this.state.allLabels}
+                tick={true}
+              />
+            )
+          }
+          if (i === this.state.allLabels.length - 1) {
+            return (
+              <GetLabelsInMenu
+                handleLabel={this.handleLabel}
+                handleLabelRemove={this.handleLabelRemove}
+                getLabel={this.props.getLabel}
+                item={item}
+                allLabels={this.state.allLabels}
+                tick={false}
+              />
+            )
+          }
+
+        }
+      } else {
+        return (
+          <GetLabelsInMenu
+            handleLabel={this.handleLabel}
+            handleLabelRemove={this.handleLabelRemove}
+            getLabel={this.props.getLabel}
+            item={item}
+            allLabels={this.state.allLabels}
+            tick={false}
+          />
+        )
+      }
     })
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
@@ -421,7 +507,7 @@ class CreateNote extends Component {
     return (
       <div
         style={{
-          marginTop: "85px"
+          marginTop: "85px",
         }}
       >
         {!this.state.openNote ? (
@@ -452,6 +538,7 @@ class CreateNote extends Component {
                 }}
               >
                 <div>
+                  <div></div>
                   <div style={{ display: "flex" }}>
                     <InputBase
                       className="inputbase"
@@ -534,7 +621,7 @@ class CreateNote extends Component {
                   />
                 </div>
                 {this.state.labelpresent || this.state.collabpresent ? (
-                  <Toolbar>
+                  <Toolbar id="display_labels">
                     {displaylabels}
                   </Toolbar>
                 ) :
@@ -544,7 +631,7 @@ class CreateNote extends Component {
                 }
                 <MuiThemeProvider >
                   <div>
-                    <Toolbar>
+                    <Toolbar id="toolbaricons">
                       <div className="buttons" style={{ display: "flex" }}>
                         <div style={{ marginLeft: "6px" }}>
                           <Tooltip
@@ -707,22 +794,23 @@ class CreateNote extends Component {
                                 </MenuItem>
                                 </Popover>
                               </div>
-                              <div>
-
-                              </div>
                             </IconButton>
                           </Tooltip>
                         </div>
-                        <div className="close_button">
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title={saveclose}
-                            arrow
-                          >
-                            <Button onClick={this.onClose}>Close</Button>
-                          </Tooltip>
-                        </div>
+
+                      </div>
+                      <div style={{
+                        marginLeft: "95px",
+                        marginTop: "-14px"
+                      }}>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title={saveclose}
+                          arrow
+                        >
+                          <Button onClick={this.onClose}>Close</Button>
+                        </Tooltip>
                       </div>
                       {/* <div className="CloseButton"> */}
                       {/* onClick={this.handleClickClose }

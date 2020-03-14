@@ -28,7 +28,8 @@ class DashBoard extends PureComponent {
       editlabelsOpen: false,
       openDialog: false,
       getNoteArr: [],
-      getLabelArr: []
+      getLabelArr: [],
+      getNoteLabelArr: []
     };
   }
 
@@ -107,6 +108,13 @@ class DashBoard extends PureComponent {
     });
     console.log("cont : ", this.state.getLabelArr)
   };
+  getLabelsForNote = async () => {
+    let labelsfornote = await LabelController.getLabelsInsideNote().then(res => {
+      this.setState({
+        getNoteLabelArr: res
+      });
+    });
+  }
   render() {
     console.log("Dashboard component entered");
     console.log("jwt = ", this.state.jwt);

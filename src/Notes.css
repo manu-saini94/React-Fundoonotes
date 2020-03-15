@@ -195,6 +195,8 @@
   min-height: 54px;
   margin-top: -13px;
   margin-bottom: -3px;
+  display: flex;
+  justify-content: space-between;
 }
 #toolbaricons {
   min-height: 59px;
@@ -250,4 +252,14 @@
 }
 #dialog_tool {
   padding-right: 0px;
+}
+#outdiv_createnewlabel {
+  display: flex;
+  margin-left: 8px;
+  margin-top: 7px;
+}
+
+#done_editlabels {
+  display: flex;
+  justify-content: flex-end;
 }

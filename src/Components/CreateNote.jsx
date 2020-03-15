@@ -256,6 +256,10 @@ class CreateNote extends Component {
         allLabels: [],
         labelpresent: false,
       });
+      for (let index = 0; index < array.length; index++) {
+        array[index] = "";
+
+      }
     } else if (this.state.title !== "" || this.state.description !== "") {
       await this.setState({
         isArchived: true,
@@ -301,6 +305,7 @@ class CreateNote extends Component {
         allLabels: [],
         labelpresent: false
       });
+
     } else {
       this.setState({ archivemsg: "Cannot Archive" });
       this.setState({ open: true, labelpresent: false, collabpresent: false });
@@ -415,6 +420,7 @@ class CreateNote extends Component {
         allLabels: [],
         labelpresent: false
       });
+
     }
 
     this.props.getNote();

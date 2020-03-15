@@ -29,6 +29,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
 import NoteController from "../Controller/NoteController";
+import LabelController from "../Controller/LabelController";
+
 import Controller from "../Controller/UserController";
 import DialogCard from "../Components/DialogCard";
 
@@ -46,7 +48,7 @@ class GetNotes extends PureComponent {
       isPinned: this.props.data.pinned,
       isTrashed: this.props.data.trashed,
       color: this.props.data.color,
-
+      getNoteLabelArr: [],
       colorAnchor: null,
       openSnack: false,
       open: false,
@@ -84,6 +86,19 @@ class GetNotes extends PureComponent {
       isPinned: props.data.pinned,
       isTrashed: props.data.trashed,
       color: props.data.color
+    });
+  }
+  componentDidMount(props) {
+    this.getLabelsForNote();
+  }
+
+  getLabelsForNote = async () => {
+    let labelsfornote = await LabelController.getLabelsInsideNote(this.props.data.id).then(res => {
+      this.setState({
+        getNoteLabelArr: res
+      });
+      console.log("note labels are : ", this.state.getNoteLabelArr);
+
     });
   }
 

@@ -49,6 +49,20 @@ var controller = {
         headers: { jwt: token, "Content-type": "application/json " }
       }
     );
+  },
+  async getLabelsInsideNote(id) {
+
+    let datas = []
+    console.log("magic", id)
+    await axios.get(`http://localhost:8080/label/labelsinsidenotes/${token}`, null,
+      { headers: { id: id, "Content-type": "application/json " } }).then(res => {
+        console.log(res.data, "labels controller get all labels method")
+        res.data.object.forEach(element => {
+
+          datas.push(element)
+        });
+      })
+    return datas
   }
 
 };

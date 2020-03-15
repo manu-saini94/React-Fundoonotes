@@ -22,8 +22,8 @@ class GetLabelsInMenu extends Component {
         this.setState({
             labelName: props.item.labelname,
             id: props.item.id,
-            allLabels: this.props.allLabels,
-            tick: this.props.tick
+            allLabels: props.allLabels,
+            tick: props.tick
         })
     }
 

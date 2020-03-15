@@ -20,6 +20,7 @@ class NotesMenu extends PureComponent {
       obj3: this.props.obj3
     };
   }
+
   componentWillReceiveProps(props) {
     this.setState({
       obj: props.obj,
@@ -33,14 +34,24 @@ class NotesMenu extends PureComponent {
     let othersnotes = this.state.obj.map(item => {
       if (!item.archived && !item.trashed && !item.pinned) {
         othersflag = true;
-        return <GetNotes getNote={this.props.getNote} data={item} key={item.id} />;
+        return <GetNotes
+          getNote={this.props.getNote}
+          getNoteLabelArr={this.props.getNoteLabelArr}
+          obj3={this.props.obj3}
+          data={item}
+          key={item.id} />;
       }
     });
 
     let pinnednotes = this.state.obj.map(item => {
       if (!item.archived && !item.trashed && item.pinned) {
         pinflag = true;
-        return <GetNotes getNote={this.props.getNote} data={item} key={item.id} />;
+        return <GetNotes
+          getNote={this.props.getNote}
+          getNoteLabelArr={this.props.getNoteLabelArr}
+          obj3={this.props.obj3}
+          data={item}
+          key={item.id} />;
       }
     });
 

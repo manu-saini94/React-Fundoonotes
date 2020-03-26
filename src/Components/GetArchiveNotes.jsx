@@ -91,19 +91,16 @@ class GetArchiveNotes extends PureComponent {
       menu: false,
       hoverMoreTooltip: false
     });
-
-  }
+  };
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(
-      res => {
-        if (res.status === 200) {
-          console.log("Note Deleted Successfully");
-        }
+    await NoteController.deletenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Note Deleted Successfully");
       }
-    );
+    });
     this.props.getNote();
-  }
+  };
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -140,20 +137,19 @@ class GetArchiveNotes extends PureComponent {
       menu: true,
       labelAnchor: event.currentTarget,
       hoverMoreTooltip: true
-    })
-  }
+    });
+  };
 
   handleTooltipClose = async => {
     this.setState({
       openTooltip: false
-    })
-  }
+    });
+  };
   handleTooltipOpen = async => {
     this.setState({
       openTooltip: true
-
-    })
-  }
+    });
+  };
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
@@ -285,7 +281,8 @@ class GetArchiveNotes extends PureComponent {
                     <img
                       style={{
                         height: "0.5cm",
-                        width: "0.5cm"
+                        width: "0.5cm",
+                        opacity: "0.65"
                       }}
                       src={Pin}
                       onClick={this.handleIsPinned}
@@ -294,26 +291,27 @@ class GetArchiveNotes extends PureComponent {
                 </Tooltip>
               </div>
             ) : (
-                <div className={"pin_getnotes"}>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Unpin"
-                    arrow
-                  >
-                    <IconButton aria-label="Unpin">
-                      <img
-                        style={{
-                          height: "0.5cm",
-                          width: "0.5cm"
-                        }}
-                        src={Unpin}
-                        onClick={this.handleIsUnpinned}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              )}
+              <div className={"pin_getnotes"}>
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Unpin"
+                  arrow
+                >
+                  <IconButton aria-label="Unpin">
+                    <img
+                      style={{
+                        height: "0.5cm",
+                        width: "0.5cm",
+                        opacity: "0.65"
+                      }}
+                      src={Unpin}
+                      onClick={this.handleIsUnpinned}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
           </div>
 
           <InputBase
@@ -367,7 +365,6 @@ class GetArchiveNotes extends PureComponent {
                     TransitionProps={{ timeout: 100 }}
                     title="Color"
                     placement="right"
-
                     onClose={this.handleTooltipClose}
                     onOpen={this.handleTooltipOpen}
                     open={this.state.openTooltip}
@@ -453,11 +450,13 @@ class GetArchiveNotes extends PureComponent {
                     TransitionProps={{ timeout: 100 }}
                     title="More"
                     disableHoverListener={this.state.hoverMoreTooltip}
-
                     arrow
                   >
                     <IconButton aria-label="More">
-                      <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
+                      <MoreVertTwoToneIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.changeLabel}
+                      />
                       <div>
                         <Menu
                           id="label-menu"

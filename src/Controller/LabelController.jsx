@@ -24,7 +24,6 @@ var controller = {
     await axios
       .get("http://localhost:8080/label/displaylabels/" + token)
       .then(res => {
-
         res.data.object.forEach(element => {
           datas.push(element);
         });
@@ -32,7 +31,6 @@ var controller = {
     return datas;
   },
   editlabelforuser(labelDetails) {
-
     return axios.put(
       `http://localhost:8080/label/edit/rename/${labelDetails.id}`,
       labelDetails,
@@ -42,28 +40,23 @@ var controller = {
     );
   },
   deletelabelforuser(labelDetails) {
-    return axios.put(
-      `http://localhost:8080/label/edit/delete/${labelDetails.id}`,
-      null,
-      {
-        headers: { jwt: token, "Content-type": "application/json " }
-      }
-    );
-  },
-  async getLabelsInsideNote(id) {
-
-    let datas = []
-    console.log("magic", id)
-    await axios.get(`http://localhost:8080/label/labelsinsidenotes/${token}`, null,
-      { headers: { id: id, "Content-type": "application/json " } }).then(res => {
-        console.log(res.data, "labels controller get all labels method")
-        res.data.object.forEach(element => {
-
-          datas.push(element)
-        });
-      })
-    return datas
+    return axios.delete(`http://localhost:8080/label/edit/delete/${token}`, {
+      headers: { id: labelDetails.id, "Content-type": "application/json " }
+    });
   }
+  // async getLabelsInsideNote(id) {
 
+  //   let datas = []
+  //   console.log("magic", id)
+  //   await axios.get(`http://localhost:8080/label/labelsinsidenotes/${token}`, null,
+  //     { headers: { id: id, "Content-type": "application/json " } }).then(res => {
+  //       console.log(res.data, "labels controller get all labels method")
+  //       res.data.object.forEach(element => {
+
+  //         datas.push(element)
+  //       });
+  //     })
+  //   return datas
+  // }
 };
 export default controller;

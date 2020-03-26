@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import NoteController from "../Controller/NoteController";
 
-class GetLabelsInMenu extends Component {
+class GetLabelsInNoteMenu extends Component {
   constructor(props) {
     super(props);
 
@@ -12,8 +12,10 @@ class GetLabelsInMenu extends Component {
       checkedLabel: false,
       allLabels: this.props.allLabels,
       labelIschecked: false,
-      tick: this.props.tick
+      tick: this.props.tick,
+      data: this.props.data
     };
+    this.handleCheckLabel = this.handleCheckLabel.bind(this);
   }
 
   componentWillReceiveProps(props) {
@@ -21,11 +23,12 @@ class GetLabelsInMenu extends Component {
       labelName: props.item.labelname,
       id: props.item.id,
       allLabels: props.allLabels,
-      tick: props.tick
+      tick: props.tick,
+      data: props.data
     });
   }
 
-  handleCheckLabel = async event => {
+  handleCheckLabel = async (event, props) => {
     await this.setState({ checkedLabel: event.target.checked });
     if (this.state.checkedLabel === true) {
       console.log(this.state.checkedLabel);
@@ -33,14 +36,24 @@ class GetLabelsInMenu extends Component {
         labelname: this.state.labelName
       };
 
-      this.props.handleLabel(this.state.labelName);
+      await NoteController.addlabeltonote(noteDetails, this.props.data.id).then(
+        res => {
+          if (res.status === 200) {
+            console.log("Label added to the note successfully");
+          }
+        }
+      );
     } else if (this.state.checkedLabel === false) {
-      let noteDetails = {
-        labelname: this.state.labelName
-      };
-
-      this.props.handleLabelRemove(this.state.labelName);
+      await NoteController.deletelabelfornote(
+        this.props.data.id,
+        this.state.id
+      ).then(res => {
+        if (res.status === 200) {
+          console.log("Label deleted for the note successfully");
+        }
+      });
     }
+    this.props.getNote();
 
     // if (this.state.checkedLabel === true) {
 
@@ -93,29 +106,16 @@ class GetLabelsInMenu extends Component {
             }}
           >
             <div className="checkbox_label">
-              {this.state.tick ? (
-                <div>
-                  <Checkbox
-                    checked={this.state.tick}
-                    onClick={this.handleCheckLabel}
-                    //defaultChecked
-                    color="default"
-                    value="default"
-                    inputProps={{ "aria-label": "checkbox with default color" }}
-                  />
-                </div>
-              ) : (
-                <div>
-                  <Checkbox
-                    checked={this.state.tick}
-                    onClick={this.handleCheckLabel}
-                    // defaultChecked
-                    color="default"
-                    value="default"
-                    inputProps={{ "aria-label": "checkbox with default color" }}
-                  />
-                </div>
-              )}
+              <div>
+                <Checkbox
+                  checked={this.state.tick}
+                  onClick={this.handleCheckLabel}
+                  //defaultChecked
+                  color="default"
+                  value="default"
+                  inputProps={{ "aria-label": "checkbox with default color" }}
+                />
+              </div>
             </div>
             <span className="labelname_field">{this.state.labelName}</span>
           </div>
@@ -125,4 +125,4 @@ class GetLabelsInMenu extends Component {
   }
 }
 
-export default GetLabelsInMenu;
+export default GetLabelsInNoteMenu;

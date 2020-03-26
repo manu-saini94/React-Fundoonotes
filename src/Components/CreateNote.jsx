@@ -9,8 +9,7 @@ import {
   Grid,
   makeStyles,
   Menu,
-  Popover,
-
+  Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -34,10 +33,8 @@ import Snackbar from "@material-ui/core/Snackbar";
 import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
 import GetLabelsInMenu from "../Components/GetLabelsInMenu";
-import Chip from '@material-ui/core/Chip';
+import Chip from "@material-ui/core/Chip";
 import NoteController from "../Controller/NoteController";
-
-
 
 const saveclose = "Save & Close";
 const bgcolor = "";
@@ -92,30 +89,33 @@ class CreateNote extends Component {
     };
   }
   componentWillReceiveProps(props) {
-    this.setState({ obj3: props.obj3 })
+    this.setState({ obj3: props.obj3 });
   }
 
-  handleLabel = async (data) => {
-
-    array.push(data)
+  handleLabel = async data => {
+    array.push(data);
     await this.setState({
       allLabels: array,
-      labelpresent: true,
-
-    })
-    console.log(this.state.allLabels)
-  }
-  handleLabelRemove = async (data) => {
-
-    array.pop(data)
+      labelpresent: true
+    });
+    console.log(this.state.allLabels);
+    console.log(array, "poter potter");
+  };
+  handleLabelRemove = async data => {
+    for (let index = 0; index < array.length; index++) {
+      if (array[index] === data) {
+        array.splice(index, 1);
+      }
+    }
+    // array.pop(data)
     await this.setState({
       allLabels: array
-    })
-    console.log(this.state.allLabels)
+    });
+    console.log(this.state.allLabels);
     if (this.state.allLabels.length === 0) {
-      this.setState({ labelpresent: false })
+      this.setState({ labelpresent: false });
     }
-  }
+  };
   handleMenuClickAway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -127,13 +127,11 @@ class CreateNote extends Component {
       hoverColorTooltip: false,
       hoverMoreTooltip: false
     });
-
-
-  }
+  };
   onChangeLabelName = async event => {
     await this.setState({ labelName: event.target.value });
     console.log(this.state.labelName);
-  }
+  };
 
   handleDoneClick = async () => {
     if (this.state.labelName !== "") {
@@ -145,24 +143,17 @@ class CreateNote extends Component {
         if (res.status === 200) {
           console.log("Successfully added label for user");
         }
-
       });
-
     }
-    await this.setState({ labelName: "" })
+    await this.setState({ labelName: "" });
     this.props.getLabel();
-
-  }
+  };
 
   handleCancel = async () => {
-    console.log("bef", this.state.labelName)
-    await this.setState({ labelName: "" })
-    console.log("aft", this.state.labelName)
-
-  }
-
-
-
+    console.log("bef", this.state.labelName);
+    await this.setState({ labelName: "" });
+    console.log("aft", this.state.labelName);
+  };
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -227,19 +218,19 @@ class CreateNote extends Component {
         labelName: this.state.labelName
       };
 
-
-
       await Controller.takenote(noteDetails).then(res => {
         if (res.status === 200) {
-          console.log("Note created successfully")
+          console.log("Note created successfully");
           this.state.allLabels.map(items => {
-            let noteDetails = { labelname: items }
-            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
-              if (reso.status === 200) {
-                console.log("Label added to note")
+            let noteDetails = { labelname: items };
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
+              reso => {
+                if (reso.status === 200) {
+                  console.log("Label added to note");
+                }
               }
-            })
-          })
+            );
+          });
         }
       });
       this.props.getNote();
@@ -254,12 +245,12 @@ class CreateNote extends Component {
         labelName: "",
         createdTime: "",
         allLabels: [],
-        labelpresent: false,
+        labelpresent: false
       });
-      for (let index = 0; index < array.length; index++) {
-        array[index] = "";
-
-      }
+      // for (let index = 0; index < array.length; index++) {
+      //   array[index] = "";
+      // }
+      array = [];
     } else if (this.state.title !== "" || this.state.description !== "") {
       await this.setState({
         isArchived: true,
@@ -280,15 +271,17 @@ class CreateNote extends Component {
       };
       await Controller.takenote(noteDetails).then(res => {
         if (res.status === 200) {
-          console.log("Note created successfully")
+          console.log("Note created successfully");
           this.state.allLabels.map(items => {
-            let noteDetails = { labelname: items }
-            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
-              if (reso.status === 200) {
-                console.log("Label added to note")
+            let noteDetails = { labelname: items };
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
+              reso => {
+                if (reso.status === 200) {
+                  console.log("Label added to note");
+                }
               }
-            })
-          })
+            );
+          });
         }
       });
       this.props.getNote();
@@ -305,13 +298,13 @@ class CreateNote extends Component {
         allLabels: [],
         labelpresent: false
       });
-
+      array = [];
     } else {
       this.setState({ archivemsg: "Cannot Archive" });
       this.setState({ open: true, labelpresent: false, collabpresent: false });
     }
+    array = [];
   };
-
 
   changeColor = event => {
     this.setState({
@@ -325,7 +318,6 @@ class CreateNote extends Component {
     this.setState({
       color: event.target.value,
       hoverColorTooltip: false
-
     });
   };
   closeColorBox = () => {
@@ -334,7 +326,6 @@ class CreateNote extends Component {
       colorAnchor: null,
       colorTooltipOpen: false,
       hoverColorTooltip: false
-
     });
   };
 
@@ -343,8 +334,8 @@ class CreateNote extends Component {
       labelMenu: true,
       menu: false,
       hoverMoreTooltip: true
-    })
-  }
+    });
+  };
   MenuClose = () => {
     this.setState({ menu: false });
   };
@@ -367,12 +358,10 @@ class CreateNote extends Component {
         openNote: false,
         allLabels: [],
         labelpresent: false,
-        collabpresent: false,
+        collabpresent: false
       });
-    }
-
-
-    else {
+      array = [];
+    } else {
       var noteDetails = {
         title: this.state.title,
         takeanote: this.state.description,
@@ -389,21 +378,20 @@ class CreateNote extends Component {
         console.log("hiii...", res);
         if (res.status === 200) {
           console.log(res.data.message);
-          console.log("Note created successfully")
+          console.log("Note created successfully");
           this.state.allLabels.map(items => {
-
-            let noteDetails = { labelname: items }
-            console.log(noteDetails.labelname, "hello pppp")
-            console.log(res.data.object.id, "jsssssssssss")
-            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(reso => {
-              if (reso.status === 200) {
-                console.log("Label added to note")
+            let noteDetails = { labelname: items };
+            console.log(noteDetails.labelname, "hello pppp");
+            console.log(res.data.object.id, "jsssssssssss");
+            NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
+              reso => {
+                if (reso.status === 200) {
+                  console.log("Label added to note");
+                }
               }
-            })
-          })
-
+            );
+          });
         }
-
       });
       await this.setState({
         title: "",
@@ -421,22 +409,19 @@ class CreateNote extends Component {
         labelpresent: false
       });
 
+      array = [];
     }
 
     this.props.getNote();
-
   };
 
   render() {
-
-
     const label = this.state.obj3.map(item => {
-      console.log(this.state.allLabels, 'all labels');
+      console.log(this.state.allLabels, "all labels");
       if (this.state.allLabels.length !== 0) {
         for (let i = 0; i < this.state.allLabels.length; i++) {
           console.log(this.state.allLabels[i], "labels");
           console.log(item, "item");
-
 
           if (this.state.allLabels[i] === item.labelname) {
             return (
@@ -448,7 +433,7 @@ class CreateNote extends Component {
                 allLabels={this.state.allLabels}
                 tick={true}
               />
-            )
+            );
           }
           if (i === this.state.allLabels.length - 1) {
             return (
@@ -460,9 +445,8 @@ class CreateNote extends Component {
                 allLabels={this.state.allLabels}
                 tick={false}
               />
-            )
+            );
           }
-
         }
       } else {
         return (
@@ -474,23 +458,20 @@ class CreateNote extends Component {
             allLabels={this.state.allLabels}
             tick={false}
           />
-        )
+        );
       }
-    })
+    });
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
       console.log(this.state.allLabels, "all Labels");
       displaylabels = this.state.allLabels.map(el => {
-        console.log(el)
+        console.log(el);
         return (
           <div>
-            <Chip
-              label={el}
-              onDelete={this.handleDeleteLabelInNote}
-            />
+            <Chip label={el} onDelete={this.handleDeleteLabelInNote} />
           </div>
-        )
-      })
+        );
+      });
     }
     const color1 = this.state.manycolor.map(color => {
       return (
@@ -513,7 +494,7 @@ class CreateNote extends Component {
     return (
       <div
         style={{
-          marginTop: "85px",
+          marginTop: "85px"
         }}
       >
         {!this.state.openNote ? (
@@ -536,318 +517,310 @@ class CreateNote extends Component {
             </Card>
           </div>
         ) : (
-            <div className="note-button">
-              <Card
-                id="card_decor1"
-                style={{
-                  backgroundColor: this.state.color
-                }}
-              >
-                <div>
-                  <div></div>
-                  <div style={{ display: "flex" }}>
-                    <InputBase
-                      className="inputbase"
-                      style={{
-                        paddingLeft: "15px",
-                        paddingRight: "32px",
-                        fontWeight: "bolder",
-                        color: "#616161"
-                      }}
-                      multiline
-                      spellCheck={false}
-                      placeholder="Title...."
-                      value={this.state.title}
-                      onChange={this.onChangeTitle}
-                    />
-
-                    {!this.state.isPinned ? (
-                      <div
-                        style={{
-                          marginRight: "-21px"
-                        }}
-                      >
-                        <Tooltip
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 100 }}
-                          title="Pin"
-                          arrow
-                        >
-                          <IconButton aria-label="Pin">
-                            <img
-                              style={{
-                                height: "0.54cm",
-                                width: "0.54cm"
-                              }}
-                              src={Pin}
-                              onClick={this.handleIsPinned}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    ) : (
-                        <div
-                          style={{
-                            marginRight: "-21px"
-                          }}
-                        >
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title="Unpin"
-                            arrow
-                          >
-                            <IconButton aria-label="Unpin">
-                              <img
-                                style={{
-                                  height: "0.54cm",
-                                  width: "0.54cm"
-                                }}
-                                src={Unpin}
-                                onClick={this.handleIsPinned}
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                      )}
-                  </div>
-
+          <div className="note-button">
+            <Card
+              id="card_decor1"
+              style={{
+                backgroundColor: this.state.color
+              }}
+            >
+              <div>
+                <div></div>
+                <div style={{ display: "flex" }}>
                   <InputBase
                     className="inputbase"
                     style={{
                       paddingLeft: "15px",
-                      paddingRight: "26px",
+                      paddingRight: "32px",
+                      fontWeight: "bolder",
                       color: "#616161"
                     }}
                     multiline
                     spellCheck={false}
-                    placeholder="Description...."
-                    value={this.state.description}
-                    onChange={this.onChangeDescription}
+                    placeholder="Title...."
+                    value={this.state.title}
+                    onChange={this.onChangeTitle}
                   />
+
+                  {!this.state.isPinned ? (
+                    <div
+                      style={{
+                        marginRight: "-21px"
+                      }}
+                    >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title="Pin"
+                        arrow
+                      >
+                        <IconButton aria-label="Pin">
+                          <img
+                            style={{
+                              height: "0.54cm",
+                              width: "0.54cm",
+                              opacity: "0.65"
+                            }}
+                            src={Pin}
+                            onClick={this.handleIsPinned}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        marginRight: "-21px"
+                      }}
+                    >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title="Unpin"
+                        arrow
+                      >
+                        <IconButton aria-label="Unpin">
+                          <img
+                            style={{
+                              height: "0.54cm",
+                              width: "0.54cm",
+                              opacity: "0.65"
+                            }}
+                            src={Unpin}
+                            onClick={this.handleIsPinned}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
-                {this.state.labelpresent || this.state.collabpresent ? (
-                  <Toolbar id="display_labels">
-                    {displaylabels}
-                  </Toolbar>
-                ) :
-                  (
-                    null
-                  )
-                }
-                <MuiThemeProvider >
-                  <div>
-                    <Toolbar id="toolbaricons">
-                      <div className="buttons" style={{ display: "flex" }}>
-                        <div style={{ marginLeft: "6px" }}>
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title="Reminder"
-                            arrow
+
+                <InputBase
+                  className="inputbase"
+                  style={{
+                    paddingLeft: "15px",
+                    paddingRight: "26px",
+                    color: "#616161"
+                  }}
+                  multiline
+                  spellCheck={false}
+                  placeholder="Description...."
+                  value={this.state.description}
+                  onChange={this.onChangeDescription}
+                />
+              </div>
+              {this.state.labelpresent || this.state.collabpresent ? (
+                <Toolbar id="display_labels">{displaylabels}</Toolbar>
+              ) : null}
+              <MuiThemeProvider>
+                <div>
+                  <Toolbar id="toolbaricons">
+                    <div className="buttons" style={{ display: "flex" }}>
+                      <div style={{ marginLeft: "6px" }}>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Reminder"
+                          arrow
+                        >
+                          <IconButton
+                            aria-label="Reminder"
+                            className="iconButtons"
                           >
-                            <IconButton
-                              aria-label="Reminder"
-                              className="iconButtons"
+                            <AddAlertIcon style={{ fontSize: "20px" }} />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Collaborator"
+                          arrow
+                        >
+                          <IconButton aria-label="Collaborator">
+                            <PersonAddIcon style={{ fontSize: "20px" }} />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Archive"
+                          arrow
+                        >
+                          <IconButton aria-label="Archive">
+                            <ArchiveOutlinedIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.handleIsArchived}
+                            />
+                            <Snackbar
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "center"
+                              }}
+                              open={this.state.open}
+                              autoHideDuration={4000}
+                              onClose={this.handleClose}
+                              message={this.state.archivemsg}
+                              action={
+                                <React.Fragment>
+                                  <div
+                                    style={{
+                                      paddingBottom: "17px",
+                                      marginRight: "-25px"
+                                    }}
+                                  >
+                                    <IconButton
+                                      size="small"
+                                      aria-label="close"
+                                      color="inherit"
+                                      onClick={this.handleClose}
+                                    >
+                                      <CloseIcon fontSize="small" />
+                                    </IconButton>
+                                  </div>
+                                </React.Fragment>
+                              }
+                            />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Color"
+                          placement="right"
+                          disableHoverListener={this.state.hoverColorTooltip}
+                          // onMouseLeave={() => {
+                          //   this.setState({ openTooltip: false })
+
+                          // }}
+                          // onMouseOutCapture={() => {
+                          //   this.setState({ openTooltip: false })
+
+                          // }}
+                          // onMouseOverCapture={() => {
+                          //   this.setState({ openTooltip: false })
+
+                          // }}
+
+                          arrow
+                        >
+                          <IconButton aria-label="Color">
+                            <PaletteOutlinedIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeColor}
+                            />
+                            <Menu
+                              id="simple-menu"
+                              open={this.state.colorOpen}
+                              anchorEl={this.state.colorAnchor}
+                              onClose={this.closeColorBox}
+                              transformOrigin={{
+                                vertical: "right",
+                                horizontal: "right"
+                              }}
+                              className="colormenu"
                             >
-                              <AddAlertIcon style={{ fontSize: "20px" }} />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                        <div>
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title="Collaborator"
-                            arrow
-                          >
-                            <IconButton aria-label="Collaborator">
-                              <PersonAddIcon style={{ fontSize: "20px" }} />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
+                              <div
+                                style={{
+                                  display: "flex",
+                                  marginBottom: "15px",
+                                  marginLeft: "58px"
+                                }}
+                              >
+                                {color1}
+                              </div>
+                            </Menu>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
 
-                        <div>
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-
-                            title="Archive"
-                            arrow
-                          >
-                            <IconButton aria-label="Archive">
-                              <ArchiveOutlinedIcon
-                                style={{ fontSize: "20px" }}
-                                onClick={this.handleIsArchived}
-                              />
-                              <Snackbar
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="More"
+                          disableHoverListener={this.state.hoverMoreTooltip}
+                          arrow
+                        >
+                          <IconButton aria-label="More">
+                            <MoreVertTwoToneIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeLabel}
+                            />
+                            <div>
+                              <Popover
+                                id="label-menu"
+                                open={this.state.menu}
+                                anchorEl={this.state.labelAnchor}
                                 anchorOrigin={{
                                   vertical: "bottom",
                                   horizontal: "center"
                                 }}
-                                open={this.state.open}
-                                autoHideDuration={4000}
-                                onClose={this.handleClose}
-                                message={this.state.archivemsg}
-                                action={
-                                  <React.Fragment>
-                                    <div
-                                      style={{
-                                        paddingBottom: "17px",
-                                        marginRight: "-25px"
-                                      }}
-                                    >
-                                      <IconButton
-                                        size="small"
-                                        aria-label="close"
-                                        color="inherit"
-                                        onClick={this.handleClose}
-                                      >
-                                        <CloseIcon fontSize="small" />
-                                      </IconButton>
-                                    </div>
-                                  </React.Fragment>
-                                }
-                              />
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-                        <div>
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title="Color"
-                            placement="right"
-
-                            disableHoverListener={this.state.hoverColorTooltip}
-                            // onMouseLeave={() => {
-                            //   this.setState({ openTooltip: false })
-
-                            // }}
-                            // onMouseOutCapture={() => {
-                            //   this.setState({ openTooltip: false })
-
-                            // }}
-                            // onMouseOverCapture={() => {
-                            //   this.setState({ openTooltip: false })
-
-                            // }}
-
-
-
-                            arrow
-                          >
-                            <IconButton aria-label="Color">
-                              <PaletteOutlinedIcon
-                                style={{ fontSize: "20px" }}
-                                onClick={this.changeColor}
-                              />
-                              <Menu
-                                id="simple-menu"
-                                open={this.state.colorOpen}
-                                anchorEl={this.state.colorAnchor}
-                                onClose={this.closeColorBox}
                                 transformOrigin={{
-                                  vertical: "right",
-                                  horizontal: "right"
+                                  vertical: "top",
+                                  horizontal: "center"
                                 }}
-                                className="colormenu"
+                                onClose={this.handleMenuClickAway}
                               >
-                                <div
-                                  style={{
-                                    display: "flex",
-                                    marginBottom: "15px",
-                                    marginLeft: "58px"
-                                  }}
-                                >
-                                  {color1}
-                                </div>
-                              </Menu>
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-
-                        <div>
-                          <Tooltip
-                            TransitionComponent={Fade}
-                            TransitionProps={{ timeout: 100 }}
-                            title="More"
-                            disableHoverListener={this.state.hoverMoreTooltip}
-                            arrow
-                          >
-                            <IconButton aria-label="More">
-                              <MoreVertTwoToneIcon
-                                style={{ fontSize: "20px" }}
-                                onClick={this.changeLabel}
-                              />
-                              <div>
-                                <Popover
-                                  id="label-menu"
-                                  open={this.state.menu}
-                                  anchorEl={this.state.labelAnchor}
-                                  anchorOrigin={{
-                                    vertical: "bottom",
-                                    horizontal: "center"
-                                  }}
-                                  transformOrigin={{
-                                    vertical: "top",
-                                    horizontal: "center"
-                                  }}
-                                  onClose={this.handleMenuClickAway}
-                                >
-                                  <MenuItem onClick={this.handleLabelMenuOpen}>
-                                    Add label
+                                <MenuItem onClick={this.handleLabelMenuOpen}>
+                                  Add label
                                 </MenuItem>
-                                </Popover>
-                              </div>
-                            </IconButton>
-                          </Tooltip>
-                        </div>
-
-                      </div>
-                      <div style={{
-                        marginLeft: "95px",
-                        marginTop: "-14px"
-                      }}>
-                        <Tooltip
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 100 }}
-                          title={saveclose}
-                          arrow
-                        >
-                          <Button onClick={this.onClose}>Close</Button>
+                              </Popover>
+                            </div>
+                          </IconButton>
                         </Tooltip>
                       </div>
-                      {/* <div className="CloseButton"> */}
-                      {/* onClick={this.handleClickClose }
+                    </div>
+                    <div
+                      style={{
+                        marginLeft: "95px",
+                        marginTop: "-14px"
+                      }}
+                    >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title={saveclose}
+                        arrow
+                      >
+                        <Button onClick={this.onClose}>Close</Button>
+                      </Tooltip>
+                    </div>
+                    {/* <div className="CloseButton"> */}
+                    {/* onClick={this.handleClickClose }
 
                                     } */}
 
-                      {/* </div> */}
-                    </Toolbar>
-                  </div>
-                </MuiThemeProvider>
-              </Card>
-
-            </div>
-          )}
+                    {/* </div> */}
+                  </Toolbar>
+                </div>
+              </MuiThemeProvider>
+            </Card>
+          </div>
+        )}
         <Popover
           id="addlabel-menu"
           open={this.state.labelMenu}
           anchorEl={this.state.labelAnchor}
           anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
+            vertical: "bottom",
+            horizontal: "center"
           }}
           transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
+            vertical: "top",
+            horizontal: "center"
           }}
           onClose={this.handleMenuClickAway}
         >
           <div id="labelnote_menu" style={{}}>
             Label Note
-                                </div>
+          </div>
           <MenuItem>
             <Toolbar id="createlabelnote_field">
               <div
@@ -896,16 +869,13 @@ class CreateNote extends Component {
             </Toolbar>
           </MenuItem>
           {label}
-
         </Popover>
       </div>
     );
-
   }
 }
 
 export default CreateNote;
-
 
 // const theme = createMuiTheme({
 //     overrides: {

@@ -63,6 +63,11 @@ var controller = {
       noteDetails,
       { headers: { jwt: token, "Content-type": "application/json " } }
     );
+  },
+  deletelabelfornote(id, id1) {
+    return axios.delete(`http://localhost:8080/note/delete/label/${id}`, {
+      headers: { id1: id1, jwt: token, "Content-type": "application/json " }
+    });
   }
 };
 export default controller;

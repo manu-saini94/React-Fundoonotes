@@ -13,6 +13,7 @@ import ArchiveMenu from "./ArchiveMenu";
 import TrashMenu from "./TrashMenu";
 import EditLabelsMenu from "./EditLabelsMenu";
 import LabelController from "../Controller/LabelController";
+import LabelMenu from "../Components/LabelMenu";
 
 class DashBoard extends PureComponent {
   constructor(props) {
@@ -26,15 +27,13 @@ class DashBoard extends PureComponent {
       archiveOpen: false,
       trashOpen: false,
       editlabelsOpen: false,
+      labelNoteOpen: false,
       openDialog: false,
       getNoteArr: [],
       getLabelArr: [],
+      labelName: ""
     };
   }
-
-  handleDialogClose = data => {
-    this.setState({ openDialog: false });
-  };
 
   handleDraweropen = () => {
     this.setState({ open: !this.state.open });
@@ -46,7 +45,8 @@ class DashBoard extends PureComponent {
       remindersOpen: false,
       archiveOpen: false,
       trashOpen: false,
-      editlabelsOpen: false
+      editlabelsOpen: false,
+      labelNoteOpen: false
     });
   };
   handleRemindersMenu = () => {
@@ -55,7 +55,8 @@ class DashBoard extends PureComponent {
       remindersOpen: true,
       archiveOpen: false,
       trashOpen: false,
-      editlabelsOpen: false
+      editlabelsOpen: false,
+      labelNoteOpen: false
     });
   };
 
@@ -65,7 +66,8 @@ class DashBoard extends PureComponent {
       remindersOpen: false,
       archiveOpen: true,
       trashOpen: false,
-      editlabelsOpen: false
+      editlabelsOpen: false,
+      labelNoteOpen: false
     });
   };
 
@@ -75,17 +77,30 @@ class DashBoard extends PureComponent {
       remindersOpen: false,
       archiveOpen: false,
       trashOpen: true,
-      editlabelsOpen: false
+      editlabelsOpen: false,
+      labelNoteOpen: false
     });
   };
 
   handleEditLabelsMenu = () => {
     this.setState({
-      editlabelsOpen: true,
-      openDialog: true
+      editlabelsOpen: !this.state.editlabelsOpen,
+      openDialog: !this.state.openDialog
     });
   };
 
+  handleLabelNoteMenu = data3 => {
+    this.setState({
+      notesOpen: false,
+      remindersOpen: false,
+      archiveOpen: false,
+      trashOpen: false,
+      editlabelsOpen: false,
+      labelNoteOpen: true,
+      labelName: data3
+    });
+    console.log("llllnamelllname :", this.state.labelName);
+  };
   componentDidMount() {
     this.getNote();
     this.getLabel();
@@ -103,9 +118,8 @@ class DashBoard extends PureComponent {
       this.setState({
         getLabelArr: res
       });
-
     });
-    console.log("cont : ", this.state.getLabelArr)
+    console.log("cont : ", this.state.getLabelArr);
   };
 
   // getLabelsForNote = async () => {
@@ -136,10 +150,15 @@ class DashBoard extends PureComponent {
                 handleArchiveMenu={this.handleArchiveMenu}
                 handleTrashMenu={this.handleTrashMenu}
                 handleEditLabelsMenu={this.handleEditLabelsMenu}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                labelNoteOpen={this.state.labelNoteOpen}
                 handleDialogOpen={this.handleDialogOpen}
                 show={this.state.open}
+                obj={this.state.getNoteArr}
+                getNote={this.getNote}
                 obj3={this.state.getLabelArr}
                 getLabel={this.getLabel}
+                getNoteLabelArr={this.getNoteLabelArr}
               />
             </div>
             <div>
@@ -161,14 +180,16 @@ class DashBoard extends PureComponent {
                 open={this.state.open}
               />
             </div>
+
             <div>
               <EditLabelsMenu
                 editlabelsOpen={this.state.editlabelsOpen}
                 open={this.state.open}
                 openDialog={this.state.openDialog}
-                handleDialogClose={this.handleDialogClose}
+                handleEditLabelsMenu={this.handleEditLabelsMenu}
                 obj2={this.state.getLabelArr}
                 getLabel={this.getLabel}
+                getNote={this.getNote}
               />
             </div>
             <div>
@@ -189,10 +210,10 @@ class DashBoard extends PureComponent {
             </div>
           </div>
         ) : (
-            <div>
-              <Problem />
-            </div>
-          )}
+          <div>
+            <Problem />
+          </div>
+        )}
       </div>
     );
   }

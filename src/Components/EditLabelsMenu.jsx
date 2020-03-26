@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 import {
   InputBase,
   MuiThemeProvider,
@@ -66,18 +66,18 @@ class EditLabelsMenu extends React.PureComponent {
 
     this.setState({ openSnack: false });
   };
-  handleDialogClickaway = (event, reason) => {
+  handleDialogClickaway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
-    this.setState({ openDialog: false });
+    this.props.handleEditLabelsMenu();
+    await this.setState({ openDialog: false });
   };
 
   onChangeLabelName = async event => {
     await this.setState({ labelName: event.target.value });
     console.log(this.state.labelName);
-  }
+  };
 
   handleDoneClick = async () => {
     if (this.state.labelName !== "") {
@@ -89,21 +89,16 @@ class EditLabelsMenu extends React.PureComponent {
         if (res.status === 200) {
           console.log("Successfully added label for user");
         }
-
       });
-
     }
-    await this.setState({ labelName: "" })
+    await this.setState({ labelName: "" });
     this.props.getLabel();
-
-  }
+    this.props.getNote();
+  };
 
   handleCancel = async () => {
-    console.log("bef", this.state.labelName)
-    await this.setState({ labelName: "" })
-    console.log("aft", this.state.labelName)
-
-  }
+    await this.setState({ labelName: "" });
+  };
 
   onCloseDialog = async () => {
     if (this.state.labelName !== "") {
@@ -115,20 +110,23 @@ class EditLabelsMenu extends React.PureComponent {
         if (res.status === 200) {
           console.log("Successfully added label for user");
         }
-
       });
-
     }
     this.props.getLabel();
-    this.props.handleDialogClose();
-  }
+    this.props.handleEditLabelsMenu();
+    this.props.getNote();
+  };
   render() {
-
-    console.log("array is :", this.state.obj2)
+    console.log("array is :", this.state.obj2);
     let getAllLabels = this.state.obj2.map(item2 => {
-
-      return <GetLabels getLabel={this.props.getLabel} data2={item2} key={item2.id} />;
-
+      return (
+        <GetLabels
+          getLabel={this.props.getLabel}
+          getNote={this.props.getNote}
+          data2={item2}
+          key={item2.id}
+        />
+      );
     });
 
     console.log(this.props.openDialog);
@@ -162,10 +160,7 @@ class EditLabelsMenu extends React.PureComponent {
               <MuiThemeProvider>
                 <div>
                   <Toolbar id="createlabel_field">
-                    <div
-                      id="outdiv_createnewlabel"
-
-                    >
+                    <div id="outdiv_createnewlabel">
                       <div className="cancel_labeltext">
                         <Tooltip
                           TransitionComponent={Fade}

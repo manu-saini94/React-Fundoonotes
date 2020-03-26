@@ -11,7 +11,8 @@ import {
   Menu,
   Dialog,
   ReactFragment,
-  Popover
+  Popover,
+  Chip
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -30,12 +31,15 @@ import CloseIcon from "@material-ui/icons/Close";
 import Fade from "@material-ui/core/Fade";
 import NoteController from "../Controller/NoteController";
 import LabelController from "../Controller/LabelController";
-
+import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
+import Input from "@material-ui/core/Input";
+import DoneIcon from "@material-ui/icons/Done";
 import Controller from "../Controller/UserController";
 import DialogCard from "../Components/DialogCard";
+import GetLabelsInNoteMenu from "../Components/GetLabelsInNoteMenu";
 
 const saveclose = "Save & Close";
-
+let array = [];
 class GetNotes extends PureComponent {
   constructor(props) {
     super(props);
@@ -53,9 +57,12 @@ class GetNotes extends PureComponent {
       openSnack: false,
       open: false,
       openDialog: false,
+      labelMenu: false,
       menu: false,
       labelAnchor: null,
       hoverMoreTooltip: false,
+      allLabels: this.props.data.labels,
+      obj3: this.props.obj3,
 
       manycolor: [
         { name: "default", colorCode: "#FDFEFE" },
@@ -85,45 +92,93 @@ class GetNotes extends PureComponent {
       isArchived: props.data.archived,
       isPinned: props.data.pinned,
       isTrashed: props.data.trashed,
-      color: props.data.color
+      color: props.data.color,
+      obj3: props.obj3,
+      allLabels: props.data.labels
     });
   }
   componentDidMount(props) {
-    this.getLabelsForNote();
+    // this.getLabelsForNote();
   }
 
-  getLabelsForNote = async () => {
-    let labelsfornote = await LabelController.getLabelsInsideNote(this.props.data.id).then(res => {
-      this.setState({
-        getNoteLabelArr: res
-      });
-      console.log("note labels are : ", this.state.getNoteLabelArr);
+  // getLabelsForNote = async () => {
+  //   let labelsfornote = await LabelController.getLabelsInsideNote(this.props.data.id).then(res => {
+  //     this.setState({
+  //       getNoteLabelArr: res
+  //     });
+  //     console.log("note labels are : ", this.state.getNoteLabelArr);
 
+  //   });
+  // }
+
+  handleLabel = async data => {
+    for (let index = 0; index < this.state.allLabels.length; index++) {
+      array.push(this.state.allLabels[index]);
+    }
+
+    array.push(data);
+    await this.setState({
+      allLabels: array,
+      labelpresent: true
     });
-  }
+    console.log(this.state.allLabels, "mojo jojo");
+  };
+  handleLabelRemove = async data => {
+    for (let index = 0; index < this.state.allLabels.length; index++) {
+      array.push(this.state.allLabels[index]);
+    }
+    for (let index = 0; index < array.length; index++) {
+      if (array[index].labelname === data.labelname) {
+        array.splice(index, 1);
+      }
+    }
+    // array.pop(data)
+    await this.setState({
+      allLabels: array
+    });
+    console.log(this.state.allLabels);
+    if (this.state.allLabels.length === 0) {
+      this.setState({ labelpresent: false });
+    }
+  };
+
+  handleLabelMenuOpen = () => {
+    this.setState({
+      labelMenu: true,
+      menu: false,
+      hoverMoreTooltip: true
+    });
+  };
 
   handleMenuClickAway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
     }
-
     await this.setState({
       menu: false,
       hoverMoreTooltip: false
     });
+  };
 
-  }
+  handleLabelMenuClickAway = async (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    await this.setState({
+      labelMenu: false,
+      hoverMoreTooltip: false
+    });
+  };
+
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(
-      res => {
-        if (res.status === 200) {
-          console.log("Note Deleted Successfully");
-        }
+    await NoteController.deletenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Note Deleted Successfully");
       }
-    );
+    });
     this.props.getNote();
-  }
+  };
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -134,8 +189,8 @@ class GetNotes extends PureComponent {
       menu: true,
       labelAnchor: event.currentTarget,
       hoverMoreTooltip: true
-    })
-  }
+    });
+  };
 
   handleClose = async (event, reason) => {
     if (reason === "clickaway") {
@@ -147,20 +202,18 @@ class GetNotes extends PureComponent {
   handleTooltipClose = async => {
     this.setState({
       openTooltip: false
-    })
-  }
+    });
+  };
   handleTooltipOpen = async => {
     this.setState({
       openTooltip: true
-
-    })
-  }
+    });
+  };
   onChangeTitle = event => {
     this.setState({
       title: event.target.value
     });
   };
-
 
   onChangeDescription = event => {
     this.setState({
@@ -257,6 +310,70 @@ class GetNotes extends PureComponent {
   };
 
   render() {
+    const label = this.state.obj3.map(item => {
+      if (this.state.allLabels.length !== 0) {
+        for (let i = 0; i < this.state.allLabels.length; i++) {
+          console.log(this.state.allLabels[i], "labels");
+          // alert(item.labelname);
+          let bool = this.state.allLabels[i].labelname === item.labelname;
+          console.log(bool);
+          if (bool) {
+            return (
+              <GetLabelsInNoteMenu
+                handleLabel={this.handleLabel}
+                handleLabelRemove={this.handleLabelRemove}
+                getLabel={this.props.getLabel}
+                getNote={this.props.getNote}
+                data={this.props.data}
+                item={item}
+                allLabels={this.state.allLabels}
+                tick={true}
+              />
+            );
+          }
+          if (i === this.state.allLabels.length - 1) {
+            return (
+              <GetLabelsInNoteMenu
+                handleLabel={this.handleLabel}
+                handleLabelRemove={this.handleLabelRemove}
+                getLabel={this.props.getLabel}
+                getNote={this.props.getNote}
+                data={this.props.data}
+                item={item}
+                allLabels={this.state.allLabels}
+                tick={false}
+              />
+            );
+          }
+        }
+      } else {
+        return (
+          <GetLabelsInNoteMenu
+            handleLabel={this.handleLabel}
+            handleLabelRemove={this.handleLabelRemove}
+            getLabel={this.props.getLabel}
+            getNote={this.props.getNote}
+            data={this.props.data}
+            item={item}
+            allLabels={this.state.allLabels}
+            tick={false}
+          />
+        );
+      }
+    });
+    let displaylabels;
+    if (this.state.allLabels.length !== 0) {
+      console.log(this.state.allLabels, "all Labels");
+      displaylabels = this.state.allLabels.map(el => {
+        console.log(el.labelname);
+        return (
+          <div>
+            <Chip label={el.labelname} />
+          </div>
+        );
+      });
+    }
+
     let item = {
       title: this.state.title,
       description: this.state.description,
@@ -319,7 +436,8 @@ class GetNotes extends PureComponent {
                     <img
                       style={{
                         height: "0.5cm",
-                        width: "0.5cm"
+                        width: "0.5cm",
+                        opacity: "0.65"
                       }}
                       src={Pin}
                       onClick={this.handleIsPinned}
@@ -328,26 +446,27 @@ class GetNotes extends PureComponent {
                 </Tooltip>
               </div>
             ) : (
-                <div className={"pin_getnotes"}>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Unpin"
-                    arrow
-                  >
-                    <IconButton aria-label="Unpin">
-                      <img
-                        style={{
-                          height: "0.5cm",
-                          width: "0.5cm"
-                        }}
-                        src={Unpin}
-                        onClick={this.handleIsUnpinned}
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-              )}
+              <div className={"pin_getnotes"}>
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Unpin"
+                  arrow
+                >
+                  <IconButton aria-label="Unpin">
+                    <img
+                      style={{
+                        height: "0.5cm",
+                        width: "0.5cm",
+                        opacity: "0.65"
+                      }}
+                      src={Unpin}
+                      onClick={this.handleIsUnpinned}
+                    />
+                  </IconButton>
+                </Tooltip>
+              </div>
+            )}
           </div>
 
           <InputBase
@@ -366,10 +485,10 @@ class GetNotes extends PureComponent {
             onClick={this.handleDialogOpen}
           />
         </div>
-
+        <Toolbar id="label_chip">{displaylabels}</Toolbar>
         <MuiThemeProvider>
           <div>
-            <Toolbar >
+            <Toolbar>
               <div className="buttons" style={{ display: "flex" }}>
                 <div style={{ marginLeft: "9px" }}>
                   <Tooltip
@@ -401,7 +520,6 @@ class GetNotes extends PureComponent {
                     TransitionProps={{ timeout: 100 }}
                     title="Color"
                     placement="right"
-
                     onClose={this.handleTooltipClose}
                     onOpen={this.handleTooltipOpen}
                     open={this.state.openTooltip}
@@ -487,11 +605,13 @@ class GetNotes extends PureComponent {
                     TransitionProps={{ timeout: 100 }}
                     title="More"
                     disableHoverListener={this.state.hoverMoreTooltip}
-
                     arrow
                   >
                     <IconButton aria-label="More">
-                      <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
+                      <MoreVertTwoToneIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.changeLabel}
+                      />
                       <div>
                         <Popover
                           id="label-menu"
@@ -507,7 +627,7 @@ class GetNotes extends PureComponent {
                             horizontal: "center"
                           }}
                         >
-                          <MenuItem onClick={this.MenuClose}>
+                          <MenuItem onClick={this.handleLabelMenuOpen}>
                             Add label
                           </MenuItem>
                           <MenuItem onClick={this.handleDeleteNote}>
@@ -528,7 +648,72 @@ class GetNotes extends PureComponent {
             </Toolbar>
           </div>
         </MuiThemeProvider>
-
+        <Popover
+          id="addlabel-menu"
+          open={this.state.labelMenu}
+          anchorEl={this.state.labelAnchor}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          onClose={this.handleLabelMenuClickAway}
+        >
+          <div id="labelnote_menu" style={{}}>
+            Label Note
+          </div>
+          <MenuItem>
+            <Toolbar id="createlabelnote_field">
+              <div
+                className="buttons"
+                style={{ display: "flex", marginLeft: "1px" }}
+              >
+                <div className="cancel_labeltext">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Cancel"
+                    placement="left"
+                    arrow
+                  >
+                    <IconButton aria-label="Cancel">
+                      <CloseOutlinedIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.handleCancel}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+                <div className="input_createlabelnote">
+                  <Input
+                    placeholder="Add new label"
+                    inputProps={{ "aria-label": "description" }}
+                    spellCheck={false}
+                    value={this.state.labelName}
+                    onChange={this.onChangeLabelName}
+                  />
+                </div>
+                <div className="done_icon">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Create label"
+                    placement="right"
+                    arrow
+                  >
+                    <IconButton aria-label="Create label">
+                      <DoneIcon onClick={this.handleDoneClick} />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              </div>
+            </Toolbar>
+          </MenuItem>
+          {label}
+        </Popover>
         <DialogCard
           openDialog={this.state.openDialog}
           handleDialogClose={this.handleDialogClose}

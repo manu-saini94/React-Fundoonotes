@@ -79,7 +79,7 @@
   flex-wrap: nowrap;
 } */
 #card_decor2 {
-  width: fit-content;
+  width: 280px;
   margin: 0px 0px 0px 0px;
   height: fit-content;
   margin: 2%;
@@ -262,4 +262,12 @@
 #done_editlabels {
   display: flex;
   justify-content: flex-end;
+}
+#label_chip {
+  display: flex;
+  flex-direction: row;
+  height: auto;
+  width: fit-content;
+  flex-wrap: wrap;
+  margin-left: 0px;
 }

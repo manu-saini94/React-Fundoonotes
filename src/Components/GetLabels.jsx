@@ -10,7 +10,8 @@ import {
   Menu,
   Dialog,
   ReactFragment,
-  Card, CssTextField
+  Card,
+  CssTextField
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -58,10 +59,9 @@ class GetLabels extends PureComponent {
     });
   }
 
-  onChangeRename = async () => {
+  onChangeRename = async event => {
     await this.setState({ labelName: event.target.value });
-    console.log(this.state.labelName);
-  }
+  };
 
   handleDeleteIcon = async () => {
     var labelDetails = {
@@ -72,19 +72,20 @@ class GetLabels extends PureComponent {
       if (res.status === 200) {
         console.log("Successfully deleted label for user");
       }
-
     });
 
     this.props.getLabel();
-  }
+    this.props.getNote();
+  };
 
   handleEditIcon = async () => {
     await this.setState({
       iconChange: true,
       autofocusField: true,
       baseColor: "lightgrey"
-    })
-  }
+    });
+  };
+
   handleDoneIcon = async () => {
     if (this.state.labelName !== "") {
       var labelDetails = {
@@ -95,36 +96,31 @@ class GetLabels extends PureComponent {
         if (res.status === 200) {
           console.log("Successfully renamed label for user");
         }
-
       });
 
       await this.setState({
         iconChange: false,
         autofocusField: false,
         baseColor: "#FDFEFE"
-      })
+      });
       this.props.getLabel();
-
-    }
-    else {
+      this.props.getNote();
+    } else {
       await this.setState({
         iconChange: false,
         autofocusField: false,
         baseColor: "#FDFEFE"
-      })
+      });
     }
-  }
+  };
 
   render() {
-
-
     return (
       <div>
         <MuiThemeProvider>
           <div>
-            <Toolbar id="createlabel_field" >
-
-              <Grid item xs={2} style={{ marginLeft: '12px' }}>
+            <Toolbar id="createlabel_field">
+              <Grid item xs={2} style={{ marginLeft: "12px" }}>
                 <Tooltip
                   TransitionComponent={Fade}
                   TransitionProps={{ timeout: 100 }}
@@ -137,27 +133,33 @@ class GetLabels extends PureComponent {
                   </IconButton>
                 </Tooltip>
               </Grid>
-              <Grid item xs={6} style={{
-                marginLeft: '-37px',
-                marginTop: '21px',
-                backgroundColor: this.state.baseColor,
-                borderRadius: '2px'
-
-              }}>
-
+              <Grid
+                item
+                xs={6}
+                style={{
+                  marginLeft: "-37px",
+                  marginTop: "21px",
+                  backgroundColor: this.state.baseColor,
+                  borderRadius: "2px"
+                }}
+              >
                 <InputBase
                   disabled={!this.state.autofocusField}
                   id="inputBase_margin"
                   autofocusField={this.state.autofocusField}
                   spellCheck={false}
-                  style={{ fontWeight: 'bold', width: '143px', color: '#616161' }}
+                  style={{
+                    fontWeight: "bold",
+                    width: "143px",
+                    color: "#616161"
+                  }}
                   defaultValue={this.state.labelName}
-                  inputProps={{ 'aria-label': 'naked' }}
+                  inputProps={{ "aria-label": "naked" }}
                   onChange={this.onChangeRename}
                 />
               </Grid>
               <Grid item xs={2}>
-                <div style={{ marginLeft: '23px' }}>
+                <div style={{ marginLeft: "23px" }}>
                   <Tooltip
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
@@ -175,7 +177,7 @@ class GetLabels extends PureComponent {
                 </div>
               </Grid>
               <Grid item xs={2}>
-                <div style={{ marginLeft: '25px' }}>
+                <div style={{ marginLeft: "25px" }}>
                   {this.state.iconChange ? (
                     <Tooltip
                       TransitionComponent={Fade}
@@ -189,19 +191,18 @@ class GetLabels extends PureComponent {
                       </IconButton>
                     </Tooltip>
                   ) : (
-                      <Tooltip
-                        TransitionComponent={Fade}
-                        TransitionProps={{ timeout: 100 }}
-                        placement="right"
-                        title="Rename label"
-                        arrow
-                      >
-                        <IconButton aria-label="Cancel">
-                          <EditTwoToneIcon onClick={this.handleEditIcon} />
-                        </IconButton>
-                      </Tooltip>
-                    )
-                  }
+                    <Tooltip
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 100 }}
+                      placement="right"
+                      title="Rename label"
+                      arrow
+                    >
+                      <IconButton aria-label="Cancel">
+                        <EditTwoToneIcon onClick={this.handleEditIcon} />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </div>
               </Grid>
             </Toolbar>

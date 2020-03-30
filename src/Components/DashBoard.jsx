@@ -180,7 +180,17 @@ class DashBoard extends PureComponent {
                 open={this.state.open}
               />
             </div>
-
+            <div>
+              <LabelMenu
+                obj={this.state.getNoteArr}
+                labelName={this.state.labelName}
+                labelNoteOpen={this.state.labelNoteOpen}
+                getNote={this.getNote}
+                getLabel={this.getLabel}
+                obj3={this.state.getLabelArr}
+                open={this.state.open}
+              />
+            </div>
             <div>
               <EditLabelsMenu
                 editlabelsOpen={this.state.editlabelsOpen}

@@ -19,7 +19,7 @@ import { MuiThemeProvider, createMuiTheme } from "@material-ui/core";
 import CreateLabelNote from "../Components/CreateLabelNote";
 import GetNotes from "../Components/GetNotes";
 
-const drawerWidth = 244;
+const drawerWidth = 265;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -46,8 +46,8 @@ const useStyles = makeStyles(theme => ({
     flexShrink: 0
   },
   drawerPaper: {
-    top: "10vh",
-    height: "90vh",
+    top: "8.9vh",
+    height: "91.1vh",
     width: drawerWidth
   },
   drawerHeader: {

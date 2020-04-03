@@ -26,6 +26,7 @@ import clsx from "clsx";
 import NotesIcon from "@material-ui/icons/Notes";
 import NotificationsOutlinedIcon from "@material-ui/icons/NotificationsOutlined";
 import LabelOutlinedIcon from "@material-ui/icons/LabelOutlined";
+import Card from "@material-ui/core/Card";
 
 const drawerWidth = 244;
 
@@ -168,11 +169,6 @@ export default function PrimarySearchAppBar(props) {
     handleMobileMenuClose();
   };
 
-  const handleSignout = () => {
-    localStorage.removeItem("logintoken");
-    props.history.push("/login");
-  };
-
   const handleMobileMenuOpen = event => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -188,7 +184,7 @@ export default function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleSignout}>Sign Out</MenuItem>
+      <MenuItem onClick={props.handleSignout}>Sign Out</MenuItem>
     </Menu>
   );
 
@@ -234,15 +230,12 @@ export default function PrimarySearchAppBar(props) {
   );
 
   return (
-    <Grid>
-      <div className={classes.root}>
-        <AppBar position="fixed" className={classes.palette}>
-          <Toolbar>
-            <Grid item xs={1} style={{ marginTop: "-18px" }}>
+    <div className={classes.root}>
+      <AppBar position="fixed" className={classes.palette}>
+        <Toolbar>
+          <Grid container spacing={1}>
+            <Grid item xs={0}>
               <IconButton
-                edge="start"
-                className={classes.menuButton}
-                color="inherit"
                 aria-label="open drawer"
                 className={clsx(classes.menuButton, open)}
                 onClick={props.handleDraweropen}
@@ -250,14 +243,7 @@ export default function PrimarySearchAppBar(props) {
                 <MenuIcon style={{ color: "#424242" }} />
               </IconButton>
             </Grid>
-            <Grid
-              item
-              xs={1}
-              style={{
-                marginLeft: "-87px",
-                marginTop: "6px"
-              }}
-            >
+            <Grid item xs={0}>
               <div>
                 <img
                   src={
@@ -267,12 +253,7 @@ export default function PrimarySearchAppBar(props) {
                 />
               </div>
             </Grid>
-            <Grid
-              style={{
-                marginLeft: "-28px",
-                marginBottom: "-4px"
-              }}
-            >
+            <Grid item xs={0}>
               <Typography
                 style={{ color: "#616161", fontSize: "150%" }}
                 className={classes.title}
@@ -282,56 +263,56 @@ export default function PrimarySearchAppBar(props) {
                 fundoo
               </Typography>
             </Grid>
-            <Grid style={{ marginLeft: "29px" }}>
-              <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                  <SearchIcon style={{ paddingRight: "40%" }} />
-                </div>
-                <InputBase
-                  placeholder="Search…"
-                  classes={{
-                    root: classes.inputRoot,
-                    input: classes.inputInput
-                  }}
-                  inputProps={{ "aria-label": "search" }}
+            <Grid item xs={8}>
+              <div className="note-button">
+                <Card id="card_decorapp">
+                  <div className="search-align">
+                    <div className="search_icon">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </div>
+                    <div className="search_input">
+                      <InputBase
+                        id="inputbase-search"
+                        inputProps={{ "aria-label": "description" }}
+                        spellCheck={false}
+                        // value={this.state.labelName}
+                        // onChange={this.onChangeLabelName}
+                        placeholder="Search"
+                      />
+                    </div>
+                  </div>
+                </Card>
+              </div>
+            </Grid>
+            <Grid item xs={2}>
+              <IconButton>
+                <RefreshIcon
+                  style={{ color: "#424242", paddingBottom: "65%" }}
                 />
-              </div>
+              </IconButton>
+              <IconButton>
+                <SettingsIcon
+                  style={{ color: "#424242", paddingBottom: "65%" }}
+                />
+              </IconButton>
+              <IconButton
+                edge="end"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+              >
+                <AccountCircle
+                  style={{ color: "#424242", paddingBottom: "65%" }}
+                />
+              </IconButton>
             </Grid>
-            <Grid style={{ marginLeft: "595px" }}>
-              <div className={classes.grow} />
-              <div className={classes.sectionDesktop}>
-                <IconButton aria-label="show 4 new mails" color="inherit">
-                  <RefreshIcon
-                    style={{ color: "#424242", paddingBottom: "65%" }}
-                  />
-                </IconButton>
-                <IconButton
-                  aria-label="show 17 new notifications"
-                  color="inherit"
-                >
-                  <SettingsIcon
-                    style={{ color: "#424242", paddingBottom: "65%" }}
-                  />
-                </IconButton>
-                <IconButton
-                  edge="end"
-                  aria-label="account of current user"
-                  aria-controls={menuId}
-                  aria-haspopup="true"
-                  onClick={handleProfileMenuOpen}
-                  color="inherit"
-                >
-                  <AccountCircle
-                    style={{ color: "#424242", paddingBottom: "65%" }}
-                  />
-                </IconButton>
-              </div>
-            </Grid>
-          </Toolbar>
-        </AppBar>
-        {renderMobileMenu}
-        {renderMenu}
-      </div>
-    </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+      {renderMobileMenu}
+      {renderMenu}
+    </div>
   );
 }

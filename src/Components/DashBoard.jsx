@@ -105,6 +105,11 @@ class DashBoard extends PureComponent {
     this.getNote();
     this.getLabel();
   }
+
+  handleSignout = async () => {
+    localStorage.removeItem("logintoken");
+    this.props.history.push("/login");
+  };
   getNote = async () => {
     let data = await Controller.getNotes().then(res => {
       this.setState({
@@ -140,7 +145,10 @@ class DashBoard extends PureComponent {
         {this.state.jwt === localStorage.getItem("logintoken") ? (
           <div>
             <div>
-              <AppNavBar handleDraweropen={this.handleDraweropen} />
+              <AppNavBar
+                handleDraweropen={this.handleDraweropen}
+                handleSignout={this.handleSignout}
+              />
             </div>
 
             <div style={{ display: "flex", background: "" }}>

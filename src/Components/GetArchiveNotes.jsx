@@ -43,7 +43,7 @@ class GetArchiveNotes extends PureComponent {
       isTrashed: this.props.data.trashed,
       color: this.props.data.color,
       hoverMoreTooltip: false,
-
+      hoverColorTooltip: false,
       colorAnchor: null,
       openSnack: false,
       open: false,
@@ -52,7 +52,6 @@ class GetArchiveNotes extends PureComponent {
       labelAnchor: null,
 
       manycolor: [
-        { name: "default", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
         { name: "Cyan", colorCode: "#80deea" },
         { name: "Blue", colorCode: "#2196f3" },
@@ -63,7 +62,8 @@ class GetArchiveNotes extends PureComponent {
         { name: "Lime", colorCode: "#e6ee9c" },
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
-        { name: "Brown", colorCode: "#bcaaa4" }
+        { name: "Brown", colorCode: "#bcaaa4" },
+        { name: "White", colorCode: "#FDFEFE" }
       ],
 
       defaultColour: "#FDFEFE",
@@ -153,13 +153,15 @@ class GetArchiveNotes extends PureComponent {
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
-      colorAnchor: null
+      colorAnchor: null,
+      hoverColorTooltip: false
     });
   };
   changeColor = event => {
     this.setState({
       colorOpen: true,
-      colorAnchor: event.currentTarget
+      colorAnchor: event.currentTarget,
+      hoverColorTooltip: true
     });
   };
   changeNoteColor = async event => {
@@ -238,7 +240,10 @@ class GetArchiveNotes extends PureComponent {
             title={color.name}
           >
             <IconButton
-              style={{ background: color.colorCode }}
+              style={{
+                background: color.colorCode,
+                margin: "2%"
+              }}
               value={color.colorCode}
               onClick={this.changeNoteColor}
             />
@@ -333,156 +338,140 @@ class GetArchiveNotes extends PureComponent {
 
         <MuiThemeProvider>
           <div>
-            <Toolbar>
-              <div className="buttons" style={{ display: "flex" }}>
-                <div style={{ marginLeft: "9px" }}>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Reminder"
-                    arrow
-                  >
-                    <IconButton aria-label="Reminder" className="iconButtons">
-                      <AddAlertIcon style={{ fontSize: "20px" }} />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Collaborator"
-                    arrow
-                  >
-                    <IconButton aria-label="Collaborator">
-                      <PersonAddIcon style={{ fontSize: "20px" }} />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Color"
-                    placement="right"
-                    onClose={this.handleTooltipClose}
-                    onOpen={this.handleTooltipOpen}
-                    open={this.state.openTooltip}
-                    arrow
-                  >
-                    <IconButton aria-label="Color">
-                      <PaletteOutlinedIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.changeColor}
-                      />
+            <Toolbar id="note-buttons">
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Reminder"
+                  arrow
+                >
+                  <IconButton aria-label="Reminder" className="iconButtons">
+                    <AddAlertIcon style={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Collaborator"
+                  arrow
+                >
+                  <IconButton aria-label="Collaborator">
+                    <PersonAddIcon style={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Color"
+                  disableHoverListener={this.state.hoverColorTooltip}
+                  arrow
+                >
+                  <IconButton aria-label="Color">
+                    <PaletteOutlinedIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.changeColor}
+                    />
+                    <Menu
+                      id="simple-menu"
+                      open={this.state.colorOpen}
+                      anchorEl={this.state.colorAnchor}
+                      onClose={this.closeColorBox}
+                      transformOrigin={{
+                        vertical: "right",
+                        horizontal: "right"
+                      }}
+                    >
+                      <div className="color-align">{color1}</div>
+                    </Menu>
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Unarchive"
+                  arrow
+                >
+                  <IconButton aria-label="UnArchive">
+                    <UnarchiveOutlinedIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.handleIsArchived}
+                    />
+                    <Snackbar
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center"
+                      }}
+                      open={this.state.openSnack}
+                      autoHideDuration={4000}
+                      onClose={this.handleClose}
+                      message={this.state.archivemsg}
+                      action={
+                        <React.Fragment>
+                          <div
+                            style={{
+                              paddingBottom: "17px",
+                              marginRight: "-25px"
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              aria-label="close"
+                              color="inherit"
+                              onClick={this.handleClose}
+                            >
+                              <CloseIcon fontSize="small" />
+                            </IconButton>
+                          </div>
+                        </React.Fragment>
+                      }
+                    />
+                  </IconButton>
+                </Tooltip>
+              </div>
+
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="More"
+                  disableHoverListener={this.state.hoverMoreTooltip}
+                  arrow
+                >
+                  <IconButton aria-label="More">
+                    <MoreVertTwoToneIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.changeLabel}
+                    />
+                    <div>
                       <Menu
-                        id="simple-menu"
-                        open={this.state.colorOpen}
-                        anchorEl={this.state.colorAnchor}
-                        onClose={this.closeColorBox}
-                        transformOrigin={{
-                          vertical: "right",
-                          horizontal: "right"
-                        }}
-                        className="colormenu"
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            marginBottom: "15px",
-                            marginLeft: "58px"
-                          }}
-                        >
-                          {color1}
-                        </div>
-                      </Menu>
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Unarchive"
-                    arrow
-                  >
-                    <IconButton aria-label="UnArchive">
-                      <UnarchiveOutlinedIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.handleIsArchived}
-                      />
-                      <Snackbar
+                        id="label-menu"
+                        open={this.state.menu}
+                        anchorEl={this.state.labelAnchor}
                         anchorOrigin={{
                           vertical: "bottom",
                           horizontal: "center"
                         }}
-                        open={this.state.openSnack}
-                        autoHideDuration={4000}
-                        onClose={this.handleClose}
-                        message={this.state.archivemsg}
-                        action={
-                          <React.Fragment>
-                            <div
-                              style={{
-                                paddingBottom: "17px",
-                                marginRight: "-25px"
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                aria-label="close"
-                                color="inherit"
-                                onClick={this.handleClose}
-                              >
-                                <CloseIcon fontSize="small" />
-                              </IconButton>
-                            </div>
-                          </React.Fragment>
-                        }
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-
-                <div className="menu_getnotes">
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="More"
-                    disableHoverListener={this.state.hoverMoreTooltip}
-                    arrow
-                  >
-                    <IconButton aria-label="More">
-                      <MoreVertTwoToneIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.changeLabel}
-                      />
-                      <div>
-                        <Menu
-                          id="label-menu"
-                          open={this.state.menu}
-                          anchorEl={this.state.labelAnchor}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "center"
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "center"
-                          }}
-                          onClick={this.handleMenuClickAway}
-                        >
-                          <MenuItem onClick={this.MenuClose}>
-                            Add label
-                          </MenuItem>
-                          <MenuItem onClick={this.handleDeleteNote}>
-                            Delete note
-                          </MenuItem>
-                        </Menu>
-                      </div>
-                    </IconButton>
-                  </Tooltip>
-                </div>
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center"
+                        }}
+                        onClick={this.handleMenuClickAway}
+                      >
+                        <MenuItem onClick={this.MenuClose}>Add label</MenuItem>
+                        <MenuItem onClick={this.handleDeleteNote}>
+                          Delete note
+                        </MenuItem>
+                      </Menu>
+                    </div>
+                  </IconButton>
+                </Tooltip>
               </div>
               {/* <div className="CloseButton"> */}
               {/* onClick={this.handleClickClose }

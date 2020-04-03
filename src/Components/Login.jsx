@@ -90,7 +90,7 @@ class Login extends Component {
         let token = res.data.object;
         console.log(token, "heello");
         localStorage.setItem("logintoken", token);
-        this.props.history.push("/dashboard/" + res.data.object);
+        this.props.history.push("/dashboard/" + token);
         this.setState({
           error: true,
           message: "Login success"

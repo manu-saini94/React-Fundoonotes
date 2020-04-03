@@ -52,8 +52,9 @@ class DialogCardArchive extends Component {
       open: false,
       menu: false,
       hoverMoreTooltip: false,
+      hoverColorTooltip: false,
+
       manycolor: [
-        { name: "default", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
         { name: "Cyan", colorCode: "#80deea" },
         { name: "Blue", colorCode: "#2196f3" },
@@ -64,7 +65,8 @@ class DialogCardArchive extends Component {
         { name: "Lime", colorCode: "#e6ee9c" },
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
-        { name: "Brown", colorCode: "#bcaaa4" }
+        { name: "Brown", colorCode: "#bcaaa4" },
+        { name: "White", colorCode: "#FDFEFE" }
       ],
 
       defaultColour: "#FDFEFE",
@@ -94,8 +96,7 @@ class DialogCardArchive extends Component {
       menu: false,
       hoverMoreTooltip: false
     });
-
-  }
+  };
   handleDialogClickaway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -125,15 +126,13 @@ class DialogCardArchive extends Component {
   };
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(
-      res => {
-        if (res.status === 200) {
-          console.log("Note Deleted Successfully");
-        }
+    await NoteController.deletenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Note Deleted Successfully");
       }
-    );
+    });
     this.props.getNote();
-  }
+  };
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -144,8 +143,8 @@ class DialogCardArchive extends Component {
       menu: true,
       labelAnchor: event.currentTarget,
       hoverMoreTooltip: true
-    })
-  }
+    });
+  };
   handleClose = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -168,13 +167,15 @@ class DialogCardArchive extends Component {
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
-      colorAnchor: null
+      colorAnchor: null,
+      hoverColorTooltip: false
     });
   };
   changeColor = event => {
     this.setState({
       colorOpen: true,
-      colorAnchor: event.currentTarget
+      colorAnchor: event.currentTarget,
+      hoverColorTooltip: true
     });
   };
   changeNoteColor = async event => {
@@ -292,7 +293,10 @@ class DialogCardArchive extends Component {
             title={color.name}
           >
             <IconButton
-              style={{ background: color.colorCode }}
+              style={{
+                background: color.colorCode,
+                margin: "2%"
+              }}
               value={color.colorCode}
               onClick={this.changeNoteColor}
             />
@@ -356,30 +360,30 @@ class DialogCardArchive extends Component {
                       </Tooltip>
                     </div>
                   ) : (
-                      <div
-                        style={{
-                          marginRight: "-21px"
-                        }}
+                    <div
+                      style={{
+                        marginRight: "-21px"
+                      }}
+                    >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title="Unpin"
+                        arrow
                       >
-                        <Tooltip
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 100 }}
-                          title="Unpin"
-                          arrow
-                        >
-                          <IconButton aria-label="Unpin">
-                            <img
-                              style={{
-                                height: "0.54cm",
-                                width: "0.54cm"
-                              }}
-                              src={Unpin}
-                              onClick={this.handleIsUnpinned}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    )}
+                        <IconButton aria-label="Unpin">
+                          <img
+                            style={{
+                              height: "0.54cm",
+                              width: "0.54cm"
+                            }}
+                            src={Unpin}
+                            onClick={this.handleIsUnpinned}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
 
                 <InputBase
@@ -479,6 +483,7 @@ class DialogCardArchive extends Component {
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="Color"
+                          disableHoverListener={this.state.hoverColorTooltip}
                           arrow
                         >
                           <IconButton aria-label="Color">
@@ -495,33 +500,26 @@ class DialogCardArchive extends Component {
                                 vertical: "right",
                                 horizontal: "right"
                               }}
-                              className="colormenu"
                             >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  marginBottom: "15px",
-                                  marginLeft: "58px"
-                                }}
-                              >
-                                {color1}
-                              </div>
+                              <div className="color-align">{color1}</div>
                             </Menu>
                           </IconButton>
                         </Tooltip>
                       </div>
 
-                      <div >
+                      <div>
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="More"
                           disableHoverListener={this.state.hoverMoreTooltip}
-
                           arrow
                         >
                           <IconButton aria-label="More">
-                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
+                            <MoreVertTwoToneIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeLabel}
+                            />
                             <div>
                               <Popover
                                 id="label-menu"
@@ -539,10 +537,10 @@ class DialogCardArchive extends Component {
                               >
                                 <MenuItem onClick={this.MenuClose}>
                                   Add label
-                          </MenuItem>
+                                </MenuItem>
                                 <MenuItem onClick={this.handleDeleteNote}>
                                   Delete note
-                          </MenuItem>
+                                </MenuItem>
                               </Popover>
                             </div>
                           </IconButton>

@@ -7,9 +7,20 @@
 .colorflex {
   display: flex;
 }
-.colormenu {
-  margin-left: 46px;
-  margin-bottom: 14px;
+
+.search_input {
+  margin-left: -41px;
+  margin-top: 2px;
+}
+.search_icon {
+  margin-left: 34px;
+  padding-top: -16px;
+  margin-top: -8.5px;
+}
+.search-align {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 .shift-true {
   display: flex;
@@ -17,7 +28,14 @@
   margin-left: 20%;
   transition: 0.15s;
 }
-
+#card_decorapp {
+  width: 700px;
+  height: 50px;
+  border-radius: 12px;
+  margin-left: -19%;
+  margin-top: 7px;
+  background-color: #fafafa;
+}
 .shift-false {
   display: flex;
   margin-left: 11%;
@@ -68,7 +86,6 @@
   height: auto;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 32px;
   margin-left: 40px;
 }
 /* .notes_align {
@@ -78,6 +95,29 @@
   flex-direction: row;
   flex-wrap: nowrap;
 } */
+#note-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-left: 9px;
+  margin-bottom: 3px;
+  margin-top: -13px;
+}
+#tooltip-style {
+  margin: 5px;
+}
+#pin-inputbase {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 10px;
+}
+#pin-inputbase-getnotes {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding-left: 21px;
+}
 #card_decor2 {
   width: 280px;
   margin: 0px 0px 0px 0px;
@@ -85,6 +125,29 @@
   margin: 2%;
   border-radius: 16px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#close_button {
+  display: flex;
+  flex-direction: row;
+  margin-left: 54%;
+  margin-top: -2%;
+}
+#inputbase-search {
+  font-weight: bold;
+  color: #616161;
+  padding-left: 11px;
+  padding-top: 14px;
+  font-size: 18px;
+}
+.inputbase_appbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+.inputbase_div {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 #card_decor3 {
   width: fit-content;
@@ -94,7 +157,14 @@
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 #card_decor1 {
-  width: 400px;
+  width: 600px;
+  margin: 0px 0px 0px 0px;
+  height: 50px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#card_decor4 {
+  width: 600px;
   margin: 0px 0px 0px 0px;
   height: fit-content;
   border-radius: 12px;
@@ -103,7 +173,7 @@
 /* #card_decordialog {
  
 } */
-.pin_getnotes {
+/* .pin_getnotes {
   margin-left: 0px;
   padding-left: 1px;
   margin-right: -43px;
@@ -111,7 +181,7 @@
   padding-top: 0px;
   padding-bottom: 0px;
   padding-right: 0px;
-}
+} */
 .menu_getnotes {
   padding-left: 52px;
   margin-right: -49px;
@@ -167,6 +237,13 @@
 .empty_trash {
   color: "blue";
 }
+.color-align {
+  width: "140px";
+  height: "fit-content";
+  display: "flex";
+  flex-direction: "row";
+  flex-wrap: "wrap";
+}
 #createLabel_toolbar {
   width: fit-content;
   margin: 0px 0px 0px 0px;
@@ -206,18 +283,47 @@
 }
 #createlabelnote_field {
   min-height: 58px;
-  margin-top: -22px;
+  margin-top: -10px;
   margin-bottom: -3px;
   margin-right: -17px;
+}
+#style-inpbase {
+  font-weight: bolder;
+  color: #616161;
+}
+#inputbase {
+  padding-top: 4.5%;
+  font-weight: bolder;
+  font-size: larger;
+  width: fit-content;
+  height: fit-content;
+  padding-left: 6%;
+  padding-bottom: 13%;
 }
 #inputBase_margin {
   margin-left: 3px;
 }
 /* .label_list_align {
 } */
+.chip-style {
+  padding-right: 2px;
+  padding-bottom: 3px;
+}
+#color-icon {
+  margin: "2%";
+}
+.color-align {
+  width: 140px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  padding-left: 37px;
+  padding-bottom: 13px;
+}
 #simple-menu {
-  top: 334px;
-  left: 171px;
+  width: 170px;
+  height: auto;
 }
 #addlabel-menu {
   top: 215px;
@@ -269,5 +375,5 @@
   height: auto;
   width: fit-content;
   flex-wrap: wrap;
-  margin-left: 0px;
+  margin-left: -6px;
 }

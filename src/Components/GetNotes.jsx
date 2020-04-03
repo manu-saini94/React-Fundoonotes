@@ -12,8 +12,10 @@ import {
   Dialog,
   ReactFragment,
   Popover,
-  Chip
+  Chip,
+  Avatar
 } from "@material-ui/core";
+import CancelTwoToneIcon from "@material-ui/icons/CancelTwoTone";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -63,9 +65,10 @@ class GetNotes extends PureComponent {
       hoverMoreTooltip: false,
       allLabels: this.props.data.labels,
       obj3: this.props.obj3,
+      hoverColorTooltip: false,
+      labelName: "",
 
       manycolor: [
-        { name: "default", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
         { name: "Cyan", colorCode: "#80deea" },
         { name: "Blue", colorCode: "#2196f3" },
@@ -76,7 +79,8 @@ class GetNotes extends PureComponent {
         { name: "Lime", colorCode: "#e6ee9c" },
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
-        { name: "Brown", colorCode: "#bcaaa4" }
+        { name: "Brown", colorCode: "#bcaaa4" },
+        { name: "White", colorCode: "#FDFEFE" }
       ],
 
       defaultColour: "#FDFEFE",
@@ -97,19 +101,7 @@ class GetNotes extends PureComponent {
       allLabels: props.data.labels
     });
   }
-  componentDidMount(props) {
-    // this.getLabelsForNote();
-  }
-
-  // getLabelsForNote = async () => {
-  //   let labelsfornote = await LabelController.getLabelsInsideNote(this.props.data.id).then(res => {
-  //     this.setState({
-  //       getNoteLabelArr: res
-  //     });
-  //     console.log("note labels are : ", this.state.getNoteLabelArr);
-
-  //   });
-  // }
+  componentDidMount(props) {}
 
   handleLabel = async data => {
     for (let index = 0; index < this.state.allLabels.length; index++) {
@@ -121,7 +113,6 @@ class GetNotes extends PureComponent {
       allLabels: array,
       labelpresent: true
     });
-    console.log(this.state.allLabels, "mojo jojo");
   };
   handleLabelRemove = async data => {
     for (let index = 0; index < this.state.allLabels.length; index++) {
@@ -132,16 +123,45 @@ class GetNotes extends PureComponent {
         array.splice(index, 1);
       }
     }
-    // array.pop(data)
     await this.setState({
       allLabels: array
     });
-    console.log(this.state.allLabels);
     if (this.state.allLabels.length === 0) {
       this.setState({ labelpresent: false });
     }
   };
+  handleDoneClick = async () => {
+    if (this.state.labelName !== "") {
+      var labelDetails = {
+        labelname: this.state.labelName
+      };
 
+      await LabelController.newlabelforuser(labelDetails).then(res => {
+        if (res.status === 200) {
+          console.log("Successfully added label for user");
+        }
+      });
+
+      await NoteController.addlabeltonote(
+        labelDetails,
+        this.props.data.id
+      ).then(res => {
+        if (res.status === 200) {
+          console.log("Label added to the note successfully");
+        }
+      });
+    }
+    await this.setState({ labelName: "" });
+    this.props.getLabel();
+    this.props.getNote();
+  };
+  onChangeLabelName = async event => {
+    await this.setState({ labelName: event.target.value });
+    console.log(this.state.labelName);
+  };
+  handleCancel = async () => {
+    await this.setState({ labelName: "" });
+  };
   handleLabelMenuOpen = () => {
     this.setState({
       labelMenu: true,
@@ -231,17 +251,23 @@ class GetNotes extends PureComponent {
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
-      colorAnchor: null
+      colorAnchor: null,
+      hoverColorTooltip: false
     });
   };
   changeColor = event => {
     this.setState({
       colorOpen: true,
-      colorAnchor: event.currentTarget
+      colorAnchor: event.currentTarget,
+      hoverColorTooltip: true
     });
   };
   changeNoteColor = async event => {
-    await this.setState({ color: event.target.value, openTooltip: false });
+    await this.setState({
+      color: event.target.value,
+      openTooltip: false,
+      hoverColorTooltip: false
+    });
 
     await NoteController.colornote(this.state.id, this.state.color).then(
       res => {
@@ -250,6 +276,14 @@ class GetNotes extends PureComponent {
         }
       }
     );
+    this.props.getNote();
+  };
+  handleDeleteLabel = async x => {
+    await NoteController.deletelabelfornote(this.props.data.id, x).then(res => {
+      if (res.status === 200) {
+        console.log("Label deleted for the note successfully");
+      }
+    });
     this.props.getNote();
   };
 
@@ -313,10 +347,7 @@ class GetNotes extends PureComponent {
     const label = this.state.obj3.map(item => {
       if (this.state.allLabels.length !== 0) {
         for (let i = 0; i < this.state.allLabels.length; i++) {
-          console.log(this.state.allLabels[i], "labels");
-          // alert(item.labelname);
           let bool = this.state.allLabels[i].labelname === item.labelname;
-          console.log(bool);
           if (bool) {
             return (
               <GetLabelsInNoteMenu
@@ -366,9 +397,32 @@ class GetNotes extends PureComponent {
       console.log(this.state.allLabels, "all Labels");
       displaylabels = this.state.allLabels.map(el => {
         console.log(el.labelname);
+        let x;
+        this.state.obj3.map(elem => {
+          if (elem.labelname === el.labelname) {
+            x = elem.id;
+          }
+        });
         return (
-          <div>
-            <Chip label={el.labelname} />
+          <div className="chip-style">
+            <Chip
+              label={el.labelname}
+              onDelete={() => {
+                NoteController.deletelabelfornote(this.props.data.id, x).then(
+                  res => {
+                    if (res.status === 200) {
+                      console.log("Label deleted for the note successfully");
+                    }
+                  }
+                );
+                this.props.getNote();
+              }}
+              deleteIcon={
+                <Tooltip title="Remove Label" placement="top">
+                  <CancelTwoToneIcon />
+                </Tooltip>
+              }
+            />
           </div>
         );
       });
@@ -386,96 +440,79 @@ class GetNotes extends PureComponent {
 
     const color1 = this.state.manycolor.map(color => {
       return (
-        <div>
-          <Tooltip
-            TransitionComponent={Fade}
-            TransitionProps={{ timeout: 100 }}
-            title={color.name}
-          >
-            <IconButton
-              style={{ background: color.colorCode }}
-              value={color.colorCode}
-              onClick={this.changeNoteColor}
-            />
-          </Tooltip>
-        </div>
+        <Tooltip
+          TransitionComponent={Fade}
+          TransitionProps={{ timeout: 100 }}
+          title={color.name}
+        >
+          <IconButton
+            style={{
+              background: color.colorCode,
+              margin: "2%"
+            }}
+            value={color.colorCode}
+            onClick={this.changeNoteColor}
+          />
+        </Tooltip>
       );
     });
     return (
       <Card id="card_decor2" style={{ backgroundColor: this.state.color }}>
-        <div>
-          <div style={{ display: "flex" }}>
-            <div>
-              <InputBase
-                className="inputbase"
-                style={{
-                  marginTop: "9px",
-                  paddingLeft: "15px",
-                  paddingRight: "29px",
-                  fontWeight: "bolder",
-                  color: "#616161"
-                }}
-                multiline
-                disabled
-                spellCheck={false}
-                placeholder="Title...."
-                value={this.state.title}
-                onChange={this.onChangeTitle}
-                onClick={this.handleDialogOpen}
-              />
-            </div>
-            {!this.state.isPinned ? (
-              <div className={"pin_getnotes"}>
-                <Tooltip
-                  TransitionComponent={Fade}
-                  TransitionProps={{ timeout: 100 }}
-                  title="Pin"
-                  arrow
-                >
-                  <IconButton aria-label="Pin">
-                    <img
-                      style={{
-                        height: "0.5cm",
-                        width: "0.5cm",
-                        opacity: "0.65"
-                      }}
-                      src={Pin}
-                      onClick={this.handleIsPinned}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            ) : (
-              <div className={"pin_getnotes"}>
-                <Tooltip
-                  TransitionComponent={Fade}
-                  TransitionProps={{ timeout: 100 }}
-                  title="Unpin"
-                  arrow
-                >
-                  <IconButton aria-label="Unpin">
-                    <img
-                      style={{
-                        height: "0.5cm",
-                        width: "0.5cm",
-                        opacity: "0.65"
-                      }}
-                      src={Unpin}
-                      onClick={this.handleIsUnpinned}
-                    />
-                  </IconButton>
-                </Tooltip>
-              </div>
-            )}
-          </div>
-
+        <div id="pin-inputbase-getnotes">
           <InputBase
             className="inputbase"
-            style={{
-              paddingLeft: "15px",
-              paddingRight: "26px",
-              color: "#616161"
-            }}
+            id="style-inpbase"
+            multiline
+            disabled
+            spellCheck={false}
+            placeholder="Title...."
+            value={this.state.title}
+            onChange={this.onChangeTitle}
+            onClick={this.handleDialogOpen}
+          />
+          {!this.state.isPinned ? (
+            <Tooltip
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 100 }}
+              title="Pin"
+              arrow
+            >
+              <IconButton aria-label="Pin">
+                <img
+                  style={{
+                    height: "0.5cm",
+                    width: "0.5cm",
+                    opacity: "0.65"
+                  }}
+                  src={Pin}
+                  onClick={this.handleIsPinned}
+                />
+              </IconButton>
+            </Tooltip>
+          ) : (
+            <Tooltip
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 100 }}
+              title="Unpin"
+              arrow
+            >
+              <IconButton aria-label="Unpin">
+                <img
+                  style={{
+                    height: "0.5cm",
+                    width: "0.5cm",
+                    opacity: "0.65"
+                  }}
+                  src={Unpin}
+                  onClick={this.handleIsUnpinned}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+        </div>
+        <div id="pin-inputbase-getnotes">
+          <InputBase
+            id="style-inpbase"
             multiline
             disabled
             spellCheck={false}
@@ -488,156 +525,141 @@ class GetNotes extends PureComponent {
         <Toolbar id="label_chip">{displaylabels}</Toolbar>
         <MuiThemeProvider>
           <div>
-            <Toolbar>
-              <div className="buttons" style={{ display: "flex" }}>
-                <div style={{ marginLeft: "9px" }}>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Reminder"
-                    arrow
-                  >
-                    <IconButton aria-label="Reminder" className="iconButtons">
-                      <AddAlertIcon style={{ fontSize: "20px" }} />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Collaborator"
-                    arrow
-                  >
-                    <IconButton aria-label="Collaborator">
-                      <PersonAddIcon style={{ fontSize: "20px" }} />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Color"
-                    placement="right"
-                    onClose={this.handleTooltipClose}
-                    onOpen={this.handleTooltipOpen}
-                    open={this.state.openTooltip}
-                    arrow
-                  >
-                    <IconButton aria-label="Color">
-                      <PaletteOutlinedIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.changeColor}
-                      />
-                      <Menu
-                        id="simple-menu"
-                        open={this.state.colorOpen}
-                        anchorEl={this.state.colorAnchor}
-                        onClose={this.closeColorBox}
-                        transformOrigin={{
-                          vertical: "right",
-                          horizontal: "right"
-                        }}
-                        className="colormenu"
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            marginBottom: "15px",
-                            marginLeft: "58px"
-                          }}
-                        >
-                          {color1}
-                        </div>
-                      </Menu>
-                    </IconButton>
-                  </Tooltip>
-                </div>
-                <div>
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Archive"
-                    arrow
-                  >
-                    <IconButton aria-label="Archive">
-                      <ArchiveOutlinedIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.handleIsArchived}
-                      />
-                      <Snackbar
+            <Toolbar id="note-buttons">
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Reminder"
+                  arrow
+                >
+                  <IconButton aria-label="Reminder">
+                    <AddAlertIcon style={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Collaborator"
+                  arrow
+                >
+                  <IconButton aria-label="Collaborator">
+                    <PersonAddIcon style={{ fontSize: "20px" }} />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Color"
+                  disableHoverListener={this.state.hoverColorTooltip}
+                  arrow
+                >
+                  <IconButton aria-label="Color">
+                    <PaletteOutlinedIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.changeColor}
+                    />
+                    <Menu
+                      id="simple-menu"
+                      open={this.state.colorOpen}
+                      anchorEl={this.state.colorAnchor}
+                      onClose={this.closeColorBox}
+                      transformOrigin={{
+                        vertical: "right",
+                        horizontal: "right"
+                      }}
+                    >
+                      <div className="color-align">{color1}</div>
+                    </Menu>
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="Archive"
+                  arrow
+                >
+                  <IconButton aria-label="Archive">
+                    <ArchiveOutlinedIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.handleIsArchived}
+                    />
+                    <Snackbar
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "center"
+                      }}
+                      open={this.state.openSnack}
+                      autoHideDuration={4000}
+                      onClose={this.handleClose}
+                      message={this.state.archivemsg}
+                      action={
+                        <React.Fragment>
+                          <div
+                            style={{
+                              paddingBottom: "17px",
+                              marginRight: "-25px"
+                            }}
+                          >
+                            <IconButton
+                              size="small"
+                              aria-label="close"
+                              color="inherit"
+                              onClick={this.handleClose}
+                            >
+                              <CloseIcon fontSize="small" />
+                            </IconButton>
+                          </div>
+                        </React.Fragment>
+                      }
+                    />
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div id="tooltip-style">
+                <Tooltip
+                  TransitionComponent={Fade}
+                  TransitionProps={{ timeout: 100 }}
+                  title="More"
+                  disableHoverListener={this.state.hoverMoreTooltip}
+                  arrow
+                >
+                  <IconButton aria-label="More">
+                    <MoreVertTwoToneIcon
+                      style={{ fontSize: "20px" }}
+                      onClick={this.changeLabel}
+                    />
+                    <div>
+                      <Popover
+                        id="label-menu"
+                        open={this.state.menu}
+                        anchorEl={this.state.labelAnchor}
+                        onClick={this.handleMenuClickAway}
                         anchorOrigin={{
                           vertical: "bottom",
                           horizontal: "center"
                         }}
-                        open={this.state.openSnack}
-                        autoHideDuration={4000}
-                        onClose={this.handleClose}
-                        message={this.state.archivemsg}
-                        action={
-                          <React.Fragment>
-                            <div
-                              style={{
-                                paddingBottom: "17px",
-                                marginRight: "-25px"
-                              }}
-                            >
-                              <IconButton
-                                size="small"
-                                aria-label="close"
-                                color="inherit"
-                                onClick={this.handleClose}
-                              >
-                                <CloseIcon fontSize="small" />
-                              </IconButton>
-                            </div>
-                          </React.Fragment>
-                        }
-                      />
-                    </IconButton>
-                  </Tooltip>
-                </div>
-
-                <div className="menu_getnotes">
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="More"
-                    disableHoverListener={this.state.hoverMoreTooltip}
-                    arrow
-                  >
-                    <IconButton aria-label="More">
-                      <MoreVertTwoToneIcon
-                        style={{ fontSize: "20px" }}
-                        onClick={this.changeLabel}
-                      />
-                      <div>
-                        <Popover
-                          id="label-menu"
-                          open={this.state.menu}
-                          anchorEl={this.state.labelAnchor}
-                          onClick={this.handleMenuClickAway}
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "center"
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "center"
-                          }}
-                        >
-                          <MenuItem onClick={this.handleLabelMenuOpen}>
-                            Add label
-                          </MenuItem>
-                          <MenuItem onClick={this.handleDeleteNote}>
-                            Delete note
-                          </MenuItem>
-                        </Popover>
-                      </div>
-                    </IconButton>
-                  </Tooltip>
-                </div>
+                        transformOrigin={{
+                          vertical: "top",
+                          horizontal: "center"
+                        }}
+                      >
+                        <MenuItem onClick={this.handleLabelMenuOpen}>
+                          Add label
+                        </MenuItem>
+                        <MenuItem onClick={this.handleDeleteNote}>
+                          Delete note
+                        </MenuItem>
+                      </Popover>
+                    </div>
+                  </IconButton>
+                </Tooltip>
               </div>
               {/* <div className="CloseButton"> */}
               {/* onClick={this.handleClickClose }

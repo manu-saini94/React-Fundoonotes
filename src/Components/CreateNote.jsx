@@ -73,7 +73,6 @@ class CreateNote extends Component {
       collabpresent: false,
 
       manycolor: [
-        { name: "White", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
         { name: "Cyan", colorCode: "#80deea" },
         { name: "Blue", colorCode: "#2196f3" },
@@ -84,7 +83,8 @@ class CreateNote extends Component {
         { name: "Lime", colorCode: "#e6ee9c" },
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
-        { name: "Brown", colorCode: "#bcaaa4" }
+        { name: "Brown", colorCode: "#bcaaa4" },
+        { name: "White", colorCode: "#FDFEFE" }
       ]
     };
   }
@@ -482,7 +482,10 @@ class CreateNote extends Component {
             title={color.name}
           >
             <IconButton
-              style={{ background: color.colorCode }}
+              style={{
+                background: color.colorCode,
+                margin: "2%"
+              }}
               value={color.colorCode}
               onClick={this.changeNoteColor}
             />
@@ -494,114 +497,86 @@ class CreateNote extends Component {
     return (
       <div
         style={{
-          marginTop: "85px"
+          marginTop: "100px"
         }}
       >
         {!this.state.openNote ? (
           <div className="note-button">
-            <Card id="card_decor3">
+            <Card id="card_decor1">
               <MuiThemeProvider>
-                <InputBase
-                  className="inputbase"
-                  style={{
-                    paddingLeft: "10px",
-                    paddingRight: "58%",
-                    fontWeight: "bold"
-                  }}
-                  multiline
-                  spellCheck={true}
-                  placeholder="Take a note...."
-                  onClick={this.handleClickOpen}
-                />
+                <div className="inputbase_div">
+                  <InputBase
+                    id="inputbase"
+                    multiline
+                    spellCheck={true}
+                    placeholder="Take a note...."
+                    onClick={this.handleClickOpen}
+                  />
+                </div>
               </MuiThemeProvider>
             </Card>
           </div>
         ) : (
           <div className="note-button">
             <Card
-              id="card_decor1"
+              id="card_decor4"
               style={{
                 backgroundColor: this.state.color
               }}
             >
-              <div>
-                <div></div>
-                <div style={{ display: "flex" }}>
-                  <InputBase
-                    className="inputbase"
-                    style={{
-                      paddingLeft: "15px",
-                      paddingRight: "32px",
-                      fontWeight: "bolder",
-                      color: "#616161"
-                    }}
-                    multiline
-                    spellCheck={false}
-                    placeholder="Title...."
-                    value={this.state.title}
-                    onChange={this.onChangeTitle}
-                  />
-
-                  {!this.state.isPinned ? (
-                    <div
-                      style={{
-                        marginRight: "-21px"
-                      }}
-                    >
-                      <Tooltip
-                        TransitionComponent={Fade}
-                        TransitionProps={{ timeout: 100 }}
-                        title="Pin"
-                        arrow
-                      >
-                        <IconButton aria-label="Pin">
-                          <img
-                            style={{
-                              height: "0.54cm",
-                              width: "0.54cm",
-                              opacity: "0.65"
-                            }}
-                            src={Pin}
-                            onClick={this.handleIsPinned}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  ) : (
-                    <div
-                      style={{
-                        marginRight: "-21px"
-                      }}
-                    >
-                      <Tooltip
-                        TransitionComponent={Fade}
-                        TransitionProps={{ timeout: 100 }}
-                        title="Unpin"
-                        arrow
-                      >
-                        <IconButton aria-label="Unpin">
-                          <img
-                            style={{
-                              height: "0.54cm",
-                              width: "0.54cm",
-                              opacity: "0.65"
-                            }}
-                            src={Unpin}
-                            onClick={this.handleIsPinned}
-                          />
-                        </IconButton>
-                      </Tooltip>
-                    </div>
-                  )}
-                </div>
-
+              <div id="pin-inputbase">
                 <InputBase
-                  className="inputbase"
-                  style={{
-                    paddingLeft: "15px",
-                    paddingRight: "26px",
-                    color: "#616161"
-                  }}
+                  id="style-inpbase"
+                  multiline
+                  spellCheck={false}
+                  placeholder="Title...."
+                  value={this.state.title}
+                  onChange={this.onChangeTitle}
+                />
+
+                {!this.state.isPinned ? (
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Pin"
+                    arrow
+                  >
+                    <IconButton aria-label="Pin">
+                      <img
+                        style={{
+                          height: "0.54cm",
+                          width: "0.54cm",
+                          opacity: "0.65"
+                        }}
+                        src={Pin}
+                        onClick={this.handleIsPinned}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                ) : (
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Unpin"
+                    arrow
+                  >
+                    <IconButton aria-label="Unpin">
+                      <img
+                        style={{
+                          height: "0.54cm",
+                          width: "0.54cm",
+                          opacity: "0.65"
+                        }}
+                        src={Unpin}
+                        onClick={this.handleIsPinned}
+                      />
+                    </IconButton>
+                  </Tooltip>
+                )}
+              </div>
+              <div id="pin-inputbase">
+                <InputBase
+                  id="style-inpbase"
                   multiline
                   spellCheck={false}
                   placeholder="Description...."
@@ -693,21 +668,7 @@ class CreateNote extends Component {
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="Color"
-                          placement="right"
                           disableHoverListener={this.state.hoverColorTooltip}
-                          // onMouseLeave={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-                          // onMouseOutCapture={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-                          // onMouseOverCapture={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-
                           arrow
                         >
                           <IconButton aria-label="Color">
@@ -724,17 +685,8 @@ class CreateNote extends Component {
                                 vertical: "right",
                                 horizontal: "right"
                               }}
-                              className="colormenu"
                             >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  marginBottom: "15px",
-                                  marginLeft: "58px"
-                                }}
-                              >
-                                {color1}
-                              </div>
+                              <div className="color-align">{color1}</div>
                             </Menu>
                           </IconButton>
                         </Tooltip>
@@ -777,12 +729,7 @@ class CreateNote extends Component {
                         </Tooltip>
                       </div>
                     </div>
-                    <div
-                      style={{
-                        marginLeft: "95px",
-                        marginTop: "-14px"
-                      }}
-                    >
+                    <div id="close_button">
                       <Tooltip
                         TransitionComponent={Fade}
                         TransitionProps={{ timeout: 100 }}

@@ -10,7 +10,8 @@ import {
   Menu,
   Dialog,
   ReactFragment,
-  Card, Popover
+  Card,
+  Popover
 } from "@material-ui/core";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -49,10 +50,10 @@ class DialogCard extends Component {
       open: false,
       menu: false,
       hoverMoreTooltip: false,
+      hoverColorTooltip: false,
       labelAnchor: null,
 
       manycolor: [
-        { name: "default", colorCode: "#FDFEFE" },
         { name: "Red", colorCode: "#ef9a9a" },
         { name: "Cyan", colorCode: "#80deea" },
         { name: "Blue", colorCode: "#2196f3" },
@@ -63,7 +64,8 @@ class DialogCard extends Component {
         { name: "Lime", colorCode: "#e6ee9c" },
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
-        { name: "Brown", colorCode: "#bcaaa4" }
+        { name: "Brown", colorCode: "#bcaaa4" },
+        { name: "White", colorCode: "#FDFEFE" }
       ],
 
       defaultColour: "#FDFEFE",
@@ -94,19 +96,16 @@ class DialogCard extends Component {
       menu: false,
       hoverMoreTooltip: false
     });
-
-  }
+  };
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(
-      res => {
-        if (res.status === 200) {
-          console.log("Note Deleted Successfully");
-        }
+    await NoteController.deletenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Note Deleted Successfully");
       }
-    );
+    });
     this.props.getNote();
-  }
+  };
 
   MenuClose = () => {
     this.setState({ menu: false });
@@ -116,8 +115,8 @@ class DialogCard extends Component {
       menu: true,
       labelAnchor: event.currentTarget,
       hoverMoreTooltip: true
-    })
-  }
+    });
+  };
   handleDialogClickaway = async (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -169,13 +168,15 @@ class DialogCard extends Component {
   closeColorBox = () => {
     this.setState({
       colorOpen: false,
-      colorAnchor: null
+      colorAnchor: null,
+      hoverColorTooltip: false
     });
   };
   changeColor = event => {
     this.setState({
       colorOpen: true,
-      colorAnchor: event.currentTarget
+      colorAnchor: event.currentTarget,
+      hoverColorTooltip: true
     });
   };
   changeNoteColor = async event => {
@@ -274,7 +275,10 @@ class DialogCard extends Component {
             title={color.name}
           >
             <IconButton
-              style={{ background: color.colorCode }}
+              style={{
+                background: color.colorCode,
+                margin: "2%"
+              }}
               value={color.colorCode}
               onClick={this.changeNoteColor}
             />
@@ -337,30 +341,30 @@ class DialogCard extends Component {
                       </Tooltip>
                     </div>
                   ) : (
-                      <div
-                        style={{
-                          marginRight: "-21px"
-                        }}
+                    <div
+                      style={{
+                        marginRight: "-21px"
+                      }}
+                    >
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title="Unpin"
+                        arrow
                       >
-                        <Tooltip
-                          TransitionComponent={Fade}
-                          TransitionProps={{ timeout: 100 }}
-                          title="Unpin"
-                          arrow
-                        >
-                          <IconButton aria-label="Unpin">
-                            <img
-                              style={{
-                                height: "0.54cm",
-                                width: "0.54cm"
-                              }}
-                              src={Unpin}
-                              onClick={this.handleIsUnpinned}
-                            />
-                          </IconButton>
-                        </Tooltip>
-                      </div>
-                    )}
+                        <IconButton aria-label="Unpin">
+                          <img
+                            style={{
+                              height: "0.54cm",
+                              width: "0.54cm"
+                            }}
+                            src={Unpin}
+                            onClick={this.handleIsUnpinned}
+                          />
+                        </IconButton>
+                      </Tooltip>
+                    </div>
+                  )}
                 </div>
 
                 <InputBase
@@ -460,6 +464,7 @@ class DialogCard extends Component {
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="Color"
+                          disableHoverListener={this.state.hoverColorTooltip}
                           arrow
                         >
                           <IconButton aria-label="Color">
@@ -476,33 +481,26 @@ class DialogCard extends Component {
                                 vertical: "right",
                                 horizontal: "right"
                               }}
-                              className="colormenu"
                             >
-                              <div
-                                style={{
-                                  display: "flex",
-                                  marginBottom: "15px",
-                                  marginLeft: "58px"
-                                }}
-                              >
-                                {color1}
-                              </div>
+                              <div className="color-align">{color1}</div>
                             </Menu>
                           </IconButton>
                         </Tooltip>
                       </div>
 
-                      <div >
+                      <div>
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="More"
                           disableHoverListener={this.state.hoverMoreTooltip}
-
                           arrow
                         >
                           <IconButton aria-label="More">
-                            <MoreVertTwoToneIcon style={{ fontSize: "20px" }} onClick={this.changeLabel} />
+                            <MoreVertTwoToneIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeLabel}
+                            />
                             <div>
                               <Popover
                                 id="label-menu"
@@ -520,16 +518,15 @@ class DialogCard extends Component {
                               >
                                 <MenuItem onClick={this.MenuClose}>
                                   Add label
-                          </MenuItem>
+                                </MenuItem>
                                 <MenuItem onClick={this.handleDeleteNote}>
                                   Delete note
-                          </MenuItem>
+                                </MenuItem>
                               </Popover>
                             </div>
                           </IconButton>
                         </Tooltip>
                       </div>
-
                     </div>
                     {/* <div className="CloseButton"> */}
                     {/* onClick={this.handleClickClose }
@@ -537,7 +534,7 @@ class DialogCard extends Component {
                                     } */}
 
                     {/* </div> */}
-                    <div className="button_close" >
+                    <div className="button_close">
                       <Tooltip
                         TransitionComponent={Fade}
                         TransitionProps={{ timeout: 100 }}

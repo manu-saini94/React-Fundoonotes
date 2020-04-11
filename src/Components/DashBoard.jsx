@@ -31,7 +31,8 @@ class DashBoard extends PureComponent {
       openDialog: false,
       getNoteArr: [],
       getLabelArr: [],
-      labelName: ""
+      labelName: "",
+      heading: "fundoo"
     };
   }
 
@@ -39,68 +40,73 @@ class DashBoard extends PureComponent {
     this.setState({ open: !this.state.open });
   };
 
-  handleNotesMenu = () => {
-    this.setState({
+  handleNotesMenu = async () => {
+    await this.setState({
       notesOpen: true,
       remindersOpen: false,
       archiveOpen: false,
       trashOpen: false,
       editlabelsOpen: false,
-      labelNoteOpen: false
+      labelNoteOpen: false,
+      heading: "fundoo"
     });
   };
-  handleRemindersMenu = () => {
-    this.setState({
+  handleRemindersMenu = async () => {
+    await this.setState({
       notesOpen: false,
       remindersOpen: true,
       archiveOpen: false,
       trashOpen: false,
       editlabelsOpen: false,
-      labelNoteOpen: false
+      labelNoteOpen: false,
+      heading: "Reminders"
     });
   };
 
-  handleArchiveMenu = () => {
-    this.setState({
+  handleArchiveMenu = async () => {
+    await this.setState({
       notesOpen: false,
       remindersOpen: false,
       archiveOpen: true,
       trashOpen: false,
       editlabelsOpen: false,
-      labelNoteOpen: false
+      labelNoteOpen: false,
+      heading: "Archive"
     });
   };
 
-  handleTrashMenu = () => {
-    this.setState({
+  handleTrashMenu = async () => {
+    await this.setState({
       notesOpen: false,
       remindersOpen: false,
       archiveOpen: false,
       trashOpen: true,
       editlabelsOpen: false,
-      labelNoteOpen: false
+      labelNoteOpen: false,
+      heading: "Trash"
     });
   };
 
-  handleEditLabelsMenu = () => {
-    this.setState({
+  handleEditLabelsMenu = async () => {
+    await this.setState({
       editlabelsOpen: !this.state.editlabelsOpen,
       openDialog: !this.state.openDialog
     });
   };
 
-  handleLabelNoteMenu = data3 => {
-    this.setState({
+  handleLabelNoteMenu = async data3 => {
+    await this.setState({
       notesOpen: false,
       remindersOpen: false,
       archiveOpen: false,
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: true,
-      labelName: data3
+      labelName: data3,
+      heading: data3
     });
-    console.log("llllnamelllname :", this.state.labelName);
   };
+
   componentDidMount() {
     this.getNote();
     this.getLabel();
@@ -124,7 +130,6 @@ class DashBoard extends PureComponent {
         getLabelArr: res
       });
     });
-    console.log("cont : ", this.state.getLabelArr);
   };
 
   // getLabelsForNote = async () => {
@@ -137,9 +142,6 @@ class DashBoard extends PureComponent {
   //   });
   // }
   render() {
-    console.log("Dashboard component entered");
-    console.log("jwt = ", this.state.jwt);
-    console.log("token =", localStorage.getItem("logintoken"));
     return (
       <div>
         {this.state.jwt === localStorage.getItem("logintoken") ? (
@@ -148,6 +150,7 @@ class DashBoard extends PureComponent {
               <AppNavBar
                 handleDraweropen={this.handleDraweropen}
                 handleSignout={this.handleSignout}
+                heading={this.state.heading}
               />
             </div>
 
@@ -159,7 +162,11 @@ class DashBoard extends PureComponent {
                 handleTrashMenu={this.handleTrashMenu}
                 handleEditLabelsMenu={this.handleEditLabelsMenu}
                 handleLabelNoteMenu={this.handleLabelNoteMenu}
+                notesOpen={this.state.notesOpen}
+                remindersOpen={this.state.remindersOpen}
                 labelNoteOpen={this.state.labelNoteOpen}
+                archiveOpen={this.state.archiveOpen}
+                trashOpen={this.state.trashOpen}
                 handleDialogOpen={this.handleDialogOpen}
                 show={this.state.open}
                 obj={this.state.getNoteArr}
@@ -216,6 +223,7 @@ class DashBoard extends PureComponent {
                 getNote={this.getNote}
                 archiveOpen={this.state.archiveOpen}
                 open={this.state.open}
+                obj3={this.state.getLabelArr}
               />
             </div>
             <div>
@@ -224,6 +232,8 @@ class DashBoard extends PureComponent {
                 getNote={this.getNote}
                 trashOpen={this.state.trashOpen}
                 open={this.state.open}
+                getLabel={this.getLabel}
+                obj3={this.state.getLabelArr}
               />
             </div>
           </div>

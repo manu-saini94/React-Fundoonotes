@@ -33,6 +33,7 @@ class LabelMenu extends Component {
                 obj3={this.props.obj3}
                 data={item}
                 key={item.id}
+                fromArchive={false}
               />
             );
           }
@@ -53,6 +54,7 @@ class LabelMenu extends Component {
                 obj3={this.props.obj3}
                 data={item}
                 key={item.id}
+                fromArchive={true}
               />
             );
           }
@@ -74,6 +76,7 @@ class LabelMenu extends Component {
                 obj3={this.props.obj3}
                 data={item}
                 key={item.id}
+                fromArchive={false}
               />
             );
           }

@@ -13,7 +13,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import MailIcon from "@material-ui/icons/Mail";
 import NotificationsIcon from "@material-ui/icons/Notifications";
-import RefreshIcon from "@material-ui/icons/Refresh";
+import RefreshOutlinedIcon from "@material-ui/icons/RefreshOutlined";
 import SettingsIcon from "@material-ui/icons/Settings";
 import Drawer from "@material-ui/core/Drawer";
 import List from "@material-ui/core/List";
@@ -233,82 +233,87 @@ export default function PrimarySearchAppBar(props) {
     <div className={classes.root}>
       <AppBar position="fixed" className={classes.palette}>
         <Toolbar>
-          <Grid container spacing={1}>
-            <Grid item xs={0}>
+          <div id="appbar-outerdiv">
+            <div style={{ width: "3%", paddingTop: "11px" }}>
               <IconButton
                 aria-label="open drawer"
                 className={clsx(classes.menuButton, open)}
                 onClick={props.handleDraweropen}
               >
-                <MenuIcon style={{ color: "#424242" }} />
+                <MenuIcon />
               </IconButton>
-            </Grid>
-            <Grid item xs={0}>
-              <div>
-                <img
-                  src={
-                    "https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"
-                  }
-                  alt="Logo"
-                />
-              </div>
-            </Grid>
-            <Grid item xs={0}>
+            </div>
+            <div className="img-logo">
+              <img
+                src={
+                  "https://www.gstatic.com/images/branding/product/1x/keep_48dp.png"
+                }
+                alt="Logo"
+              />
+            </div>
+            <div
+              style={{
+                width: "10%",
+                display: "flex",
+                justifyContent: "start"
+              }}
+            >
               <Typography
-                style={{ color: "#616161", fontSize: "150%" }}
+                style={{
+                  color: "#616161",
+                  fontSize: "150%",
+                  paddingTop: "15px"
+                }}
                 className={classes.title}
                 variant="h6"
                 noWrap
               >
-                fundoo
+                {props.heading}
               </Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <div className="note-button">
-                <Card id="card_decorapp">
-                  <div className="search-align">
-                    <div className="search_icon">
-                      <IconButton>
-                        <SearchIcon />
-                      </IconButton>
-                    </div>
-                    <div className="search_input">
-                      <InputBase
-                        id="inputbase-search"
-                        inputProps={{ "aria-label": "description" }}
-                        spellCheck={false}
-                        // value={this.state.labelName}
-                        // onChange={this.onChangeLabelName}
-                        placeholder="Search"
-                      />
-                    </div>
+            </div>
+            <div className="note-buttonapp" style={{ width: "70%" }}>
+              <Card id="card_decorapp">
+                <div className="search-align">
+                  <div className="search_icon">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
                   </div>
-                </Card>
-              </div>
-            </Grid>
-            <Grid item xs={2}>
+                  <div className="search_input">
+                    <InputBase
+                      id="inputbase-search"
+                      inputProps={{ "aria-label": "description" }}
+                      spellCheck={false}
+                      // value={this.state.labelName}
+                      // onChange={this.onChangeLabelName}
+                      placeholder="Search"
+                    />
+                  </div>
+                </div>
+              </Card>
+            </div>
+            <div
+              style={{
+                width: "12%",
+                paddingTop: "7px",
+                display: "flex",
+                justifyContent: "flex-start"
+              }}
+            >
               <IconButton>
-                <RefreshIcon
-                  style={{ color: "#424242", paddingBottom: "65%" }}
-                />
+                <RefreshOutlinedIcon style={{ color: "#616161" }} />
               </IconButton>
-              <IconButton>
-                <SettingsIcon
-                  style={{ color: "#424242", paddingBottom: "65%" }}
-                />
-              </IconButton>
+
               <IconButton
                 edge="end"
                 aria-controls={menuId}
                 aria-haspopup="true"
                 onClick={handleProfileMenuOpen}
               >
-                <AccountCircle
-                  style={{ color: "#424242", paddingBottom: "65%" }}
-                />
+                <AccountCircle style={{ color: "#616161" }} />
               </IconButton>
-            </Grid>
-          </Grid>
+            </div>
+          </div>
         </Toolbar>
       </AppBar>
       {renderMobileMenu}

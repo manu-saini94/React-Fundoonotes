@@ -194,36 +194,37 @@ class Problem extends Component {
             <div style={{ paddingRight: "177px", paddingBottom: "10px" }}>
               <a href="/forgot">forgot password?</a>
             </div>
-
-            <div style={{ marginLeft: "-264px" }}>
-              <Button
-                variant="outlined"
-                size="medium"
-                color="primary"
-                className={classes.paper}
-                style={{ color: "blue" }}
-                onClick={this.onSubmit}
+            <div style={{ marginLeft: "-60px" }}>
+              <div style={{ marginLeft: "-264px" }}>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  color="primary"
+                  className={classes.paper}
+                  style={{ color: "blue" }}
+                  onClick={this.onSubmit}
+                >
+                  Login
+                </Button>
+              </div>
+              <div
+                style={{
+                  marginLeft: "215px",
+                  marginTop: "-36px",
+                  paddingRight: "191px"
+                }}
               >
-                Login
-              </Button>
-            </div>
-            <div
-              style={{
-                marginLeft: "215px",
-                marginTop: "-36px",
-                paddingRight: "191px"
-              }}
-            >
-              <Button
-                variant="outlined"
-                size="medium"
-                color="primary"
-                className={classes.paper}
-                style={{ color: "blue" }}
-                onClick={this.signupPage}
-              >
-                Signup
-              </Button>
+                <Button
+                  variant="outlined"
+                  size="medium"
+                  color="primary"
+                  className={classes.paper}
+                  style={{ color: "blue" }}
+                  onClick={this.signupPage}
+                >
+                  Signup
+                </Button>
+              </div>
             </div>
           </div>
         </Box>

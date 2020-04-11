@@ -68,6 +68,16 @@ var controller = {
     return axios.delete(`http://localhost:8080/note/delete/label/${id}`, {
       headers: { id1: id1, jwt: token, "Content-type": "application/json " }
     });
+  },
+  addcollabtonote(collabDetails) {
+    return axios.post("http://localhost:8080/collab/add", collabDetails, {
+      headers: { jwt: token, "Content-type": "application/json " }
+    });
+  },
+  deletecollabfromnote(collabDetails) {
+    return axios.post("http://localhost:8080/collab/delete", collabDetails, {
+      headers: { jwt: token, "Content-type": "application/json " }
+    });
   }
 };
 export default controller;

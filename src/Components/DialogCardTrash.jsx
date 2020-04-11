@@ -33,10 +33,8 @@ import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import RestoreFromTrashIcon from "@material-ui/icons/RestoreFromTrash";
 
 class DialogCardTrash extends Component {
-
-
   constructor(props) {
-    super(props)
+    super(props);
 
     this.state = {
       title: this.props.data.title,
@@ -45,8 +43,8 @@ class DialogCardTrash extends Component {
       isArchived: this.props.data.isArchived,
       isPinned: this.props.data.isPinned,
       isTrashed: this.props.data.isTrashed,
-      color: this.props.data.color,
-    }
+      color: this.props.data.color
+    };
   }
 
   handleDialogClickaway = async (event, reason) => {
@@ -112,8 +110,8 @@ class DialogCardTrash extends Component {
               <MuiThemeProvider>
                 <div>
                   <Toolbar>
-                    <div className="buttons" style={{ display: "flex" }}>
-                      <div style={{ marginLeft: "9px" }}>
+                    <div id="trash-icons">
+                      <div>
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
@@ -125,7 +123,7 @@ class DialogCardTrash extends Component {
                             className="iconButtons"
                           >
                             <DeleteForeverIcon
-                              style={{ fontSize: "20px" }}
+                              style={{ fontSize: "23px" }}
                               onClick={this.props.handleDeleteForever}
                             />
                           </IconButton>
@@ -140,7 +138,7 @@ class DialogCardTrash extends Component {
                         >
                           <IconButton aria-label="Restore">
                             <RestoreFromTrashIcon
-                              style={{ fontSize: "20px" }}
+                              style={{ fontSize: "23px" }}
                               onClick={this.props.handleRestore}
                             />
                           </IconButton>

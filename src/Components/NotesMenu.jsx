@@ -49,6 +49,7 @@ class NotesMenu extends PureComponent {
             obj3={this.props.obj3}
             data={item}
             key={item.id}
+            fromArchive={false}
           />
         );
       }
@@ -65,6 +66,7 @@ class NotesMenu extends PureComponent {
             obj3={this.props.obj3}
             data={item}
             key={item.id}
+            fromArchive={false}
           />
         );
       }

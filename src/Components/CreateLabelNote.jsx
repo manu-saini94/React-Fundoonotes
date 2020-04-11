@@ -9,8 +9,15 @@ import {
   Grid,
   makeStyles,
   Menu,
-  Popover
+  Popover,
+  Avatar,
+  Dialog,
+  Divider,
+  Typography,
+  TextField
 } from "@material-ui/core";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
+import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
@@ -39,6 +46,9 @@ import NoteController from "../Controller/NoteController";
 const saveclose = "Save & Close";
 const bgcolor = "";
 let array = [];
+let arrcollab1 = [];
+let rem = [];
+
 class CreateLabelNote extends Component {
   constructor(props) {
     super(props);
@@ -69,8 +79,18 @@ class CreateLabelNote extends Component {
       color: "#FDFEFE",
       getNote: this.props.getNote,
       allLabels: [],
+      collaborators1: [],
+      collaborators: [],
       labelpresent: false,
       collabpresent: false,
+      collabOpen: false,
+      disable: true,
+      collabName: "",
+      err1: false,
+      reminderMenu: false,
+      reminderAnchor: null,
+      selectedDate: "",
+      remState: [],
 
       manycolor: [
         { name: "Red", colorCode: "#ef9a9a" },
@@ -132,7 +152,9 @@ class CreateLabelNote extends Component {
       menu: false,
       labelMenu: false,
       hoverColorTooltip: false,
-      hoverMoreTooltip: false
+      hoverMoreTooltip: false,
+      reminderMenu: false,
+      selectedDate: ""
     });
   };
   onChangeLabelName = async event => {
@@ -224,8 +246,8 @@ class CreateLabelNote extends Component {
         archived: this.state.isArchived,
         pinned: this.state.isPinned,
         color: this.state.color,
-        reminder: this.state.reminder,
-        labelName: this.state.labelName
+        labelName: this.state.labelName,
+        reminder: this.state.selectedDate
       };
 
       await Controller.takenote(noteDetails).then(res => {
@@ -241,10 +263,24 @@ class CreateLabelNote extends Component {
               }
             );
           });
+          this.state.collaborators.map(items => {
+            let collabDetails = {
+              noteId: res.data.object.id,
+              collaborator: items
+            };
+            NoteController.addcollabtonote(collabDetails).then(resp => {
+              if (resp.status === 200) {
+                console.log("Collaborator added to note");
+              }
+            });
+          });
         }
       });
       this.props.getNote();
       array = [];
+      arrcollab1 = [];
+      rem = [];
+
       array.push(this.props.labelName);
 
       await this.setState({
@@ -258,7 +294,10 @@ class CreateLabelNote extends Component {
         labelName: "",
         createdTime: "",
         allLabels: array,
-        labelpresent: true
+        labelpresent: true,
+        collaborators: [],
+        selectedDate: "",
+        remState: []
       });
       // for (let index = 0; index < array.length; index++) {
       //   array[index] = "";
@@ -278,8 +317,8 @@ class CreateLabelNote extends Component {
         archived: this.state.isArchived,
         pinned: this.state.isPinned,
         color: this.state.color,
-        reminder: this.state.reminder,
-        labelName: this.state.labelName
+        labelName: this.state.labelName,
+        reminder: this.state.selectedDate
       };
       await Controller.takenote(noteDetails).then(res => {
         if (res.status === 200) {
@@ -294,10 +333,22 @@ class CreateLabelNote extends Component {
               }
             );
           });
+          this.state.collaborators.map(items => {
+            let collabDetails = {
+              noteId: res.data.object.id,
+              collaborator: items
+            };
+            NoteController.addcollabtonote(collabDetails).then(resp => {
+              if (resp.status === 200) {
+                console.log("Collaborator added to note");
+              }
+            });
+          });
         }
       });
       this.props.getNote();
       array = [];
+      arrcollab1 = [];
       array.push(this.props.labelName);
       await this.setState({
         title: "",
@@ -310,16 +361,148 @@ class CreateLabelNote extends Component {
         labelName: "",
         createdTime: "",
         allLabels: array,
-        labelpresent: true
+        labelpresent: true,
+        selectedDate: "",
+        remState: []
       });
       array = [];
+      arrcollab1 = [];
+      rem = [];
     } else {
       this.setState({ archivemsg: "Cannot Archive" });
       this.setState({ open: true, labelpresent: false, collabpresent: false });
     }
-    array = [];
   };
 
+  handleReminder = async event => {
+    await this.setState({
+      selectedDate: event.target.value
+    });
+    console.log("date is :", this.state.selectedDate);
+  };
+  handleSaveReminder = async () => {
+    if (this.state.selectedDate === "") {
+      await this.setState({
+        reminderMenu: false
+      });
+    } else if (this.state.selectedDate !== "") {
+      let date = new Date(this.state.selectedDate);
+      let val = "";
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      let remVal = val.concat(
+        date.toLocaleString("default", { month: "long" }),
+        " ",
+        date.getDate(),
+        " ",
+        date.getFullYear(),
+        " ",
+        strTime
+      );
+      console.log("rem value is : ", remVal);
+      if (rem.length !== 0) {
+        rem = [];
+        rem.push(remVal);
+      } else {
+        rem.push(remVal);
+      }
+      await this.setState({
+        remState: rem,
+        reminderMenu: false
+      });
+    }
+  };
+
+  handleReminderDelete = async () => {
+    rem = [];
+    await this.setState({
+      remState: rem,
+      selectedDate: ""
+    });
+  };
+
+  handleCollabOpen = async => {
+    this.setState({ collabOpen: true });
+  };
+
+  onChangeCollabName = async event => {
+    await this.setState({ collabName: event.target.value });
+
+    if (
+      /^[a-zA-z\d._-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,4}$/.test(
+        this.state.collabName
+      )
+    ) {
+      this.setState({ err1: false });
+      if (this.state.collabName !== "") {
+        await this.setState({ disable: false });
+      }
+    } else if (this.state.collabName === "") {
+      this.setState({ err1: false, disable: true });
+    } else {
+      this.setState({ err1: true });
+    }
+  };
+
+  helpercollabmethod = () => {
+    if (this.state.err1) {
+      return "Not a valid mail id";
+    }
+  };
+  handleCollabDoneClick = async () => {
+    arrcollab1.push(this.state.collabName);
+    await this.setState({
+      collaborators1: arrcollab1,
+      collabName: "",
+      disable: true
+    });
+  };
+  handleRemoveCollab = async (data, item) => {
+    let temparr = this.state.collaborators;
+
+    for (let index = 0; index < temparr.length; index++) {
+      if (item === temparr[index]) {
+        temparr.splice(index, 1);
+
+        await this.setState({ collaborators: temparr });
+      }
+    }
+  };
+  handleRemoveCollab1 = async (data, item) => {
+    for (let index = 0; index < arrcollab1.length; index++) {
+      if (item === arrcollab1[index]) {
+        arrcollab1.splice(index, 1);
+        await this.setState({
+          collaborators1: arrcollab1
+        });
+      }
+    }
+  };
+  handleCollabSave = async () => {
+    let tempo = this.state.collaborators;
+    if (arrcollab1.length !== 0) {
+      for (let index = 0; index < arrcollab1.length; index++) {
+        tempo.push(arrcollab1[index]);
+      }
+    }
+    await this.setState({
+      collabOpen: false,
+      collaborators: tempo,
+      collaborators1: []
+    });
+    arrcollab1 = [];
+  };
+  handleCollabCancel = async () => {
+    arrcollab1 = [];
+    await this.setState({
+      collaborators1: arrcollab1,
+      collabOpen: false
+    });
+  };
   changeColor = event => {
     this.setState({
       colorOpen: true,
@@ -342,7 +525,12 @@ class CreateLabelNote extends Component {
       hoverColorTooltip: false
     });
   };
-
+  handleReminderClick = async event => {
+    await this.setState({
+      reminderMenu: true,
+      reminderAnchor: event.currentTarget
+    });
+  };
   handleLabelMenuOpen = () => {
     this.setState({
       labelMenu: true,
@@ -374,8 +562,12 @@ class CreateLabelNote extends Component {
         openNote: false,
         allLabels: array,
         labelpresent: true,
-        collabpresent: false
+        collabpresent: false,
+        collaborators: [],
+        selectedDate: "",
+        remState: []
       });
+      rem = [];
     } else {
       var noteDetails = {
         title: this.state.title,
@@ -385,8 +577,8 @@ class CreateLabelNote extends Component {
         archived: this.state.isArchived,
         pinned: this.state.isPinned,
         color: this.state.color,
-        reminder: this.state.reminder,
-        labelName: this.state.labelName
+        labelName: this.state.labelName,
+        reminder: this.state.selectedDate
       };
 
       await Controller.takenote(noteDetails).then(res => {
@@ -406,6 +598,17 @@ class CreateLabelNote extends Component {
               }
             );
           });
+          this.state.collaborators.map(items => {
+            let collabDetails = {
+              noteId: res.data.object.id,
+              collaborator: items
+            };
+            NoteController.addcollabtonote(collabDetails).then(resp => {
+              if (resp.status === 200) {
+                console.log("Collaborator added to note");
+              }
+            });
+          });
         }
       });
       await this.setState({
@@ -421,16 +624,24 @@ class CreateLabelNote extends Component {
         createdTime: "",
         openNote: false,
         allLabels: [],
-        labelpresent: false
+        labelpresent: false,
+        collaborators: [],
+        selectedDate: "",
+        remState: []
       });
 
       array = [];
+      arrcollab1 = [];
+      rem = [];
     }
 
     this.props.getNote();
   };
 
   render() {
+    console.log("reminder is ::", this.state.selectedDate);
+
+    let owner = localStorage.getItem("owner");
     const label = this.state.obj3.map(item => {
       console.log(this.state.allLabels, "all labels");
       if (this.state.allLabels.length !== 0) {
@@ -476,13 +687,33 @@ class CreateLabelNote extends Component {
         );
       }
     });
+    let displaycollabs;
+    displaycollabs = this.state.collaborators.map(item => {
+      return (
+        <div className="collab-style">
+          <Tooltip title={item}>
+            <Avatar src="/broken-image.jpg" />
+          </Tooltip>
+        </div>
+      );
+    });
+    let displaycoll;
+    displaycoll = this.state.collaborators1.map(item => {
+      return (
+        <div className="collab-style">
+          <Tooltip title={item}>
+            <Avatar src="/broken-image.jpg" />
+          </Tooltip>
+        </div>
+      );
+    });
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
       console.log(this.state.allLabels, "all Labels");
       displaylabels = this.state.allLabels.map(el => {
         console.log(el);
         return (
-          <div>
+          <div className="chip-style">
             <Chip label={el} onDelete={this.handleDeleteLabelInNote} />
           </div>
         );
@@ -505,6 +736,65 @@ class CreateLabelNote extends Component {
               onClick={this.changeNoteColor}
             />
           </Tooltip>
+        </div>
+      );
+    });
+    let collabs;
+    collabs = this.state.collaborators.map(item => {
+      return (
+        <div className="collab-owner">
+          <div style={{ marginLeft: "23px", marginTop: "10px" }}>
+            <Avatar src="/broken-image.jpg" />
+          </div>
+          <div style={{ marginLeft: "7px" }}>
+            <h4>{item}</h4>
+          </div>
+          <div style={{ marginLeft: "35px", marginTop: "-3px" }}>
+            <IconButton
+              onClick={data => {
+                this.handleRemoveCollab(data, item);
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+        </div>
+      );
+    });
+    //bro its not getting removed
+    //
+    let coll;
+    coll = this.state.collaborators1.map(item => {
+      return (
+        <div className="collab-owner">
+          <div style={{ marginLeft: "23px" }}>
+            <Avatar src="/broken-image.jpg" />
+          </div>
+          <div style={{ marginLeft: "7px", marginTop: "-10px" }}>
+            <h4>{item}</h4>
+          </div>
+          <div style={{ marginTop: "-3px" }}>
+            <IconButton
+              onClick={data => {
+                this.handleRemoveCollab1(data, item);
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+        </div>
+      );
+    });
+
+    let reminder;
+    reminder = this.state.remState.map(elem => {
+      return (
+        <div className="chip-style">
+          <Chip
+            icon={<AccessTimeIcon />}
+            label={elem}
+            onDelete={this.handleReminderDelete}
+          />
         </div>
       );
     });
@@ -550,43 +840,47 @@ class CreateLabelNote extends Component {
                 />
 
                 {!this.state.isPinned ? (
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Pin"
-                    arrow
-                  >
-                    <IconButton aria-label="Pin">
-                      <img
-                        style={{
-                          height: "0.54cm",
-                          width: "0.54cm",
-                          opacity: "0.65"
-                        }}
-                        src={Pin}
-                        onClick={this.handleIsPinned}
-                      />
-                    </IconButton>
-                  </Tooltip>
+                  <div className="pin-align">
+                    <Tooltip
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 100 }}
+                      title="Pin"
+                      arrow
+                    >
+                      <IconButton aria-label="Pin">
+                        <img
+                          style={{
+                            height: "0.54cm",
+                            width: "0.54cm",
+                            opacity: "0.65"
+                          }}
+                          src={Pin}
+                          onClick={this.handleIsPinned}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
                 ) : (
-                  <Tooltip
-                    TransitionComponent={Fade}
-                    TransitionProps={{ timeout: 100 }}
-                    title="Unpin"
-                    arrow
-                  >
-                    <IconButton aria-label="Unpin">
-                      <img
-                        style={{
-                          height: "0.54cm",
-                          width: "0.54cm",
-                          opacity: "0.65"
-                        }}
-                        src={Unpin}
-                        onClick={this.handleIsPinned}
-                      />
-                    </IconButton>
-                  </Tooltip>
+                  <div className="pin-align">
+                    <Tooltip
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 100 }}
+                      title="Unpin"
+                      arrow
+                    >
+                      <IconButton aria-label="Unpin">
+                        <img
+                          style={{
+                            height: "0.54cm",
+                            width: "0.54cm",
+                            opacity: "0.65"
+                          }}
+                          src={Unpin}
+                          onClick={this.handleIsPinned}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
                 )}
               </div>
               <div id="pin-inputbase">
@@ -600,13 +894,19 @@ class CreateLabelNote extends Component {
                 />
               </div>
 
-              {this.state.labelpresent || this.state.collabpresent ? (
-                <Toolbar id="display_labels">{displaylabels}</Toolbar>
-              ) : null}
+              <Toolbar id="display_labels">
+                {reminder}
+                {displaylabels}
+                {displaycollabs}
+                {displaycoll}
+              </Toolbar>
               <MuiThemeProvider>
                 <div>
-                  <Toolbar id="toolbaricons">
-                    <div className="buttons" style={{ display: "flex" }}>
+                  <Toolbar id="toolbariconsnote">
+                    <div
+                      className="buttons"
+                      style={{ display: "flex", marginLeft: "-28px" }}
+                    >
                       <div style={{ marginLeft: "6px" }}>
                         <Tooltip
                           TransitionComponent={Fade}
@@ -617,6 +917,7 @@ class CreateLabelNote extends Component {
                           <IconButton
                             aria-label="Reminder"
                             className="iconButtons"
+                            onClick={this.handleReminderClick}
                           >
                             <AddAlertIcon style={{ fontSize: "20px" }} />
                           </IconButton>
@@ -629,7 +930,10 @@ class CreateLabelNote extends Component {
                           title="Collaborator"
                           arrow
                         >
-                          <IconButton aria-label="Collaborator">
+                          <IconButton
+                            aria-label="Collaborator"
+                            onClick={this.handleCollabOpen}
+                          >
                             <PersonAddIcon style={{ fontSize: "20px" }} />
                           </IconButton>
                         </Tooltip>
@@ -684,21 +988,7 @@ class CreateLabelNote extends Component {
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
                           title="Color"
-                          placement="right"
                           disableHoverListener={this.state.hoverColorTooltip}
-                          // onMouseLeave={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-                          // onMouseOutCapture={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-                          // onMouseOverCapture={() => {
-                          //   this.setState({ openTooltip: false })
-
-                          // }}
-
                           arrow
                         >
                           <IconButton aria-label="Color">
@@ -717,7 +1007,7 @@ class CreateLabelNote extends Component {
                               }}
                               className="colormenu"
                             >
-                              <div className="color-align">{color1}</div>
+                              <div id="color-align">{color1}</div>
                             </Menu>
                           </IconButton>
                         </Tooltip>
@@ -797,15 +1087,10 @@ class CreateLabelNote extends Component {
           }}
           onClose={this.handleMenuClickAway}
         >
-          <div id="labelnote_menu" style={{}}>
-            Label Note
-          </div>
+          <div id="labelnote_menu">Label Note</div>
           <MenuItem>
             <Toolbar id="createlabelnote_field">
-              <div
-                className="buttons"
-                style={{ display: "flex", marginLeft: "1px" }}
-              >
+              <div style={{ display: "flex" }}>
                 <div className="cancel_labeltext">
                   <Tooltip
                     TransitionComponent={Fade}
@@ -848,6 +1133,105 @@ class CreateLabelNote extends Component {
             </Toolbar>
           </MenuItem>
           {label}
+        </Popover>
+        <Dialog open={this.state.collabOpen}>
+          <Card id="card_decor_collab">
+            <Toolbar>
+              <h3>Collaborators</h3>
+            </Toolbar>
+            <Divider />
+            <div className="collab-owner">
+              <div style={{ marginLeft: "23px", marginTop: "10px" }}>
+                <Avatar src="/broken-image.jpg" />
+              </div>
+              <div style={{ marginLeft: "7px" }}>
+                <h4>{owner}(owner)</h4>
+              </div>
+            </div>
+            {collabs}
+            {coll}
+            <div className="collab-new">
+              <div>
+                <IconButton>
+                  <PersonAddTwoToneIcon fontSize="15px" />
+                </IconButton>
+              </div>
+              <div
+                style={{
+                  paddingTop: "6px"
+                }}
+              >
+                <Input
+                  required="true"
+                  error={this.state.err1}
+                  placeholder="Email to share with"
+                  spellCheck={false}
+                  value={this.state.collabName}
+                  onChange={this.onChangeCollabName}
+                  helperText={this.helpercollabmethod()}
+                />
+              </div>
+              <div>
+                <IconButton disabled={this.state.disable}>
+                  <DoneIcon onClick={this.handleCollabDoneClick} />
+                </IconButton>
+              </div>
+            </div>
+            <Divider />
+            <div className="collab-cancelsavebutton">
+              <div style={{ marginRight: "5%" }}>
+                <Button variant="contained" onClick={this.handleCollabCancel}>
+                  Cancel
+                </Button>
+              </div>
+              <div>
+                <Button variant="contained" onClick={this.handleCollabSave}>
+                  Save
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </Dialog>
+        <Popover
+          id="label-menu"
+          open={this.state.reminderMenu}
+          anchorEl={this.state.reminderAnchor}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center"
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center"
+          }}
+          onClose={this.handleMenuClickAway}
+        >
+          <Card id="reminder-card">
+            <Toolbar id="createlabelnote_field">
+              <Typography style={{ fontWeight: "bolder" }}>
+                Reminders
+              </Typography>
+            </Toolbar>
+            <Divider />
+            <Toolbar>
+              <div style={{ marginLeft: "-11px" }}>
+                <form>
+                  <TextField
+                    id="datetime-local"
+                    type="datetime-local"
+                    value={this.state.selectedDate}
+                    defaultValue={this.state.selectedDate}
+                    onChange={this.handleReminder}
+                  />
+                </form>
+              </div>
+            </Toolbar>
+            <Toolbar id="createlabelnote_field">
+              <div className="rem-save">
+                <Button onClick={this.handleSaveReminder}>save</Button>
+              </div>
+            </Toolbar>
+          </Card>
         </Popover>
       </div>
     );

@@ -13,8 +13,10 @@ import {
   ReactFragment,
   Popover,
   Chip,
-  Avatar
+  Avatar,
+  Divider
 } from "@material-ui/core";
+import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
 import CancelTwoToneIcon from "@material-ui/icons/CancelTwoTone";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
 import IconButton from "@material-ui/core/IconButton";
@@ -37,11 +39,13 @@ import CloseOutlinedIcon from "@material-ui/icons/CloseOutlined";
 import Input from "@material-ui/core/Input";
 import DoneIcon from "@material-ui/icons/Done";
 import Controller from "../Controller/UserController";
-import DialogCard from "../Components/DialogCard";
 import GetLabelsInNoteMenu from "../Components/GetLabelsInNoteMenu";
+import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
 
 const saveclose = "Save & Close";
 let array = [];
+let arrcollab1 = [];
+
 class GetNotes extends PureComponent {
   constructor(props) {
     super(props);
@@ -54,6 +58,7 @@ class GetNotes extends PureComponent {
       isPinned: this.props.data.pinned,
       isTrashed: this.props.data.trashed,
       color: this.props.data.color,
+
       getNoteLabelArr: [],
       colorAnchor: null,
       openSnack: false,
@@ -67,6 +72,12 @@ class GetNotes extends PureComponent {
       obj3: this.props.obj3,
       hoverColorTooltip: false,
       labelName: "",
+      collaborators: this.props.data.collaborator,
+      collabOpen: false,
+      disable: true,
+      collabName: "",
+      err1: false,
+      fromArchive: this.props.fromArchive,
 
       manycolor: [
         { name: "Red", colorCode: "#ef9a9a" },
@@ -98,10 +109,11 @@ class GetNotes extends PureComponent {
       isTrashed: props.data.trashed,
       color: props.data.color,
       obj3: props.obj3,
-      allLabels: props.data.labels
+      allLabels: props.data.labels,
+      collaborators: props.data.collaborator,
+      fromArchive: props.fromArchive
     });
   }
-  componentDidMount(props) {}
 
   handleLabel = async data => {
     for (let index = 0; index < this.state.allLabels.length; index++) {
@@ -287,6 +299,100 @@ class GetNotes extends PureComponent {
     this.props.getNote();
   };
 
+  handleCollabOpen = async () => {
+    await this.setState({ collabOpen: true });
+  };
+  onChangeCollabName = async event => {
+    await this.setState({ collabName: event.target.value });
+
+    if (
+      /^[a-zA-z\d._-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,4}$/.test(
+        this.state.collabName
+      )
+    ) {
+      this.setState({ err1: false });
+      if (this.state.collabName !== "") {
+        await this.setState({ disable: false });
+      }
+    } else if (this.state.collabName === "") {
+      this.setState({ err1: false, disable: true });
+    } else {
+      this.setState({ err1: true });
+    }
+  };
+  helpercollabmethod = () => {
+    if (this.state.err1) {
+      return "Not a valid mail id";
+    }
+  };
+  handleCollabDoneClick = async () => {
+    arrcollab1.push(this.state.collabName);
+
+    let collabDetails = {
+      noteId: this.props.data.id,
+      collaborator: this.state.collabName
+    };
+    await NoteController.addcollabtonote(collabDetails).then(resp => {
+      if (resp.status === 200) {
+        console.log("Collaborator added to note");
+        this.props.getNote();
+      }
+    });
+    await this.setState({
+      collabName: "",
+      disable: true
+    });
+  };
+  handleRemoveCollab = async (data, item) => {
+    let collabDetails = {
+      noteId: this.props.data.id,
+      collaborator: item
+    };
+    NoteController.deletecollabfromnote(collabDetails).then(resp => {
+      if (resp.status === 200) {
+        console.log("Collaborator added to note");
+        this.props.getNote();
+      }
+    });
+  };
+  // handleRemoveCollab1 = async (data, item) => {
+  //   for (let index = 0; index < arrcollab1.length; index++) {
+  //     console.log("man", item);
+  //     if (item === arrcollab1[index]) {
+  //       arrcollab1.splice(index, 1);
+  //       await this.setState({
+  //         collaborators1: arrcollab1
+  //       });
+  //     }
+  //   }
+  // };
+  handleCollabSave = async () => {
+    await this.setState({
+      collabOpen: false
+    });
+    arrcollab1 = [];
+  };
+  handleCollabCancel = async () => {
+    if (arrcollab1.length !== 0) {
+      for (let index = 0; index < arrcollab1.length; index++) {
+        let collabDetails = {
+          noteId: this.props.data.id,
+          collaborator: arrcollab1[index]
+        };
+        NoteController.deletecollabfromnote(collabDetails).then(resp => {
+          if (resp.status === 200) {
+            console.log("Collaborator added to note");
+          }
+        });
+      }
+    }
+    arrcollab1 = [];
+    this.props.getNote();
+    await this.setState({
+      collabOpen: false
+    });
+  };
+
   handleIsPinned = async () => {
     await this.setState({ isPinned: true });
     await NoteController.pinnote(this.state.id).then(res => {
@@ -298,6 +404,9 @@ class GetNotes extends PureComponent {
     this.props.getNote();
   };
 
+  handleDialogPinUnpin = async () => {
+    await this.setState({ isPinned: !this.state.isPinned });
+  };
   handleIsUnpinned = async () => {
     await this.setState({ isPinned: false });
     await NoteController.pinnote(this.state.id).then(res => {
@@ -307,7 +416,21 @@ class GetNotes extends PureComponent {
     });
     this.props.getNote();
   };
+  handleIsUnArchived = async () => {
+    await this.setState({
+      isPinned: false,
+      isArchived: false,
+      archivemsg: "Note Unarchived ",
+      openSnack: true
+    });
 
+    await NoteController.archivenote(this.state.id).then(res => {
+      if (res.status === 200) {
+        console.log("Successfully Unarchived");
+      }
+    });
+    this.props.getNote();
+  };
   handleIsArchived = async () => {
     console.log(
       "in archive",
@@ -342,8 +465,32 @@ class GetNotes extends PureComponent {
       this.props.getNote();
     }
   };
+  onCloseDialog = async () => {
+    var noteDetails = {
+      id: this.state.id,
+      title: this.state.title,
+      takeanote: this.state.description,
+      createdtime: this.state.createdTime,
+      trashed: this.state.isTrashed,
+      archived: this.state.isArchived,
+      pinned: this.state.isPinned,
+      color: this.state.color,
+      reminder: this.state.reminder,
+      labelName: this.state.labelName
+    };
 
+    await NoteController.setTitleDesc(noteDetails).then(res => {
+      console.log("hiii...", res);
+      if (res.status === 200) {
+        console.log(res.data.message);
+      }
+    });
+    this.props.getNote();
+    await this.setState({ openDialog: false });
+  };
   render() {
+    let owner = localStorage.getItem("owner");
+
     const label = this.state.obj3.map(item => {
       if (this.state.allLabels.length !== 0) {
         for (let i = 0; i < this.state.allLabels.length; i++) {
@@ -407,14 +554,15 @@ class GetNotes extends PureComponent {
           <div className="chip-style">
             <Chip
               label={el.labelname}
-              onDelete={() => {
-                NoteController.deletelabelfornote(this.props.data.id, x).then(
-                  res => {
-                    if (res.status === 200) {
-                      console.log("Label deleted for the note successfully");
-                    }
+              onDelete={async () => {
+                await NoteController.deletelabelfornote(
+                  this.props.data.id,
+                  x
+                ).then(res => {
+                  if (res.status === 200) {
+                    console.log("Label deleted for the note successfully");
                   }
-                );
+                });
                 this.props.getNote();
               }}
               deleteIcon={
@@ -427,6 +575,41 @@ class GetNotes extends PureComponent {
         );
       });
     }
+    let displaycollabs;
+    displaycollabs = this.state.collaborators.map(item => {
+      return (
+        <div className="collab-style">
+          <Tooltip title={item.collaborator}>
+            <Avatar src="/broken-image.jpg" />
+          </Tooltip>
+        </div>
+      );
+    });
+
+    let collabs;
+    collabs = this.state.collaborators.map(item => {
+      return (
+        <div className="collab-owner">
+          <div style={{ marginLeft: "23px" }}>
+            <Avatar src="/broken-image.jpg" />
+          </div>
+          <div style={{ marginLeft: "7px", marginTop: "-10px" }}>
+            <h4>{item.collaborator}</h4>
+          </div>
+          <div style={{ marginTop: "-3px" }}>
+            <IconButton
+              onClick={data => {
+                console.log("collabs", item.collaborator);
+
+                this.handleRemoveCollab(data, item.collaborator);
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
+          </div>
+        </div>
+      );
+    });
 
     let item = {
       title: this.state.title,
@@ -471,43 +654,47 @@ class GetNotes extends PureComponent {
             onClick={this.handleDialogOpen}
           />
           {!this.state.isPinned ? (
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 100 }}
-              title="Pin"
-              arrow
-            >
-              <IconButton aria-label="Pin">
-                <img
-                  style={{
-                    height: "0.5cm",
-                    width: "0.5cm",
-                    opacity: "0.65"
-                  }}
-                  src={Pin}
-                  onClick={this.handleIsPinned}
-                />
-              </IconButton>
-            </Tooltip>
+            <div className="pinunpin-align">
+              <Tooltip
+                TransitionComponent={Fade}
+                TransitionProps={{ timeout: 100 }}
+                title="Pin"
+                arrow
+              >
+                <IconButton aria-label="Pin">
+                  <img
+                    style={{
+                      height: "0.5cm",
+                      width: "0.5cm",
+                      opacity: "0.65"
+                    }}
+                    src={Pin}
+                    onClick={this.handleIsPinned}
+                  />
+                </IconButton>
+              </Tooltip>
+            </div>
           ) : (
-            <Tooltip
-              TransitionComponent={Fade}
-              TransitionProps={{ timeout: 100 }}
-              title="Unpin"
-              arrow
-            >
-              <IconButton aria-label="Unpin">
-                <img
-                  style={{
-                    height: "0.5cm",
-                    width: "0.5cm",
-                    opacity: "0.65"
-                  }}
-                  src={Unpin}
-                  onClick={this.handleIsUnpinned}
-                />
-              </IconButton>
-            </Tooltip>
+            <div className="pinunpin-align">
+              <Tooltip
+                TransitionComponent={Fade}
+                TransitionProps={{ timeout: 100 }}
+                title="Unpin"
+                arrow
+              >
+                <IconButton aria-label="Unpin">
+                  <img
+                    style={{
+                      height: "0.5cm",
+                      width: "0.5cm",
+                      opacity: "0.65"
+                    }}
+                    src={Unpin}
+                    onClick={this.handleIsUnpinned}
+                  />
+                </IconButton>
+              </Tooltip>
+            </div>
           )}
         </div>
         <div id="pin-inputbase-getnotes">
@@ -522,7 +709,10 @@ class GetNotes extends PureComponent {
             onClick={this.handleDialogOpen}
           />
         </div>
-        <Toolbar id="label_chip">{displaylabels}</Toolbar>
+        <Toolbar id="label_chip">
+          {displaylabels}
+          {displaycollabs}
+        </Toolbar>
         <MuiThemeProvider>
           <div>
             <Toolbar id="note-buttons">
@@ -545,7 +735,10 @@ class GetNotes extends PureComponent {
                   title="Collaborator"
                   arrow
                 >
-                  <IconButton aria-label="Collaborator">
+                  <IconButton
+                    aria-label="Collaborator"
+                    onClick={this.handleCollabOpen}
+                  >
                     <PersonAddIcon style={{ fontSize: "20px" }} />
                   </IconButton>
                 </Tooltip>
@@ -573,55 +766,102 @@ class GetNotes extends PureComponent {
                         horizontal: "right"
                       }}
                     >
-                      <div className="color-align">{color1}</div>
+                      <div id="color-align">{color1}</div>
                     </Menu>
                   </IconButton>
                 </Tooltip>
               </div>
-              <div id="tooltip-style">
-                <Tooltip
-                  TransitionComponent={Fade}
-                  TransitionProps={{ timeout: 100 }}
-                  title="Archive"
-                  arrow
-                >
-                  <IconButton aria-label="Archive">
-                    <ArchiveOutlinedIcon
-                      style={{ fontSize: "20px" }}
-                      onClick={this.handleIsArchived}
-                    />
-                    <Snackbar
-                      anchorOrigin={{
-                        vertical: "bottom",
-                        horizontal: "center"
-                      }}
-                      open={this.state.openSnack}
-                      autoHideDuration={4000}
-                      onClose={this.handleClose}
-                      message={this.state.archivemsg}
-                      action={
-                        <React.Fragment>
-                          <div
-                            style={{
-                              paddingBottom: "17px",
-                              marginRight: "-25px"
-                            }}
-                          >
-                            <IconButton
-                              size="small"
-                              aria-label="close"
-                              color="inherit"
-                              onClick={this.handleClose}
+              {this.state.fromArchive ? (
+                <div id="tooltip-style">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Unarchive"
+                    arrow
+                  >
+                    <IconButton aria-label="Unarchive">
+                      <UnarchiveOutlinedIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.handleIsUnArchived}
+                      />
+                      <Snackbar
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center"
+                        }}
+                        open={this.state.openSnack}
+                        autoHideDuration={4000}
+                        onClose={this.handleClose}
+                        message={this.state.archivemsg}
+                        action={
+                          <React.Fragment>
+                            <div
+                              style={{
+                                paddingBottom: "17px",
+                                marginRight: "-25px"
+                              }}
                             >
-                              <CloseIcon fontSize="small" />
-                            </IconButton>
-                          </div>
-                        </React.Fragment>
-                      }
-                    />
-                  </IconButton>
-                </Tooltip>
-              </div>
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={this.handleClose}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </div>
+                          </React.Fragment>
+                        }
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              ) : (
+                <div id="tooltip-style">
+                  <Tooltip
+                    TransitionComponent={Fade}
+                    TransitionProps={{ timeout: 100 }}
+                    title="Archive"
+                    arrow
+                  >
+                    <IconButton aria-label="Archive">
+                      <ArchiveOutlinedIcon
+                        style={{ fontSize: "20px" }}
+                        onClick={this.handleIsArchived}
+                      />
+                      <Snackbar
+                        anchorOrigin={{
+                          vertical: "bottom",
+                          horizontal: "center"
+                        }}
+                        open={this.state.openSnack}
+                        autoHideDuration={4000}
+                        onClose={this.handleClose}
+                        message={this.state.archivemsg}
+                        action={
+                          <React.Fragment>
+                            <div
+                              style={{
+                                paddingBottom: "17px",
+                                marginRight: "-25px"
+                              }}
+                            >
+                              <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={this.handleClose}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                            </div>
+                          </React.Fragment>
+                        }
+                      />
+                    </IconButton>
+                  </Tooltip>
+                </div>
+              )}
               <div id="tooltip-style">
                 <Tooltip
                   TransitionComponent={Fade}
@@ -684,15 +924,10 @@ class GetNotes extends PureComponent {
           }}
           onClose={this.handleLabelMenuClickAway}
         >
-          <div id="labelnote_menu" style={{}}>
-            Label Note
-          </div>
+          <div id="labelnote_menu">Label Note</div>
           <MenuItem>
             <Toolbar id="createlabelnote_field">
-              <div
-                className="buttons"
-                style={{ display: "flex", marginLeft: "1px" }}
-              >
+              <div style={{ display: "flex" }}>
                 <div className="cancel_labeltext">
                   <Tooltip
                     TransitionComponent={Fade}
@@ -736,12 +971,346 @@ class GetNotes extends PureComponent {
           </MenuItem>
           {label}
         </Popover>
-        <DialogCard
+        <Dialog open={this.state.openDialog}>
+          <div className="note-button">
+            <Card
+              id="card_decor5"
+              style={{
+                backgroundColor: this.state.color
+              }}
+            >
+              <div id="pin-inputbase">
+                <InputBase
+                  id="style-inpbase"
+                  multiline
+                  spellCheck={false}
+                  placeholder="Title...."
+                  value={this.state.title}
+                  onChange={this.onChangeTitle}
+                />
+
+                {!this.state.isPinned ? (
+                  <div className="pinunpin-align">
+                    <Tooltip
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 100 }}
+                      title="Pin"
+                      arrow
+                    >
+                      <IconButton aria-label="Pin">
+                        <img
+                          style={{
+                            height: "0.54cm",
+                            width: "0.54cm",
+                            opacity: "0.65"
+                          }}
+                          src={Pin}
+                          onClick={this.handleDialogPinUnpin}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                ) : (
+                  <div className="pinunpin-align">
+                    <Tooltip
+                      TransitionComponent={Fade}
+                      TransitionProps={{ timeout: 100 }}
+                      title="Unpin"
+                      arrow
+                    >
+                      <IconButton aria-label="Unpin">
+                        <img
+                          style={{
+                            height: "0.54cm",
+                            width: "0.54cm",
+                            opacity: "0.65"
+                          }}
+                          src={Unpin}
+                          onClick={this.handleDialogPinUnpin}
+                        />
+                      </IconButton>
+                    </Tooltip>
+                  </div>
+                )}
+              </div>
+              <div id="pin-inputbase">
+                <InputBase
+                  id="style-inpbase"
+                  multiline
+                  spellCheck={false}
+                  placeholder="Description...."
+                  value={this.state.description}
+                  onChange={this.onChangeDescription}
+                />
+              </div>
+
+              <Toolbar id="display_labels">
+                {displaylabels}
+                {displaycollabs}
+              </Toolbar>
+
+              <MuiThemeProvider>
+                <div>
+                  <Toolbar id="toolbaricons">
+                    <div style={{ display: "flex" }}>
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Reminder"
+                          arrow
+                        >
+                          <IconButton
+                            aria-label="Reminder"
+                            className="iconButtons"
+                          >
+                            <AddAlertIcon style={{ fontSize: "20px" }} />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Collaborator"
+                          arrow
+                        >
+                          <IconButton
+                            aria-label="Collaborator"
+                            onClick={this.handleCollabOpen}
+                          >
+                            <PersonAddIcon style={{ fontSize: "20px" }} />
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+
+                      <div>
+                        {this.state.fromArchive ? (
+                          <Tooltip
+                            TransitionComponent={Fade}
+                            TransitionProps={{ timeout: 100 }}
+                            title="Unarchive"
+                            arrow
+                          >
+                            <IconButton aria-label="Unarchive">
+                              <UnarchiveOutlinedIcon
+                                style={{ fontSize: "20px" }}
+                                onClick={this.handleIsUnArchived}
+                              />
+                              <Snackbar
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "center"
+                                }}
+                                open={this.state.open}
+                                autoHideDuration={4000}
+                                onClose={this.handleClose}
+                                message={this.state.archivemsg}
+                                action={
+                                  <React.Fragment>
+                                    <div>
+                                      <IconButton
+                                        size="small"
+                                        aria-label="close"
+                                        color="inherit"
+                                        onClick={this.handleClose}
+                                      >
+                                        <CloseIcon fontSize="small" />
+                                      </IconButton>
+                                    </div>
+                                  </React.Fragment>
+                                }
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        ) : (
+                          <Tooltip
+                            TransitionComponent={Fade}
+                            TransitionProps={{ timeout: 100 }}
+                            title="Archive"
+                            arrow
+                          >
+                            <IconButton aria-label="Archive">
+                              <ArchiveOutlinedIcon
+                                style={{ fontSize: "20px" }}
+                                onClick={this.handleIsArchived}
+                              />
+                              <Snackbar
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "center"
+                                }}
+                                open={this.state.open}
+                                autoHideDuration={4000}
+                                onClose={this.handleClose}
+                                message={this.state.archivemsg}
+                                action={
+                                  <React.Fragment>
+                                    <div>
+                                      <IconButton
+                                        size="small"
+                                        aria-label="close"
+                                        color="inherit"
+                                        onClick={this.handleClose}
+                                      >
+                                        <CloseIcon fontSize="small" />
+                                      </IconButton>
+                                    </div>
+                                  </React.Fragment>
+                                }
+                              />
+                            </IconButton>
+                          </Tooltip>
+                        )}
+                      </div>
+                      <div >
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="Color"
+                          disableHoverListener={this.state.hoverColorTooltip}
+                          arrow
+                        >
+                          <IconButton aria-label="Color">
+                            <PaletteOutlinedIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeColor}
+                            />
+                            <Menu
+                              id="simple-menu"
+                              open={this.state.colorOpen}
+                              anchorEl={this.state.colorAnchor}
+                              onClose={this.closeColorBox}
+                              transformOrigin={{
+                                vertical: "right",
+                                horizontal: "right"
+                              }}
+                            >
+                              <div id="color-align">{color1}</div>
+                            </Menu>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                      <div>
+                        <Tooltip
+                          TransitionComponent={Fade}
+                          TransitionProps={{ timeout: 100 }}
+                          title="More"
+                          disableHoverListener={this.state.hoverMoreTooltip}
+                          arrow
+                        >
+                          <IconButton aria-label="More">
+                            <MoreVertTwoToneIcon
+                              style={{ fontSize: "20px" }}
+                              onClick={this.changeLabel}
+                            />
+                            <div>
+                              <Popover
+                                id="label-menu"
+                                open={this.state.menu}
+                                anchorEl={this.state.labelAnchor}
+                                onClick={this.handleMenuClickAway}
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "center"
+                                }}
+                                transformOrigin={{
+                                  vertical: "top",
+                                  horizontal: "center"
+                                }}
+                              >
+                                <MenuItem onClick={this.handleLabelMenuOpen}>
+                                  Add label
+                                </MenuItem>
+                                <MenuItem onClick={this.handleDeleteNote}>
+                                  Delete note
+                                </MenuItem>
+                              </Popover>
+                            </div>
+                          </IconButton>
+                        </Tooltip>
+                      </div>
+                    </div>
+                    <div id="close_button">
+                      <Tooltip
+                        TransitionComponent={Fade}
+                        TransitionProps={{ timeout: 100 }}
+                        title={saveclose}
+                        arrow
+                      >
+                        <Button onClick={this.onCloseDialog}>Close</Button>
+                      </Tooltip>
+                    </div>
+                  </Toolbar>
+                </div>
+              </MuiThemeProvider>
+            </Card>
+          </div>
+        </Dialog>
+
+        {/* <DialogCard
           openDialog={this.state.openDialog}
           handleDialogClose={this.handleDialogClose}
           data={item}
           getNote={this.props.getNote}
-        />
+        /> */}
+        <Dialog open={this.state.collabOpen}>
+          <Card id="card_decor_collab">
+            <Toolbar>
+              <h3>Collaborators</h3>
+            </Toolbar>
+            <Divider />
+            <div className="collab-owner">
+              <div style={{ marginLeft: "23px", marginTop: "10px" }}>
+                <Avatar src="/broken-image.jpg" />
+              </div>
+              <div style={{ marginLeft: "7px" }}>
+                <h4>{owner}(owner)</h4>
+              </div>
+            </div>
+            {collabs}
+            <div className="collab-new">
+              <div>
+                <IconButton>
+                  <PersonAddTwoToneIcon fontSize="15px" />
+                </IconButton>
+              </div>
+              <div
+                style={{
+                  paddingTop: "6px"
+                }}
+              >
+                <Input
+                  required="true"
+                  error={this.state.err1}
+                  placeholder="Email to share with"
+                  spellCheck={false}
+                  value={this.state.collabName}
+                  onChange={this.onChangeCollabName}
+                  helperText={this.helpercollabmethod()}
+                />
+              </div>
+              <div>
+                <IconButton disabled={this.state.disable}>
+                  <DoneIcon onClick={this.handleCollabDoneClick} />
+                </IconButton>
+              </div>
+            </div>
+            <Divider />
+            <div className="collab-cancelsavebutton">
+              <div style={{ marginRight: "5%" }}>
+                <Button variant="contained" onClick={this.handleCollabCancel}>
+                  Cancel
+                </Button>
+              </div>
+              <div>
+                <Button variant="contained" onClick={this.handleCollabSave}>
+                  Save
+                </Button>
+              </div>
+            </div>
+          </Card>
+        </Dialog>
       </Card>
     );
   }

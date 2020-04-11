@@ -123,7 +123,11 @@ const useStyles = makeStyles(theme => ({
 
 export default function SideNavBar(props) {
   const classes = useStyles();
-
+  const [NoteColor, setNoteColor] = useState(true);
+  const [ReminderColor, setReminderColor] = useState(false);
+  const [LabelColor, setLabelColor] = useState(false);
+  const [ArchiveColor, setArchiveColor] = useState(false);
+  const [TrashColor, setTrashColor] = useState(false);
   const [obj3, setObj3] = useState(props.obj3);
   const [obj, setObj] = useState(props.obj);
 
@@ -132,7 +136,6 @@ export default function SideNavBar(props) {
   };
 
   let getUserLabels = props.obj3.map(item3 => {
-    console.log("the labels are: ", item3);
     return (
       <div>
         <List
@@ -146,8 +149,7 @@ export default function SideNavBar(props) {
               className
               style={{
                 paddingTop: "-2%",
-                fontWeight: "bolder",
-                marginBottom: "0.9%"
+                fontWeight: "bolder"
               }}
             >
               <LabelTwoToneIcon />
@@ -181,7 +183,12 @@ export default function SideNavBar(props) {
       <Divider />
 
       <List onClick={props.handleNotesMenu}>
-        <ListItem style={{ marginTop: "-2%" }} button key="Notes">
+        <ListItem
+          style={{ marginTop: "-2%" }}
+          button
+          key="Notes"
+          selected={props.notesOpen}
+        >
           <ListItemIcon
             style={{
               paddingTop: "2%",
@@ -190,26 +197,22 @@ export default function SideNavBar(props) {
               marginRight: "59%"
             }}
           >
-            <NotesIcon />{" "}
-            <ListItemText
-              style={{
-                paddingLeft: "50%",
-                paddingBottom: "2%",
-                fontFamily: "Arial",
-                fontWeight: "bolder",
-                color: "#212121",
-                marginBottom: "12%",
-                fontSizeAdjust: "inherit"
-              }}
-            >
-              Notes
-            </ListItemText>
+            <NotesIcon style={{ marginTop: "-15%" }} />
           </ListItemIcon>
+
+          <ListItemText style={{ width: "100%", marginLeft: "-59%" }}>
+            Notes
+          </ListItemText>
         </ListItem>
       </List>
 
       <List onClick={props.handleRemindersMenu}>
-        <ListItem style={{ marginTop: "-6%" }} button key="Reminders">
+        <ListItem
+          style={{ marginTop: "-6%" }}
+          button
+          key="Reminders"
+          selected={props.remindersOpen}
+        >
           <ListItemIcon
             style={{
               paddingTop: "2%",
@@ -248,7 +251,12 @@ export default function SideNavBar(props) {
 
       <Divider />
       <List onClick={props.handleArchiveMenu}>
-        <ListItem style={{ marginTop: "-1%" }} button key="Archive">
+        <ListItem
+          style={{ marginTop: "-1%" }}
+          button
+          key="Archive"
+          selected={props.archiveOpen}
+        >
           <ListItemIcon
             className
             style={{
@@ -268,7 +276,12 @@ export default function SideNavBar(props) {
         </ListItem>
       </List>
       <List onClick={props.handleTrashMenu}>
-        <ListItem style={{ marginTop: "-6%" }} button key="Trash">
+        <ListItem
+          style={{ marginTop: "-6%" }}
+          button
+          key="Trash"
+          selected={props.trashOpen}
+        >
           <ListItemIcon
             className
             style={{

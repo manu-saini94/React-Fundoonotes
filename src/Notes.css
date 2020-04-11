@@ -7,20 +7,30 @@
 .colorflex {
   display: flex;
 }
+#appbar-outerdiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  width: 100%;
+}
 
-.search_input {
-  margin-left: -41px;
-  margin-top: 2px;
-}
-.search_icon {
-  margin-left: 34px;
-  padding-top: -16px;
-  margin-top: -8.5px;
-}
 .search-align {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+.pinunpin-align {
+  padding-right: 7px;
+  padding-top: 5px;
+}
+.title-heading {
+  color: rgb(97, 97, 97);
+  font-size: 23px;
+  padding-top: 17px;
+}
+.img-logo {
+  padding-top: 11px;
+  width: 5%;
 }
 .shift-true {
   display: flex;
@@ -32,9 +42,8 @@
   width: 700px;
   height: 50px;
   border-radius: 12px;
-  margin-left: -19%;
-  margin-top: 7px;
   background-color: #fafafa;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .shift-false {
   display: flex;
@@ -48,7 +57,12 @@
   display: flex;
   justify-content: center;
 }
-
+.note-buttonapp {
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 6px;
+}
 .create_note {
   height: auto;
 }
@@ -99,18 +113,21 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-left: 9px;
-  margin-bottom: 3px;
-  margin-top: -13px;
+  margin-left: -19px;
+  margin-bottom: -4px;
 }
 #tooltip-style {
   margin: 5px;
+}
+.pin-align {
+  padding-right: 12px;
+  padding-top: 8px;
 }
 #pin-inputbase {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding-left: 10px;
+  padding-left: 17px;
 }
 #pin-inputbase-getnotes {
   display: flex;
@@ -129,8 +146,7 @@
 #close_button {
   display: flex;
   flex-direction: row;
-  margin-left: 54%;
-  margin-top: -2%;
+  margin-left: 52%;
 }
 #inputbase-search {
   font-weight: bold;
@@ -148,6 +164,9 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
+}
+#getnote-dialog {
+  border-radius: 6px;
 }
 #card_decor3 {
   width: fit-content;
@@ -168,6 +187,12 @@
   margin: 0px 0px 0px 0px;
   height: fit-content;
   border-radius: 12px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+#card_decor5 {
+  width: 600px;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 /* #card_decordialog {
@@ -237,12 +262,29 @@
 .empty_trash {
   color: "blue";
 }
-.color-align {
-  width: "140px";
+#color-align {
+  width: 140px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  overflow-y: hidden;
+  padding-left: 9px;
+}
+
+/* #reminder-align {
+  width: 200px;
+  height: fit-content;
+} */
+#reminder-card {
+  width: 240px;
   height: "fit-content";
-  display: "flex";
-  flex-direction: "row";
-  flex-wrap: "wrap";
+}
+.rem-save {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding-bottom: 18px;
 }
 #createLabel_toolbar {
   width: fit-content;
@@ -253,33 +295,33 @@
 
 .input_createlabel {
   margin-top: 16px;
-  margin-left: -27px;
 }
 .input_createlabelnote {
   margin-top: 16px;
-  margin-left: -26px;
-  margin-right: -1px;
+  margin-left: 2px;
 }
 .cancel_labeltext {
-  margin-left: 10px;
+  margin-top: 10px;
 }
 .done_icon {
-  margin-left: 27px;
-  margin-top: -2px;
-  margin-right: -42px;
+  margin-top: 6px;
 }
 #createlabel_field {
+}
+#editlist-labels {
   min-height: 54px;
-  margin-top: -13px;
-  margin-bottom: -3px;
   display: flex;
-  justify-content: space-between;
+  margin-bottom: -18px;
+}
+#toolbariconsnote {
+  min-height: 64px;
+  margin-bottom: -6px;
+  margin-left: 7px;
 }
 #toolbaricons {
-  min-height: 59px;
-  margin-top: -8px;
-  margin-bottom: -1px;
-  margin-left: 3px;
+  min-height: 64px;
+  margin-bottom: -5px;
+  margin-left: -17px;
 }
 #createlabelnote_field {
   min-height: 58px;
@@ -300,13 +342,15 @@
   padding-left: 6%;
   padding-bottom: 13%;
 }
-#inputBase_margin {
-  margin-left: 3px;
-}
+
 /* .label_list_align {
 } */
 .chip-style {
-  padding-right: 2px;
+  padding-right: 3px;
+  padding-bottom: 3px;
+}
+.collab-style {
+  padding-right: 3px;
   padding-bottom: 3px;
 }
 #color-icon {
@@ -361,8 +405,6 @@
 }
 #outdiv_createnewlabel {
   display: flex;
-  margin-left: 8px;
-  margin-top: 7px;
 }
 
 #done_editlabels {
@@ -376,4 +418,37 @@
   width: fit-content;
   flex-wrap: wrap;
   margin-left: -6px;
+}
+.collab-owner {
+  display: flex;
+  flex-direction: row;
+  margin-top: -6px;
+  margin-bottom: -6px;
+}
+.collab-new {
+  display: flex;
+  flex-direction: row;
+  margin-top: -6px;
+  margin-left: 19px;
+}
+#card_decor_collab {
+  width: 600px;
+  margin: 0px 0px 0px 0px;
+  height: auto;
+}
+#toolbar-collab {
+  min-height: 61px;
+}
+.collab-cancelsavebutton {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-top: 10px;
+  margin-bottom: 11px;
+  padding-right: 24px;
+}
+#trash-icons {
+  display: flex;
+  padding-left: -17px;
+  margin-left: -18px;
 }

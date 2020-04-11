@@ -119,8 +119,8 @@ class GetLabels extends PureComponent {
       <div>
         <MuiThemeProvider>
           <div>
-            <Toolbar id="createlabel_field">
-              <Grid item xs={2} style={{ marginLeft: "12px" }}>
+            <Toolbar id="editlist-labels">
+              <Grid item xs={2}>
                 <Tooltip
                   TransitionComponent={Fade}
                   TransitionProps={{ timeout: 100 }}
@@ -137,8 +137,6 @@ class GetLabels extends PureComponent {
                 item
                 xs={6}
                 style={{
-                  marginLeft: "-37px",
-                  marginTop: "21px",
                   backgroundColor: this.state.baseColor,
                   borderRadius: "2px"
                 }}
@@ -151,7 +149,8 @@ class GetLabels extends PureComponent {
                   style={{
                     fontWeight: "bold",
                     width: "143px",
-                    color: "#616161"
+                    color: "#616161",
+                    paddingLeft: "4px"
                   }}
                   defaultValue={this.state.labelName}
                   inputProps={{ "aria-label": "naked" }}
@@ -159,7 +158,7 @@ class GetLabels extends PureComponent {
                 />
               </Grid>
               <Grid item xs={2}>
-                <div style={{ marginLeft: "23px" }}>
+                <div>
                   <Tooltip
                     TransitionComponent={Fade}
                     TransitionProps={{ timeout: 100 }}
@@ -177,7 +176,7 @@ class GetLabels extends PureComponent {
                 </div>
               </Grid>
               <Grid item xs={2}>
-                <div style={{ marginLeft: "25px" }}>
+                <div>
                   {this.state.iconChange ? (
                     <Tooltip
                       TransitionComponent={Fade}

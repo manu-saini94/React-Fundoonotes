@@ -322,7 +322,7 @@ class Registration extends Component {
                 />
               </div>
 
-              <div style={{ marginLeft: "-255px" }}>
+              <div style={{ marginLeft: "-373px" }}>
                 <Button
                   variant="outlined"
                   size="medium"

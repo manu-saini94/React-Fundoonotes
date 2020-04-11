@@ -159,7 +159,7 @@ class EditLabelsMenu extends React.PureComponent {
               </div>
               <MuiThemeProvider>
                 <div>
-                  <Toolbar id="createlabel_field">
+                  <Toolbar>
                     <div id="outdiv_createnewlabel">
                       <div className="cancel_labeltext">
                         <Tooltip
@@ -207,7 +207,7 @@ class EditLabelsMenu extends React.PureComponent {
               <MuiThemeProvider>
                 <div>
                   <Toolbar id="done_editlabels">
-                    <div className="buttons" style={{ display: "flex" }}>
+                    <div style={{ display: "flex" }}>
                       <div className="close_button">
                         <Tooltip
                           TransitionComponent={Fade}

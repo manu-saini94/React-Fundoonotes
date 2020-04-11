@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from "react";
-import GetArchiveNotes from "../Components/GetArchiveNotes";
+import GetNotes from "../Components/GetNotes";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
 
 class ArchiveMenu extends PureComponent {
@@ -8,7 +8,8 @@ class ArchiveMenu extends PureComponent {
 
     this.state = {
       obj: this.props.obj,
-      getNote: this.props.getNote
+      getNote: this.props.getNote,
+      obj3: this.props.obj3
     };
   }
 
@@ -22,7 +23,16 @@ class ArchiveMenu extends PureComponent {
     let archiveNotes = this.state.obj.map(item => {
       if (item.archived && !item.trashed && !item.pinned) {
         archiveflag = true;
-        return <GetArchiveNotes getNote={this.props.getNote} data={item} />;
+        return (
+          <GetNotes
+            getNote={this.props.getNote}
+            getNoteLabelArr={this.props.getNoteLabelArr}
+            obj3={this.props.obj3}
+            data={item}
+            key={item.id}
+            fromArchive={true}
+          />
+        );
       }
     });
 

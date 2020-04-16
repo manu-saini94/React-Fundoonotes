@@ -278,6 +278,7 @@ class CreateNote extends Component {
         reminder: "",
         labelName: "",
         createdTime: "",
+        openNote: false,
         allLabels: [],
         labelpresent: false,
         collaborators: [],
@@ -344,6 +345,7 @@ class CreateNote extends Component {
         color: "#FDFEFE",
         reminder: "",
         labelName: "",
+        openNote: false,
         createdTime: "",
         allLabels: [],
         labelpresent: false,
@@ -573,7 +575,6 @@ class CreateNote extends Component {
         archived: this.state.isArchived,
         pinned: this.state.isPinned,
         color: this.state.color,
-        reminder: this.state.reminder,
         labelName: this.state.labelName,
         reminder: this.state.selectedDate
       };
@@ -940,35 +941,6 @@ class CreateNote extends Component {
                               style={{ fontSize: "20px" }}
                               onClick={this.handleIsArchived}
                             />
-                            <Snackbar
-                              anchorOrigin={{
-                                vertical: "bottom",
-                                horizontal: "center"
-                              }}
-                              open={this.state.open}
-                              autoHideDuration={4000}
-                              onClose={this.handleClose}
-                              message={this.state.archivemsg}
-                              action={
-                                <React.Fragment>
-                                  <div
-                                    style={{
-                                      paddingBottom: "17px",
-                                      marginRight: "-25px"
-                                    }}
-                                  >
-                                    <IconButton
-                                      size="small"
-                                      aria-label="close"
-                                      color="inherit"
-                                      onClick={this.handleClose}
-                                    >
-                                      <CloseIcon fontSize="small" />
-                                    </IconButton>
-                                  </div>
-                                </React.Fragment>
-                              }
-                            />
                           </IconButton>
                         </Tooltip>
                       </div>
@@ -1222,6 +1194,30 @@ class CreateNote extends Component {
             </Toolbar>
           </Card>
         </Popover>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center"
+          }}
+          open={this.state.open}
+          autoHideDuration={4000}
+          onClose={this.handleClose}
+          message={this.state.archivemsg}
+          action={
+            <React.Fragment>
+              <div>
+                <IconButton
+                  size="small"
+                  aria-label="close"
+                  color="inherit"
+                  onClick={this.handleClose}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              </div>
+            </React.Fragment>
+          }
+        />
       </div>
     );
   }

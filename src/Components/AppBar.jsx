@@ -27,6 +27,7 @@ import NotesIcon from "@material-ui/icons/Notes";
 import NotificationsOutlinedIcon from "@material-ui/icons/NotificationsOutlined";
 import LabelOutlinedIcon from "@material-ui/icons/LabelOutlined";
 import Card from "@material-ui/core/Card";
+import Loader from "react-loader-spinner";
 
 const drawerWidth = 244;
 
@@ -153,7 +154,7 @@ export default function PrimarySearchAppBar(props) {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
   const theme = useTheme();
-
+  const [loading, setloading] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
   const handleProfileMenuOpen = event => {
@@ -300,7 +301,24 @@ export default function PrimarySearchAppBar(props) {
                 justifyContent: "flex-start"
               }}
             >
-              <IconButton>
+              <Loader
+                type="Puff"
+                color="#616161"
+                height={100}
+                width={100}
+                timeout={3000}
+                visible={loading}
+              />
+            </div>
+            <div
+              style={{
+                width: "12%",
+                paddingTop: "7px",
+                display: "flex",
+                justifyContent: "flex-start"
+              }}
+            >
+              <IconButton onClick={props.handleRefresh}>
                 <RefreshOutlinedIcon style={{ color: "#616161" }} />
               </IconButton>
 

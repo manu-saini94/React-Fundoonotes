@@ -85,7 +85,7 @@ class LabelMenu extends Component {
     });
 
     return (
-      <div>
+      <div style={{ marginTop: "55px" }}>
         {this.props.labelNoteOpen ? (
           <div className={this.props.open ? "shift-true" : "shift-false"}>
             <div className="create_note">

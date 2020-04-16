@@ -37,7 +37,7 @@ class ArchiveMenu extends PureComponent {
     });
 
     return (
-      <div>
+      <div style={{ marginTop: "55px" }}>
         {this.props.archiveOpen ? (
           <div className={this.props.open ? "shift-true" : "shift-false"}>
             {archiveflag ? (

@@ -78,6 +78,12 @@ var controller = {
     return axios.post("http://localhost:8080/collab/delete", collabDetails, {
       headers: { jwt: token, "Content-type": "application/json " }
     });
+  },
+  updatenote(noteDetails) {
+    return axios.put(
+      "http://localhost:8080/note/updateAll/" + token,
+      noteDetails
+    );
   }
 };
 export default controller;

@@ -14,8 +14,12 @@ import {
   Popover,
   Chip,
   Avatar,
-  Divider
+  Divider,
+  Typography,
+  TextField,
+  Button,
 } from "@material-ui/core";
+import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import UnarchiveOutlinedIcon from "@material-ui/icons/UnarchiveOutlined";
 import CancelTwoToneIcon from "@material-ui/icons/CancelTwoTone";
 import AddAlertIcon from "@material-ui/icons/AddAlert";
@@ -23,7 +27,7 @@ import IconButton from "@material-ui/core/IconButton";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import PaletteOutlinedIcon from "@material-ui/icons/PaletteOutlined";
 import ArchiveOutlinedIcon from "@material-ui/icons/ArchiveOutlined";
-import Button from "@material-ui/core/Button";
+
 import MoreVertTwoToneIcon from "@material-ui/icons/MoreVertTwoTone";
 import Toolbar from "@material-ui/core/Toolbar";
 import Pin from "../IMG/pin.svg";
@@ -45,6 +49,8 @@ import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
 const saveclose = "Save & Close";
 let array = [];
 let arrcollab1 = [];
+let rem = "";
+let profpic = localStorage.getItem("profilepicture");
 
 class GetNotes extends PureComponent {
   constructor(props) {
@@ -58,6 +64,8 @@ class GetNotes extends PureComponent {
       isPinned: this.props.data.pinned,
       isTrashed: this.props.data.trashed,
       color: this.props.data.color,
+      remState: this.props.data.reminder,
+      createdTime: this.props.data.createdtime,
 
       getNoteLabelArr: [],
       colorAnchor: null,
@@ -78,6 +86,10 @@ class GetNotes extends PureComponent {
       collabName: "",
       err1: false,
       fromArchive: this.props.fromArchive,
+      reminderMenu: false,
+      reminderAnchor: null,
+      selectedDate: this.props.data.reminder,
+      profilePicture: profpic,
 
       manycolor: [
         { name: "Red", colorCode: "#ef9a9a" },
@@ -91,12 +103,12 @@ class GetNotes extends PureComponent {
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
         { name: "Brown", colorCode: "#bcaaa4" },
-        { name: "White", colorCode: "#FDFEFE" }
+        { name: "White", colorCode: "#FDFEFE" },
       ],
 
       defaultColour: "#FDFEFE",
       colorOpen: false,
-      opencolourBox: false
+      opencolourBox: false,
     };
   }
   componentWillReceiveProps(props) {
@@ -108,14 +120,17 @@ class GetNotes extends PureComponent {
       isPinned: props.data.pinned,
       isTrashed: props.data.trashed,
       color: props.data.color,
+      remState: props.data.reminder,
+      createdTime: props.data.createdtime,
+      selectedDate: props.data.reminder,
       obj3: props.obj3,
       allLabels: props.data.labels,
       collaborators: props.data.collaborator,
-      fromArchive: props.fromArchive
+      fromArchive: props.fromArchive,
     });
   }
 
-  handleLabel = async data => {
+  handleLabel = async (data) => {
     for (let index = 0; index < this.state.allLabels.length; index++) {
       array.push(this.state.allLabels[index]);
     }
@@ -123,10 +138,10 @@ class GetNotes extends PureComponent {
     array.push(data);
     await this.setState({
       allLabels: array,
-      labelpresent: true
+      labelpresent: true,
     });
   };
-  handleLabelRemove = async data => {
+  handleLabelRemove = async (data) => {
     for (let index = 0; index < this.state.allLabels.length; index++) {
       array.push(this.state.allLabels[index]);
     }
@@ -136,7 +151,7 @@ class GetNotes extends PureComponent {
       }
     }
     await this.setState({
-      allLabels: array
+      allLabels: array,
     });
     if (this.state.allLabels.length === 0) {
       this.setState({ labelpresent: false });
@@ -145,10 +160,10 @@ class GetNotes extends PureComponent {
   handleDoneClick = async () => {
     if (this.state.labelName !== "") {
       var labelDetails = {
-        labelname: this.state.labelName
+        labelname: this.state.labelName,
       };
 
-      await LabelController.newlabelforuser(labelDetails).then(res => {
+      await LabelController.newlabelforuser(labelDetails).then((res) => {
         if (res.status === 200) {
           console.log("Successfully added label for user");
         }
@@ -157,7 +172,7 @@ class GetNotes extends PureComponent {
       await NoteController.addlabeltonote(
         labelDetails,
         this.props.data.id
-      ).then(res => {
+      ).then((res) => {
         if (res.status === 200) {
           console.log("Label added to the note successfully");
         }
@@ -167,18 +182,26 @@ class GetNotes extends PureComponent {
     this.props.getLabel();
     this.props.getNote();
   };
-  onChangeLabelName = async event => {
+  onChangeLabelName = async (event) => {
     await this.setState({ labelName: event.target.value });
     console.log(this.state.labelName);
   };
   handleCancel = async () => {
     await this.setState({ labelName: "" });
   };
+
+  handleReminderClick = async (event) => {
+    await this.setState({
+      reminderMenu: true,
+      reminderAnchor: event.currentTarget,
+    });
+  };
+
   handleLabelMenuOpen = () => {
     this.setState({
       labelMenu: true,
       menu: false,
-      hoverMoreTooltip: true
+      hoverMoreTooltip: true,
     });
   };
 
@@ -188,7 +211,8 @@ class GetNotes extends PureComponent {
     }
     await this.setState({
       menu: false,
-      hoverMoreTooltip: false
+      hoverMoreTooltip: false,
+      reminderMenu: false,
     });
   };
 
@@ -198,13 +222,13 @@ class GetNotes extends PureComponent {
     }
     await this.setState({
       labelMenu: false,
-      hoverMoreTooltip: false
+      hoverMoreTooltip: false,
     });
   };
 
   handleDeleteNote = async () => {
     await this.setState({ isTrashed: true });
-    await NoteController.deletenote(this.state.id).then(res => {
+    await NoteController.deletenote(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Note Deleted Successfully");
       }
@@ -216,11 +240,11 @@ class GetNotes extends PureComponent {
     this.setState({ menu: false });
   };
 
-  changeLabel = event => {
+  changeLabel = (event) => {
     this.setState({
       menu: true,
       labelAnchor: event.currentTarget,
-      hoverMoreTooltip: true
+      hoverMoreTooltip: true,
     });
   };
 
@@ -231,32 +255,32 @@ class GetNotes extends PureComponent {
     await this.setState({ openSnack: false });
   };
 
-  handleTooltipClose = async => {
+  handleTooltipClose = (async) => {
     this.setState({
-      openTooltip: false
+      openTooltip: false,
     });
   };
-  handleTooltipOpen = async => {
+  handleTooltipOpen = (async) => {
     this.setState({
-      openTooltip: true
+      openTooltip: true,
     });
   };
-  onChangeTitle = event => {
+  onChangeTitle = (event) => {
     this.setState({
-      title: event.target.value
+      title: event.target.value,
     });
   };
 
-  onChangeDescription = event => {
+  onChangeDescription = (event) => {
     this.setState({
-      description: event.target.value
+      description: event.target.value,
     });
   };
 
   handleDialogOpen = () => {
     this.setState({ openDialog: true });
   };
-  handleDialogClose = data => {
+  handleDialogClose = (data) => {
     this.setState({ openDialog: false });
   };
 
@@ -264,25 +288,25 @@ class GetNotes extends PureComponent {
     this.setState({
       colorOpen: false,
       colorAnchor: null,
-      hoverColorTooltip: false
+      hoverColorTooltip: false,
     });
   };
-  changeColor = event => {
+  changeColor = (event) => {
     this.setState({
       colorOpen: true,
       colorAnchor: event.currentTarget,
-      hoverColorTooltip: true
+      hoverColorTooltip: true,
     });
   };
-  changeNoteColor = async event => {
+  changeNoteColor = async (event) => {
     await this.setState({
       color: event.target.value,
       openTooltip: false,
-      hoverColorTooltip: false
+      hoverColorTooltip: false,
     });
 
     await NoteController.colornote(this.state.id, this.state.color).then(
-      res => {
+      (res) => {
         if (res.status === 200) {
           console.log("Color set Successfully");
         }
@@ -290,19 +314,119 @@ class GetNotes extends PureComponent {
     );
     this.props.getNote();
   };
-  handleDeleteLabel = async x => {
-    await NoteController.deletelabelfornote(this.props.data.id, x).then(res => {
+  handleDeleteLabel = async (x) => {
+    await NoteController.deletelabelfornote(this.props.data.id, x).then(
+      (res) => {
+        if (res.status === 200) {
+          console.log("Label deleted for the note successfully");
+        }
+      }
+    );
+    this.props.getNote();
+  };
+
+  handleReminder = async (event) => {
+    await this.setState({
+      selectedDate: event.target.value,
+    });
+    console.log("date is :", this.state.selectedDate);
+  };
+  handleSaveReminder = async () => {
+    if (this.state.selectedDate === "") {
+      await this.setState({
+        remState: null,
+        reminderMenu: false,
+        selectedDate: "",
+      });
+      var noteDetails = {
+        id: this.state.id,
+        title: this.state.title,
+        takeanote: this.state.description,
+        trashed: this.state.isTrashed,
+        archived: this.state.isArchived,
+        pinned: this.state.isPinned,
+        color: this.state.color,
+        labelName: this.state.labelName,
+        reminder: this.state.selectedDate,
+      };
+      await NoteController.updatenote(noteDetails).then((res) => {
+        if (res.status === 200) {
+          console.log("Note updated successfully");
+          this.props.getNote();
+        }
+      });
+    } else if (this.state.selectedDate !== "") {
+      let date = new Date(this.state.selectedDate);
+      let val = "";
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      let remVal = val.concat(
+        date.toLocaleString("default", { month: "long" }),
+        " ",
+        date.getDate(),
+        " ",
+        date.getFullYear(),
+        " ",
+        strTime
+      );
+      console.log("rem value is : ", remVal);
+
+      await this.setState({
+        remState: remVal,
+        reminderMenu: false,
+      });
+      var noteDetails = {
+        id: this.state.id,
+        title: this.state.title,
+        takeanote: this.state.description,
+        trashed: this.state.isTrashed,
+        archived: this.state.isArchived,
+        pinned: this.state.isPinned,
+        color: this.state.color,
+        labelName: this.state.labelName,
+        reminder: this.state.selectedDate,
+      };
+      await NoteController.updatenote(noteDetails).then((res) => {
+        if (res.status === 200) {
+          console.log("Note updated successfully");
+          this.props.getNote();
+        }
+      });
+    }
+  };
+
+  handleReminderDelete = async () => {
+    await this.setState({
+      remState: null,
+      selectedDate: null,
+    });
+    var noteDetails = {
+      id: this.state.id,
+      title: this.state.title,
+      takeanote: this.state.description,
+      trashed: this.state.isTrashed,
+      archived: this.state.isArchived,
+      pinned: this.state.isPinned,
+      color: this.state.color,
+      labelName: this.state.labelName,
+      reminder: this.state.selectedDate,
+    };
+    await NoteController.updatenote(noteDetails).then((res) => {
       if (res.status === 200) {
-        console.log("Label deleted for the note successfully");
+        console.log("Note updated successfully");
+        this.props.getNote();
       }
     });
-    this.props.getNote();
   };
 
   handleCollabOpen = async () => {
     await this.setState({ collabOpen: true });
   };
-  onChangeCollabName = async event => {
+  onChangeCollabName = async (event) => {
     await this.setState({ collabName: event.target.value });
 
     if (
@@ -330,9 +454,9 @@ class GetNotes extends PureComponent {
 
     let collabDetails = {
       noteId: this.props.data.id,
-      collaborator: this.state.collabName
+      collaborator: this.state.collabName,
     };
-    await NoteController.addcollabtonote(collabDetails).then(resp => {
+    await NoteController.addcollabtonote(collabDetails).then((resp) => {
       if (resp.status === 200) {
         console.log("Collaborator added to note");
         this.props.getNote();
@@ -340,15 +464,15 @@ class GetNotes extends PureComponent {
     });
     await this.setState({
       collabName: "",
-      disable: true
+      disable: true,
     });
   };
   handleRemoveCollab = async (data, item) => {
     let collabDetails = {
       noteId: this.props.data.id,
-      collaborator: item
+      collaborator: item,
     };
-    NoteController.deletecollabfromnote(collabDetails).then(resp => {
+    NoteController.deletecollabfromnote(collabDetails).then((resp) => {
       if (resp.status === 200) {
         console.log("Collaborator added to note");
         this.props.getNote();
@@ -368,7 +492,7 @@ class GetNotes extends PureComponent {
   // };
   handleCollabSave = async () => {
     await this.setState({
-      collabOpen: false
+      collabOpen: false,
     });
     arrcollab1 = [];
   };
@@ -377,9 +501,9 @@ class GetNotes extends PureComponent {
       for (let index = 0; index < arrcollab1.length; index++) {
         let collabDetails = {
           noteId: this.props.data.id,
-          collaborator: arrcollab1[index]
+          collaborator: arrcollab1[index],
         };
-        NoteController.deletecollabfromnote(collabDetails).then(resp => {
+        NoteController.deletecollabfromnote(collabDetails).then((resp) => {
           if (resp.status === 200) {
             console.log("Collaborator added to note");
           }
@@ -389,19 +513,23 @@ class GetNotes extends PureComponent {
     arrcollab1 = [];
     this.props.getNote();
     await this.setState({
-      collabOpen: false
+      collabOpen: false,
     });
   };
 
   handleIsPinned = async () => {
     await this.setState({ isPinned: true });
-    await NoteController.pinnote(this.state.id).then(res => {
+    await NoteController.pinnote(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Successfully pinned");
       }
     });
 
     this.props.getNote();
+    await this.setState({
+      archivemsg: "Note Pinned ",
+      openSnack: true,
+    });
   };
 
   handleDialogPinUnpin = async () => {
@@ -409,27 +537,33 @@ class GetNotes extends PureComponent {
   };
   handleIsUnpinned = async () => {
     await this.setState({ isPinned: false });
-    await NoteController.pinnote(this.state.id).then(res => {
+    await NoteController.pinnote(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Successfully Unpinned");
       }
     });
     this.props.getNote();
+    await this.setState({
+      archivemsg: "Note Unpinned ",
+      openSnack: true,
+    });
   };
   handleIsUnArchived = async () => {
     await this.setState({
       isPinned: false,
       isArchived: false,
-      archivemsg: "Note Unarchived ",
-      openSnack: true
     });
 
-    await NoteController.archivenote(this.state.id).then(res => {
+    await NoteController.archivenote(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Successfully Unarchived");
       }
     });
     this.props.getNote();
+    await this.setState({
+      archivemsg: "Note Unarchived ",
+      openSnack: true,
+    });
   };
   handleIsArchived = async () => {
     console.log(
@@ -441,28 +575,32 @@ class GetNotes extends PureComponent {
       await this.setState({
         isPinned: false,
         isArchived: true,
-        archivemsg: "Note Unpinned and Archived",
-        openSnack: true
       });
 
-      await NoteController.archivenote(this.state.id).then(res => {
+      await NoteController.archivenote(this.state.id).then((res) => {
         if (res.status === 200) {
           console.log("Successfully unpinned and archived");
         }
       });
       this.props.getNote();
+      await this.setState({
+        archivemsg: "Note Unpinned and Archived",
+        openSnack: true,
+      });
     } else {
       await this.setState({
         isArchived: true,
-        archivemsg: "Note Archived",
-        openSnack: true
       });
-      await NoteController.archivenote(this.state.id).then(res => {
+      await NoteController.archivenote(this.state.id).then((res) => {
         if (res.status === 200) {
           console.log("successfully archived");
         }
       });
       this.props.getNote();
+      await this.setState({
+        archivemsg: "Note Archived",
+        openSnack: true,
+      });
     }
   };
   onCloseDialog = async () => {
@@ -476,10 +614,10 @@ class GetNotes extends PureComponent {
       pinned: this.state.isPinned,
       color: this.state.color,
       reminder: this.state.reminder,
-      labelName: this.state.labelName
+      labelName: this.state.labelName,
     };
 
-    await NoteController.setTitleDesc(noteDetails).then(res => {
+    await NoteController.setTitleDesc(noteDetails).then((res) => {
       console.log("hiii...", res);
       if (res.status === 200) {
         console.log(res.data.message);
@@ -489,9 +627,29 @@ class GetNotes extends PureComponent {
     await this.setState({ openDialog: false });
   };
   render() {
+    if (this.state.remState !== "") {
+      let date = new Date(this.state.remState);
+      let val = "";
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? "pm" : "am";
+      hours = hours % 12;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      var strTime = hours + ":" + minutes + " " + ampm;
+      let remVal = val.concat(
+        date.toLocaleString("default", { month: "long" }),
+        " ",
+        date.getDate(),
+        " ",
+        date.getFullYear(),
+        " ",
+        strTime
+      );
+      rem = remVal;
+    }
     let owner = localStorage.getItem("owner");
 
-    const label = this.state.obj3.map(item => {
+    const label = this.state.obj3.map((item) => {
       if (this.state.allLabels.length !== 0) {
         for (let i = 0; i < this.state.allLabels.length; i++) {
           let bool = this.state.allLabels[i].labelname === item.labelname;
@@ -542,10 +700,10 @@ class GetNotes extends PureComponent {
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
       console.log(this.state.allLabels, "all Labels");
-      displaylabels = this.state.allLabels.map(el => {
+      displaylabels = this.state.allLabels.map((el) => {
         console.log(el.labelname);
         let x;
-        this.state.obj3.map(elem => {
+        this.state.obj3.map((elem) => {
           if (elem.labelname === el.labelname) {
             x = elem.id;
           }
@@ -558,7 +716,7 @@ class GetNotes extends PureComponent {
                 await NoteController.deletelabelfornote(
                   this.props.data.id,
                   x
-                ).then(res => {
+                ).then((res) => {
                   if (res.status === 200) {
                     console.log("Label deleted for the note successfully");
                   }
@@ -576,18 +734,18 @@ class GetNotes extends PureComponent {
       });
     }
     let displaycollabs;
-    displaycollabs = this.state.collaborators.map(item => {
+    displaycollabs = this.state.collaborators.map((item) => {
       return (
         <div className="collab-style">
           <Tooltip title={item.collaborator}>
-            <Avatar src="/broken-image.jpg" />
+            <Avatar id="avatar" src={this.state.profilePicture} />
           </Tooltip>
         </div>
       );
     });
 
     let collabs;
-    collabs = this.state.collaborators.map(item => {
+    collabs = this.state.collaborators.map((item) => {
       return (
         <div className="collab-owner">
           <div style={{ marginLeft: "23px" }}>
@@ -598,7 +756,7 @@ class GetNotes extends PureComponent {
           </div>
           <div style={{ marginTop: "-3px" }}>
             <IconButton
-              onClick={data => {
+              onClick={(data) => {
                 console.log("collabs", item.collaborator);
 
                 this.handleRemoveCollab(data, item.collaborator);
@@ -618,10 +776,10 @@ class GetNotes extends PureComponent {
       isArchived: this.state.isArchived,
       isPinned: this.state.isPinned,
       isTrashed: this.state.isTrashed,
-      color: this.state.color
+      color: this.state.color,
     };
 
-    const color1 = this.state.manycolor.map(color => {
+    const color1 = this.state.manycolor.map((color) => {
       return (
         <Tooltip
           TransitionComponent={Fade}
@@ -631,7 +789,7 @@ class GetNotes extends PureComponent {
           <IconButton
             style={{
               background: color.colorCode,
-              margin: "2%"
+              margin: "2%",
             }}
             value={color.colorCode}
             onClick={this.changeNoteColor}
@@ -666,7 +824,7 @@ class GetNotes extends PureComponent {
                     style={{
                       height: "0.5cm",
                       width: "0.5cm",
-                      opacity: "0.65"
+                      opacity: "0.65",
                     }}
                     src={Pin}
                     onClick={this.handleIsPinned}
@@ -687,7 +845,7 @@ class GetNotes extends PureComponent {
                     style={{
                       height: "0.5cm",
                       width: "0.5cm",
-                      opacity: "0.65"
+                      opacity: "0.65",
                     }}
                     src={Unpin}
                     onClick={this.handleIsUnpinned}
@@ -710,6 +868,15 @@ class GetNotes extends PureComponent {
           />
         </div>
         <Toolbar id="label_chip">
+          {this.state.remState !== null ? (
+            <div className="chip-style">
+              <Chip
+                icon={<AccessTimeIcon />}
+                label={rem}
+                onDelete={this.handleReminderDelete}
+              />
+            </div>
+          ) : null}
           {displaylabels}
           {displaycollabs}
         </Toolbar>
@@ -723,7 +890,10 @@ class GetNotes extends PureComponent {
                   title="Reminder"
                   arrow
                 >
-                  <IconButton aria-label="Reminder">
+                  <IconButton
+                    aria-label="Reminder"
+                    onClick={this.handleReminderClick}
+                  >
                     <AddAlertIcon style={{ fontSize: "20px" }} />
                   </IconButton>
                 </Tooltip>
@@ -763,7 +933,7 @@ class GetNotes extends PureComponent {
                       onClose={this.closeColorBox}
                       transformOrigin={{
                         vertical: "right",
-                        horizontal: "right"
+                        horizontal: "right",
                       }}
                     >
                       <div id="color-align">{color1}</div>
@@ -787,7 +957,7 @@ class GetNotes extends PureComponent {
                       <Snackbar
                         anchorOrigin={{
                           vertical: "bottom",
-                          horizontal: "center"
+                          horizontal: "center",
                         }}
                         open={this.state.openSnack}
                         autoHideDuration={4000}
@@ -795,12 +965,7 @@ class GetNotes extends PureComponent {
                         message={this.state.archivemsg}
                         action={
                           <React.Fragment>
-                            <div
-                              style={{
-                                paddingBottom: "17px",
-                                marginRight: "-25px"
-                              }}
-                            >
+                            <div>
                               <IconButton
                                 size="small"
                                 aria-label="close"
@@ -832,7 +997,7 @@ class GetNotes extends PureComponent {
                       <Snackbar
                         anchorOrigin={{
                           vertical: "bottom",
-                          horizontal: "center"
+                          horizontal: "center",
                         }}
                         open={this.state.openSnack}
                         autoHideDuration={4000}
@@ -840,12 +1005,7 @@ class GetNotes extends PureComponent {
                         message={this.state.archivemsg}
                         action={
                           <React.Fragment>
-                            <div
-                              style={{
-                                paddingBottom: "17px",
-                                marginRight: "-25px"
-                              }}
-                            >
+                            <div>
                               <IconButton
                                 size="small"
                                 aria-label="close"
@@ -883,11 +1043,11 @@ class GetNotes extends PureComponent {
                         onClick={this.handleMenuClickAway}
                         anchorOrigin={{
                           vertical: "bottom",
-                          horizontal: "center"
+                          horizontal: "center",
                         }}
                         transformOrigin={{
                           vertical: "top",
-                          horizontal: "center"
+                          horizontal: "center",
                         }}
                       >
                         <MenuItem onClick={this.handleLabelMenuOpen}>
@@ -916,11 +1076,11 @@ class GetNotes extends PureComponent {
           anchorEl={this.state.labelAnchor}
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "center"
+            horizontal: "center",
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "center"
+            horizontal: "center",
           }}
           onClose={this.handleLabelMenuClickAway}
         >
@@ -976,7 +1136,7 @@ class GetNotes extends PureComponent {
             <Card
               id="card_decor5"
               style={{
-                backgroundColor: this.state.color
+                backgroundColor: this.state.color,
               }}
             >
               <div id="pin-inputbase">
@@ -1002,7 +1162,7 @@ class GetNotes extends PureComponent {
                           style={{
                             height: "0.54cm",
                             width: "0.54cm",
-                            opacity: "0.65"
+                            opacity: "0.65",
                           }}
                           src={Pin}
                           onClick={this.handleDialogPinUnpin}
@@ -1023,7 +1183,7 @@ class GetNotes extends PureComponent {
                           style={{
                             height: "0.54cm",
                             width: "0.54cm",
-                            opacity: "0.65"
+                            opacity: "0.65",
                           }}
                           src={Unpin}
                           onClick={this.handleDialogPinUnpin}
@@ -1045,6 +1205,15 @@ class GetNotes extends PureComponent {
               </div>
 
               <Toolbar id="display_labels">
+                {this.state.remState !== null ? (
+                  <div className="chip-style">
+                    <Chip
+                      icon={<AccessTimeIcon />}
+                      label={rem}
+                      onDelete={this.handleReminderDelete}
+                    />
+                  </div>
+                ) : null}
                 {displaylabels}
                 {displaycollabs}
               </Toolbar>
@@ -1063,6 +1232,7 @@ class GetNotes extends PureComponent {
                           <IconButton
                             aria-label="Reminder"
                             className="iconButtons"
+                            onClick={this.handleReminderClick}
                           >
                             <AddAlertIcon style={{ fontSize: "20px" }} />
                           </IconButton>
@@ -1100,7 +1270,7 @@ class GetNotes extends PureComponent {
                               <Snackbar
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                                 open={this.state.open}
                                 autoHideDuration={4000}
@@ -1138,7 +1308,7 @@ class GetNotes extends PureComponent {
                               <Snackbar
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                                 open={this.state.open}
                                 autoHideDuration={4000}
@@ -1163,7 +1333,7 @@ class GetNotes extends PureComponent {
                           </Tooltip>
                         )}
                       </div>
-                      <div >
+                      <div>
                         <Tooltip
                           TransitionComponent={Fade}
                           TransitionProps={{ timeout: 100 }}
@@ -1183,7 +1353,7 @@ class GetNotes extends PureComponent {
                               onClose={this.closeColorBox}
                               transformOrigin={{
                                 vertical: "right",
-                                horizontal: "right"
+                                horizontal: "right",
                               }}
                             >
                               <div id="color-align">{color1}</div>
@@ -1212,11 +1382,11 @@ class GetNotes extends PureComponent {
                                 onClick={this.handleMenuClickAway}
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                                 transformOrigin={{
                                   vertical: "top",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                               >
                                 <MenuItem onClick={this.handleLabelMenuOpen}>
@@ -1277,7 +1447,7 @@ class GetNotes extends PureComponent {
               </div>
               <div
                 style={{
-                  paddingTop: "6px"
+                  paddingTop: "6px",
                 }}
               >
                 <Input
@@ -1311,6 +1481,47 @@ class GetNotes extends PureComponent {
             </div>
           </Card>
         </Dialog>
+        <Popover
+          id="label-menu"
+          open={this.state.reminderMenu}
+          anchorEl={this.state.reminderAnchor}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "center",
+          }}
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          onClose={this.handleMenuClickAway}
+        >
+          <Card id="reminder-card">
+            <Toolbar id="createlabelnote_field">
+              <Typography style={{ fontWeight: "bolder" }}>
+                Reminders
+              </Typography>
+            </Toolbar>
+            <Divider />
+            <Toolbar>
+              <div style={{ marginLeft: "-11px" }}>
+                <form>
+                  <TextField
+                    id="datetime-local"
+                    type="datetime-local"
+                    value={this.state.selectedDate}
+                    defaultValue={this.state.selectedDate}
+                    onChange={this.handleReminder}
+                  />
+                </form>
+              </div>
+            </Toolbar>
+            <Toolbar id="createlabelnote_field">
+              <div className="rem-save">
+                <Button onClick={this.handleSaveReminder}>save</Button>
+              </div>
+            </Toolbar>
+          </Card>
+        </Popover>
       </Card>
     );
   }

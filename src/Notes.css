@@ -211,7 +211,20 @@
   padding-left: 52px;
   margin-right: -49px;
 }
-
+#trash-icons-dialog {
+  display: flex;
+  width: 100%;
+}
+.div-trash-icons {
+  width: 10%;
+  display: flex;
+  justify-content: flex-start;
+}
+#close_button_trash {
+  display: flex;
+  width: 80%;
+  justify-content: flex-end;
+}
 /* .close_button {
   margin-left: 0px;
   margin-top: 6px;
@@ -451,4 +464,10 @@
   display: flex;
   padding-left: -17px;
   margin-left: -18px;
+}
+#avatar {
+  border-radius: 10;
+  border-width: 4;
+  border-color: "white";
+  opacity: 0.8;
 }

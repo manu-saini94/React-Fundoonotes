@@ -21,71 +21,71 @@ import GetNotes from "../Components/GetNotes";
 
 const drawerWidth = 265;
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBar: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   appBarShift: {
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
+      duration: theme.transitions.duration.enteringScreen,
+    }),
   },
 
   hide: {
-    display: "none"
+    display: "none",
   },
   drawer: {
     width: drawerWidth,
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
     top: "8.9vh",
     height: "91.1vh",
-    width: drawerWidth
+    width: drawerWidth,
   },
   drawerHeader: {
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   palette: {
-    backgroundColor: "#fafafa"
+    backgroundColor: "#fafafa",
   },
   grow: {
-    flexGrow: 1
+    flexGrow: 1,
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   title: {
     display: "none",
     [theme.breakpoints.up("sm")]: {
-      display: "block"
-    }
+      display: "block",
+    },
   },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.black, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.black, 0.25)
+      backgroundColor: fade(theme.palette.common.black, 0.25),
     },
     marginRight: theme.spacing(2),
     width: "50%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(3),
-      width: "auto"
+      width: "auto",
     },
-    color: "#424242"
+    color: "#424242",
   },
   searchIcon: {
     width: theme.spacing(7),
@@ -94,31 +94,31 @@ const useStyles = makeStyles(theme => ({
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputRoot: {
-    color: "inherit"
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 7),
     transition: theme.transitions.create("width"),
     width: "100%",
     [theme.breakpoints.up("md")]: {
-      width: 200
-    }
+      width: 200,
+    },
   },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
-      display: "flex"
-    }
+      display: "flex",
+    },
   },
   sectionMobile: {
     display: "flex",
     [theme.breakpoints.up("md")]: {
-      display: "none"
-    }
-  }
+      display: "none",
+    },
+  },
 }));
 
 export default function SideNavBar(props) {
@@ -131,11 +131,11 @@ export default function SideNavBar(props) {
   const [obj3, setObj3] = useState(props.obj3);
   const [obj, setObj] = useState(props.obj);
 
-  const handleLabelNoteMenu123 = data3 => {
+  const handleLabelNoteMenu123 = (data3) => {
     props.handleLabelNoteMenu(data3);
   };
 
-  let getUserLabels = props.obj3.map(item3 => {
+  let getUserLabels = props.obj3.map((item3) => {
     return (
       <div>
         <List
@@ -149,7 +149,7 @@ export default function SideNavBar(props) {
               className
               style={{
                 paddingTop: "-2%",
-                fontWeight: "bolder"
+                fontWeight: "bolder",
               }}
             >
               <LabelTwoToneIcon />
@@ -173,11 +173,11 @@ export default function SideNavBar(props) {
       anchor="left"
       open={props.show}
       classes={{
-        paper: classes.drawerPaper
+        paper: classes.drawerPaper,
       }}
       style={{
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
       }}
     >
       <Divider />
@@ -194,7 +194,7 @@ export default function SideNavBar(props) {
               paddingTop: "2%",
               fontWeight: "bolder",
               marginBottom: "-2%",
-              marginRight: "59%"
+              marginRight: "59%",
             }}
           >
             <NotesIcon style={{ marginTop: "-15%" }} />
@@ -218,7 +218,7 @@ export default function SideNavBar(props) {
               paddingTop: "2%",
               fontWeight: "bolder",
               marginBottom: "-2%",
-              marginRight: "59%"
+              marginRight: "59%",
             }}
           >
             <NotificationsOutlinedIcon style={{ marginTop: "-15%" }} />
@@ -240,7 +240,7 @@ export default function SideNavBar(props) {
             style={{
               paddingTop: "-2%",
               fontWeight: "bolder",
-              marginBottom: "0.9%"
+              marginBottom: "0.9%",
             }}
           >
             <EditOutlinedIcon />
@@ -263,7 +263,7 @@ export default function SideNavBar(props) {
               paddingTop: "-2%",
               fontWeight: "bolder",
               marginBottom: "-2%",
-              marginRight: "59%"
+              marginRight: "59%",
             }}
           >
             <ArchiveOutlinedIcon />
@@ -288,7 +288,7 @@ export default function SideNavBar(props) {
               paddingTop: "-2%",
               fontWeight: "bolder",
               marginBottom: "-2%",
-              marginRight: "59%"
+              marginRight: "59%",
             }}
           >
             <DeleteOutlineIcon />

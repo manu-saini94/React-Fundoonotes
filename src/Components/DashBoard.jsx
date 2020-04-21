@@ -15,6 +15,7 @@ import EditLabelsMenu from "./EditLabelsMenu";
 import LabelController from "../Controller/LabelController";
 import LabelMenu from "../Components/LabelMenu";
 import ProfilePicture from "./ProfilePicture";
+import UserController from "../Controller/UserController";
 
 class DashBoard extends PureComponent {
   constructor(props) {
@@ -34,6 +35,9 @@ class DashBoard extends PureComponent {
       getLabelArr: [],
       labelName: "",
       heading: "fundoo",
+      view: false,
+      profilePicture: "",
+      uniqLabels: [],
     };
   }
 
@@ -41,6 +45,11 @@ class DashBoard extends PureComponent {
     this.setState({ open: !this.state.open });
   };
 
+  componentWillReceiveProps(props) {
+    this.setState({
+      jwt: props.match.params.jwt,
+    });
+  }
   handleNotesMenu = async () => {
     await this.setState({
       notesOpen: true,
@@ -108,9 +117,12 @@ class DashBoard extends PureComponent {
     });
   };
 
+  handleSearchMenu = async () => {};
+
   componentDidMount() {
     this.getNote();
     this.getLabel();
+    this.getProfilePic();
   }
   handleRefresh = async () => {
     if (this.state.notesOpen) {
@@ -131,6 +143,20 @@ class DashBoard extends PureComponent {
     }
   };
 
+  getProfilePic = async () => {
+    let fileName = localStorage.getItem("profilepicture");
+    if (fileName !== null) {
+      UserController.getprofilepic(fileName).then((res) => {
+        if (res.status === 200) {
+          let url = res.data.object;
+          this.setState({
+            profilePicture: url,
+          });
+          console.log("profile pic url is :", this.state.profilePicture);
+        }
+      });
+    }
+  };
   handleSignout = async () => {
     localStorage.removeItem("logintoken");
     this.props.history.push("/login");
@@ -151,15 +177,77 @@ class DashBoard extends PureComponent {
     });
   };
 
-  // getLabelsForNote = async () => {
-  //   let labelsfornote = await LabelController.getLabelsInsideNote().then(res => {
-  //     this.setState({
-  //       getNoteLabelArr: res
-  //     });
-  //     console.log("note labels are : ", this.state.getNoteLabelArr);
+  handleView = async () => {
+    await this.setState({
+      view: !this.state.view,
+    });
+    console.log("view val :", this.state.view);
+  };
 
-  //   });
-  // }
+  calcLabels = async () => {
+    var tempArr = [];
+    this.state.getNoteArr.map((item) => {
+      if (item.labels.length != 0) {
+        item.labels.forEach((element) => {
+          tempArr.push(element);
+        });
+      }
+    });
+    return tempArr;
+  };
+  calcCollabs = async () => {
+    var tempArr = [];
+    this.state.getNoteArr.map((item) => {
+      if (item.collaborator.length != 0) {
+        item.collaborator.forEach((element) => {
+          tempArr.push(element);
+        });
+      }
+    });
+    return tempArr;
+  };
+  calcColors = async () => {
+    var tempArr = [];
+    this.state.getNoteArr.map((item) => {
+      if (item.color !== "") {
+        tempArr.push(item.color);
+      }
+    });
+    return tempArr;
+  };
+
+  handleSearchClick = async () => {
+    var uniqueLabelArray = [];
+    var uniqueCollabArray = [];
+    var uniqueColorArray = [];
+    this.calcLabels().then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        if (uniqueLabelArray.indexOf(data[i].labelname) === -1) {
+          uniqueLabelArray.push(data[i].labelname);
+        }
+      }
+      console.log("the unique label array is :", uniqueLabelArray);
+    });
+
+    this.calcCollabs().then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        if (uniqueCollabArray.indexOf(data[i].collaborator) === -1) {
+          uniqueCollabArray.push(data[i].collaborator);
+        }
+      }
+      console.log("the unique collaborator array is :", uniqueCollabArray);
+    });
+
+    this.calcColors().then((data) => {
+      for (let i = 0; i < data.length; i++) {
+        if (uniqueColorArray.indexOf(data[i]) === -1) {
+          uniqueColorArray.push(data[i]);
+        }
+      }
+      console.log("the unique color array is :", uniqueColorArray);
+    });
+  };
+
   render() {
     return (
       <div>
@@ -171,6 +259,9 @@ class DashBoard extends PureComponent {
                 handleSignout={this.handleSignout}
                 heading={this.state.heading}
                 handleRefresh={this.handleRefresh}
+                handleView={this.handleView}
+                profilePicture={this.state.profilePicture}
+                handleSearchClick={this.handleSearchClick}
               />
             </div>
 
@@ -183,6 +274,7 @@ class DashBoard extends PureComponent {
                 handleEditLabelsMenu={this.handleEditLabelsMenu}
                 handleLabelNoteMenu={this.handleLabelNoteMenu}
                 notesOpen={this.state.notesOpen}
+                labelName={this.state.labelName}
                 remindersOpen={this.state.remindersOpen}
                 labelNoteOpen={this.state.labelNoteOpen}
                 archiveOpen={this.state.archiveOpen}
@@ -204,6 +296,9 @@ class DashBoard extends PureComponent {
                 open={this.state.open}
                 getLabel={this.getLabel}
                 obj3={this.state.getLabelArr}
+                view={this.state.view}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                profilePicture={this.state.profilePicture}
               />
             </div>
 
@@ -214,6 +309,9 @@ class DashBoard extends PureComponent {
                 getNote={this.getNote}
                 remindersOpen={this.state.remindersOpen}
                 open={this.state.open}
+                view={this.state.view}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                profilePicture={this.state.profilePicture}
               />
             </div>
             <div>
@@ -225,6 +323,9 @@ class DashBoard extends PureComponent {
                 getLabel={this.getLabel}
                 obj3={this.state.getLabelArr}
                 open={this.state.open}
+                view={this.state.view}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                profilePicture={this.state.profilePicture}
               />
             </div>
             <div>
@@ -245,6 +346,9 @@ class DashBoard extends PureComponent {
                 archiveOpen={this.state.archiveOpen}
                 open={this.state.open}
                 obj3={this.state.getLabelArr}
+                view={this.state.view}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                profilePicture={this.state.profilePicture}
               />
             </div>
             <div>
@@ -255,11 +359,13 @@ class DashBoard extends PureComponent {
                 open={this.state.open}
                 getLabel={this.getLabel}
                 obj3={this.state.getLabelArr}
+                view={this.state.view}
               />
             </div>
-            <div>
+
+            {/* <div>
               <ProfilePicture />
-            </div>
+            </div> */}
           </div>
         ) : (
           <div>

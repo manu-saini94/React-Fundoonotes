@@ -9,18 +9,22 @@ class ArchiveMenu extends PureComponent {
     this.state = {
       obj: this.props.obj,
       getNote: this.props.getNote,
-      obj3: this.props.obj3
+      obj3: this.props.obj3,
+      view: this.props.view,
+      profilePicture: this.props.profilePicture,
     };
   }
 
   componentWillReceiveProps(props) {
     this.setState({
-      obj: props.obj
+      obj: props.obj,
+      view: props.view,
+      profilePicture: props.profilePicture,
     });
   }
   render() {
     var archiveflag = false;
-    let archiveNotes = this.state.obj.map(item => {
+    let archiveNotes = this.state.obj.map((item) => {
       if (item.archived && !item.trashed && !item.pinned) {
         archiveflag = true;
         return (
@@ -31,6 +35,8 @@ class ArchiveMenu extends PureComponent {
             data={item}
             key={item.id}
             fromArchive={true}
+            view={this.state.view}
+            profilePicture={this.state.profilePicture}
           />
         );
       }
@@ -51,7 +57,7 @@ class ArchiveMenu extends PureComponent {
                     style={{
                       fontSize: "115px",
                       marginTop: "100px",
-                      color: "lightgrey"
+                      color: "lightgrey",
                     }}
                   />
                 </div>

@@ -57,12 +57,22 @@ var controller = {
     return datas;
   },
 
-  addprofilepic(formData) {
-    return axios.post("http://localhost:8080/user/files/add", formData, {
+  async addprofilepic(formData) {
+    return await axios.post("http://localhost:8080/user/files/add", formData, {
       headers: {
         "content-type": "multipart/form-data",
         enablePublicReadAccess: true,
       },
+    });
+  },
+  getprofilepic(filename) {
+    return axios.get(`http://localhost:8080/user/files/get`, {
+      headers: { filename: filename, "Content-type": "application/json " },
+    });
+  },
+  removeprofilepic(filename) {
+    return axios.post(`http://localhost:8080/user/files/delete`, {
+      headers: { filename: filename, "Content-type": "application/json " },
     });
   },
 };

@@ -4,6 +4,7 @@ import SimpleExpansionPanel from "./TakeNote";
 import clsx from "clsx";
 import { useTheme } from "@material-ui/core/styles";
 import CreateNote from "./CreateNote";
+import NotesIcon from "@material-ui/icons/Notes";
 import GetNotes from "../Components/GetNotes";
 import "../Notes.css";
 import Controller from "../Controller/NoteController";
@@ -18,20 +19,24 @@ class NotesMenu extends PureComponent {
       obj: this.props.obj,
       getNote: this.props.getNote,
       pinnedStatus: false,
-      obj3: this.props.obj3
+      obj3: this.props.obj3,
+      view: this.props.view,
+      profilePicture: this.props.profilePicture,
     };
   }
 
   componentWillReceiveProps(props) {
     this.setState({
       obj: props.obj,
-      obj3: props.obj3
+      obj3: props.obj3,
+      view: props.view,
+      profilePicture: props.profilePicture,
     });
   }
   getNote123 = async () => {
-    let data = await Controller.getNotes().then(res => {
+    let data = await Controller.getNotes().then((res) => {
       this.setState({
-        obj: res
+        obj: res,
       });
     });
   };
@@ -39,7 +44,7 @@ class NotesMenu extends PureComponent {
   render() {
     var pinflag = false;
     var othersflag = false;
-    let othersnotes = this.state.obj.map(item => {
+    let othersnotes = this.state.obj.map((item) => {
       if (!item.archived && !item.trashed && !item.pinned) {
         othersflag = true;
         return (
@@ -50,12 +55,15 @@ class NotesMenu extends PureComponent {
             data={item}
             key={item.id}
             fromArchive={false}
+            view={this.state.view}
+            handleLabelNoteMenu={this.props.handleLabelNoteMenu}
+            profilePicture={this.state.profilePicture}
           />
         );
       }
     });
 
-    let pinnednotes = this.state.obj.map(item => {
+    let pinnednotes = this.state.obj.map((item) => {
       if (!item.archived && !item.trashed && item.pinned) {
         pinflag = true;
         return (
@@ -67,6 +75,9 @@ class NotesMenu extends PureComponent {
             data={item}
             key={item.id}
             fromArchive={false}
+            view={this.state.view}
+            handleLabelNoteMenu={this.props.handleLabelNoteMenu}
+            profilePicture={this.state.profilePicture}
           />
         );
       }
@@ -82,32 +93,63 @@ class NotesMenu extends PureComponent {
                   getNote={this.props.getNote}
                   getLabel={this.props.getLabel}
                   obj3={this.props.obj3}
+                  profilePicture={this.state.profilePicture}
                 />
               </div>
             </div>
-
-            {pinflag ? (
+            {pinflag === true || othersflag === true ? (
               <div>
-                <div className="pin_heading">PINNED</div>
-                <div className="pin_notes">{pinnednotes}</div>
-                {othersflag ? (
+                {pinflag ? (
                   <div>
-                    <div className="others_heading">OTHERS</div>
-                    <div className="get_notes">{othersnotes}</div>
+                    <div>
+                      <div
+                        className={
+                          !this.state.view ? "pin_heading" : "pin_heading_view"
+                        }
+                      >
+                        PINNED
+                      </div>
+                      <div className="pin_notes">{pinnednotes}</div>
+                    </div>
+                    {othersflag ? (
+                      <div>
+                        <div
+                          className={
+                            !this.state.view
+                              ? "others_heading"
+                              : "others_heading_view"
+                          }
+                        >
+                          OTHERS
+                        </div>
+                        <div className="get_notes">{othersnotes}</div>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
                   </div>
                 ) : (
-                  <div></div>
+                  <div style={{ marginTop: "3%" }}>
+                    <div className="get_notes">{othersnotes}</div>
+                  </div>
                 )}
               </div>
             ) : (
               <div>
-                <div className="get_notes">{othersnotes}</div>
+                <div>
+                  <NotesIcon
+                    style={{
+                      fontSize: "115px",
+                      marginTop: "100px",
+                      color: "lightgrey",
+                    }}
+                  />
+                </div>
+                <div className="noarchive_head">Notes you add appear here</div>
               </div>
             )}
           </div>
-        ) : (
-          <div></div>
-        )}
+        ) : null}
       </div>
     );
   }

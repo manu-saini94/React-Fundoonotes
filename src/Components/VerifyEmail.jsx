@@ -8,7 +8,7 @@ class VerifyEmail extends Component {
     this.state = {
       error: false,
       message: "",
-      jwt: this.props.match.params.jwt
+      jwt: this.props.match.params.jwt,
     };
   }
 
@@ -17,14 +17,15 @@ class VerifyEmail extends Component {
   }
 
   verificationMethod = () => {
-    Controller.verification(this.state.jwt).then(res => {
+    Controller.verification(this.state.jwt).then((res) => {
       console.log("hiii...", res);
       if (res.status === 200) {
         alert("Email has been verified");
         this.props.history.push("/login");
+        localStorage.removeItem("registerToken");
         this.setState({
           error: true,
-          message: "Email Verified"
+          message: "Email Verified",
         });
       }
       // else {

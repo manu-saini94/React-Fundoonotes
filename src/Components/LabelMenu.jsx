@@ -9,18 +9,25 @@ class LabelMenu extends Component {
 
     this.state = {
       obj: this.props.obj,
-      labelName: this.props.labelName
+      labelName: this.props.labelName,
+      view: this.props.view,
+      profilePicture: this.props.profilePicture,
     };
   }
 
   componentWillReceiveProps(props) {
-    this.setState({ obj: props.obj, labelName: props.labelName });
+    this.setState({
+      obj: props.obj,
+      labelName: props.labelName,
+      view: props.view,
+      profilePicture: props.profilePicture,
+    });
   }
   render() {
     var pinflag = false;
     var othersflag = false;
     let archiveflag = false;
-    let othersnotes = this.state.obj.map(item => {
+    let othersnotes = this.state.obj.map((item) => {
       if (!item.archived && !item.trashed && !item.pinned) {
         for (let i = 0; i < item.labels.length; i++) {
           const element = item.labels[i].labelname;
@@ -34,6 +41,8 @@ class LabelMenu extends Component {
                 data={item}
                 key={item.id}
                 fromArchive={false}
+                view={this.state.view}
+                profilePicture={this.state.profilePicture}
               />
             );
           }
@@ -41,7 +50,7 @@ class LabelMenu extends Component {
       }
     });
 
-    let archivenotes = this.state.obj.map(item => {
+    let archivenotes = this.state.obj.map((item) => {
       if (item.archived && !item.trashed && !item.pinned) {
         for (let i = 0; i < item.labels.length; i++) {
           const element = item.labels[i].labelname;
@@ -55,6 +64,8 @@ class LabelMenu extends Component {
                 data={item}
                 key={item.id}
                 fromArchive={true}
+                view={this.state.view}
+                profilePicture={this.state.profilePicture}
               />
             );
           }
@@ -62,7 +73,7 @@ class LabelMenu extends Component {
       }
     });
 
-    let pinnednotes = this.state.obj.map(item => {
+    let pinnednotes = this.state.obj.map((item) => {
       if (!item.archived && !item.trashed && item.pinned) {
         for (let i = 0; i < item.labels.length; i++) {
           const element = item.labels[i].labelname;
@@ -77,6 +88,8 @@ class LabelMenu extends Component {
                 data={item}
                 key={item.id}
                 fromArchive={false}
+                view={this.state.view}
+                profilePicture={this.state.profilePicture}
               />
             );
           }
@@ -95,6 +108,7 @@ class LabelMenu extends Component {
                   getLabel={this.props.getLabel}
                   obj3={this.props.obj3}
                   labelName={this.props.labelName}
+                  profilePicture={this.state.profilePicture}
                 />
               </div>
             </div>
@@ -103,20 +117,42 @@ class LabelMenu extends Component {
               <div>
                 {pinflag ? (
                   <div>
-                    <div className="pin_heading">PINNED</div>
+                    <div
+                      className={
+                        !this.state.view ? "pin_heading" : "pin_heading_view"
+                      }
+                    >
+                      PINNED
+                    </div>
                     <div className="pin_notes">{pinnednotes}</div>
                   </div>
                 ) : null}
                 {archiveflag ? (
                   <div>
-                    <div className="others_heading">ARCHIVE</div>
+                    <div
+                      className={
+                        !this.state.view
+                          ? "others_heading"
+                          : "others_heading_view"
+                      }
+                    >
+                      ARCHIVE
+                    </div>
                     <div className="get_notes">{archivenotes}</div>
                   </div>
                 ) : null}
 
                 {othersflag ? (
                   <div>
-                    <div className="others_heading">OTHERS</div>
+                    <div
+                      className={
+                        !this.state.view
+                          ? "others_heading"
+                          : "others_heading_view"
+                      }
+                    >
+                      OTHERS
+                    </div>
                     <div className="get_notes">{othersnotes}</div>
                   </div>
                 ) : null}
@@ -125,8 +161,16 @@ class LabelMenu extends Component {
               <div>
                 {othersflag ? (
                   <div>
-                    <div className="others_heading"></div>
-                    <div className="get_notes">{othersnotes}</div>
+                    <div
+                      className={
+                        !this.state.view
+                          ? "others_heading"
+                          : "others_heading_view"
+                      }
+                    ></div>
+                    <div style={{ marginTop: "-2%" }}>
+                      <div className="get_notes">{othersnotes}</div>
+                    </div>
                   </div>
                 ) : (
                   <div>
@@ -135,7 +179,7 @@ class LabelMenu extends Component {
                         style={{
                           fontSize: "115px",
                           marginTop: "100px",
-                          color: "lightgrey"
+                          color: "lightgrey",
                         }}
                       />
                     </div>

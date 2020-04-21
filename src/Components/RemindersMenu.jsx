@@ -10,20 +10,24 @@ class RemindersMenu extends PureComponent {
     this.state = {
       obj: this.props.obj,
       getNote: this.props.getNote,
-      obj3: this.props.obj3
+      obj3: this.props.obj3,
+      view: this.props.view,
+      profilePicture: this.props.profilePicture,
     };
   }
 
   componentWillReceiveProps(props) {
     this.setState({
       obj: props.obj,
-      obj3: props.obj3
+      obj3: props.obj3,
+      view: props.view,
+      profilePicture: props.profilePicture,
     });
   }
   render() {
     var reminderflag = false;
-    let reminderNotes = this.state.obj.map(item => {
-      if (item.reminder !== null) {
+    let reminderNotes = this.state.obj.map((item) => {
+      if (item.reminder !== null && !item.archived) {
         reminderflag = true;
         return (
           <GetNotes
@@ -33,6 +37,22 @@ class RemindersMenu extends PureComponent {
             data={item}
             key={item.id}
             fromArchive={false}
+            view={this.state.view}
+            profilePicture={this.state.profilePicture}
+          />
+        );
+      } else if (item.reminder !== null && item.archived) {
+        reminderflag = true;
+        return (
+          <GetNotes
+            getNote={this.props.getNote}
+            getNoteLabelArr={this.props.getNoteLabelArr}
+            obj3={this.props.obj3}
+            data={item}
+            key={item.id}
+            fromArchive={true}
+            view={this.state.view}
+            profilePicture={this.state.profilePicture}
           />
         );
       }
@@ -49,6 +69,7 @@ class RemindersMenu extends PureComponent {
                   getLabel={this.props.getLabel}
                   obj3={this.props.obj3}
                   labelName={this.props.labelName}
+                  profilePicture={this.state.profilePicture}
                 />
               </div>
             </div>
@@ -63,7 +84,7 @@ class RemindersMenu extends PureComponent {
                     style={{
                       fontSize: "115px",
                       marginTop: "100px",
-                      color: "lightgrey"
+                      color: "lightgrey",
                     }}
                   />
                 </div>

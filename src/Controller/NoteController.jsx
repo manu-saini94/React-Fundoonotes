@@ -6,25 +6,29 @@ import axios from "axios";
 //     'jwt': localStorage.getItem('logintoken')
 // }
 const header = {
-  Authorization: "Bearer " + localStorage.getItem("logintoken")
+  Authorization: "Bearer " + localStorage.getItem("logintoken"),
 };
 const token = localStorage.getItem("logintoken");
 var controller = {
   pinnote(id) {
     return axios.put(`http://localhost:8080/note/update/pin/${id}`, null, {
-      headers: { jwt: token, "Content-type": "application/json " }
+      headers: { jwt: token, "Content-type": "application/json " },
     });
   },
 
   archivenote(id) {
     return axios.put(`http://localhost:8080/note/update/archive/${id}`, null, {
-      headers: { jwt: token, "Content-type": "application/json " }
+      headers: { jwt: token, "Content-type": "application/json " },
     });
   },
 
   colornote(id, color) {
     return axios.put(`http://localhost:8080/note/update/color/${id}`, null, {
-      headers: { jwt: token, "Content-type": "application/json ", color: color }
+      headers: {
+        jwt: token,
+        "Content-type": "application/json ",
+        color: color,
+      },
     });
   },
   setTitleDesc(noteDetails) {
@@ -36,13 +40,13 @@ var controller = {
   },
   deletenote(id) {
     return axios.put(`http://localhost:8080/note/delete/${id}`, null, {
-      headers: { jwt: token, "Content-type": "application/json " }
+      headers: { jwt: token, "Content-type": "application/json " },
     });
   },
 
   restorenote(id) {
     return axios.put(`http://localhost:8080/note/restore/${token}`, null, {
-      headers: { id: id, "Content-type": "application/json " }
+      headers: { id: id, "Content-type": "application/json " },
     });
   },
   deletenoteforever(id) {
@@ -54,7 +58,7 @@ var controller = {
   },
   emptytrash() {
     return axios.put(`http://localhost:8080/note/emptytrash/${token}`, null, {
-      headers: { "Content-type": "application/json " }
+      headers: { "Content-type": "application/json " },
     });
   },
   addlabeltonote(noteDetails, id) {
@@ -66,17 +70,17 @@ var controller = {
   },
   deletelabelfornote(id, id1) {
     return axios.delete(`http://localhost:8080/note/delete/label/${id}`, {
-      headers: { id1: id1, jwt: token, "Content-type": "application/json " }
+      headers: { id1: id1, jwt: token, "Content-type": "application/json " },
     });
   },
   addcollabtonote(collabDetails) {
     return axios.post("http://localhost:8080/collab/add", collabDetails, {
-      headers: { jwt: token, "Content-type": "application/json " }
+      headers: { jwt: token, "Content-type": "application/json " },
     });
   },
   deletecollabfromnote(collabDetails) {
     return axios.post("http://localhost:8080/collab/delete", collabDetails, {
-      headers: { jwt: token, "Content-type": "application/json " }
+      headers: { jwt: token, "Content-type": "application/json " },
     });
   },
   updatenote(noteDetails) {
@@ -84,6 +88,6 @@ var controller = {
       "http://localhost:8080/note/updateAll/" + token,
       noteDetails
     );
-  }
+  },
 };
 export default controller;

@@ -15,7 +15,7 @@ import {
   ReactFragment,
   Chip,
   Avatar,
-  Button
+  Button,
 } from "@material-ui/core";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import CancelTwoToneIcon from "@material-ui/icons/CancelTwoTone";
@@ -51,7 +51,8 @@ class GetTrashNotes extends Component {
       menu: false,
       collaborators: this.props.data.collaborator,
       allLabels: this.props.data.labels,
-      obj3: this.props.obj3
+      obj3: this.props.obj3,
+      view: this.props.view,
     };
   }
 
@@ -68,13 +69,14 @@ class GetTrashNotes extends Component {
       color: props.data.color,
       collaborators: props.data.collaborator,
       allLabels: props.data.labels,
-      obj3: props.obj3
+      obj3: props.obj3,
+      view: props.view,
     });
   }
 
   handleRestore = async () => {
     await this.setState({ isTrashed: false });
-    await NoteController.restorenote(this.state.id).then(res => {
+    await NoteController.restorenote(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Note Restored Successfully");
       }
@@ -84,7 +86,7 @@ class GetTrashNotes extends Component {
 
   handleDeleteForever = async () => {
     await this.setState({ isTrashed: false });
-    await NoteController.deletenoteforever(this.state.id).then(res => {
+    await NoteController.deletenoteforever(this.state.id).then((res) => {
       if (res.status === 200) {
         console.log("Note Deleted Forever Successfully");
       }
@@ -96,7 +98,7 @@ class GetTrashNotes extends Component {
     this.setState({ openDialog: true });
   };
 
-  handleDialogClose = data => {
+  handleDialogClose = (data) => {
     this.setState({ openDialog: false });
   };
   handleDialogClickaway = async (event, reason) => {
@@ -133,15 +135,15 @@ class GetTrashNotes extends Component {
       isArchived: this.state.isArchived,
       isPinned: this.state.isPinned,
       isTrashed: this.state.isTrashed,
-      color: this.state.color
+      color: this.state.color,
     };
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
       console.log(this.state.allLabels, "all Labels");
-      displaylabels = this.state.allLabels.map(el => {
+      displaylabels = this.state.allLabels.map((el) => {
         console.log(el.labelname);
         let x;
-        this.state.obj3.map(elem => {
+        this.state.obj3.map((elem) => {
           if (elem.labelname === el.labelname) {
             x = elem.id;
           }
@@ -154,17 +156,23 @@ class GetTrashNotes extends Component {
       });
     }
     let displaycollabs;
-    displaycollabs = this.state.collaborators.map(item => {
+    displaycollabs = this.state.collaborators.map((item) => {
       return (
         <div className="collab-style">
           <Tooltip title={item.collaborator}>
-            <Avatar src="/broken-image.jpg" />
+            <Avatar
+              src="https://rocky123.s3.ap-south-1.amazonaws.com/kohli.jpg"
+              opacity="0.87"
+            />
           </Tooltip>
         </div>
       );
     });
     return (
-      <Card id="card_decor2" style={{ backgroundColor: this.state.color }}>
+      <Card
+        id={!this.state.view ? "card_decor2" : "card_decor6"}
+        style={{ backgroundColor: this.state.color }}
+      >
         <div>
           <div style={{ display: "flex" }}>
             <div>
@@ -175,7 +183,7 @@ class GetTrashNotes extends Component {
                   paddingLeft: "15px",
                   paddingRight: "29px",
                   fontWeight: "bolder",
-                  color: "#616161"
+                  color: "#616161",
                 }}
                 multiline
                 disabled
@@ -193,7 +201,7 @@ class GetTrashNotes extends Component {
               style={{
                 paddingLeft: "15px",
                 paddingRight: "26px",
-                color: "#616161"
+                color: "#616161",
               }}
               multiline
               disabled
@@ -276,7 +284,7 @@ class GetTrashNotes extends Component {
                         paddingLeft: "15px",
                         paddingRight: "29px",
                         fontWeight: "bolder",
-                        color: "#616161"
+                        color: "#616161",
                       }}
                       multiline
                       disabled
@@ -293,7 +301,7 @@ class GetTrashNotes extends Component {
                   style={{
                     paddingLeft: "15px",
                     paddingRight: "26px",
-                    color: "#616161"
+                    color: "#616161",
                   }}
                   multiline
                   disabled

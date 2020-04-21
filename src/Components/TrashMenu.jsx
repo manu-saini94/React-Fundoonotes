@@ -11,12 +11,13 @@ class TrashMenu extends PureComponent {
 
     this.state = {
       obj: this.props.obj,
-      getNote: this.props.getNote
+      getNote: this.props.getNote,
+      view: this.props.view,
     };
   }
 
   handleEmptyTrash = async () => {
-    await NoteController.emptytrash().then(res => {
+    await NoteController.emptytrash().then((res) => {
       if (res.status === 200) {
         console.log("Trash Empty Successfully");
       }
@@ -25,12 +26,13 @@ class TrashMenu extends PureComponent {
   };
   componentWillReceiveProps(props) {
     this.setState({
-      obj: props.obj
+      obj: props.obj,
+      view: props.view,
     });
   }
   render() {
     var trashflag = false;
-    let trashNotes = this.state.obj.map(item => {
+    let trashNotes = this.state.obj.map((item) => {
       if (item.trashed) {
         trashflag = true;
         return (
@@ -38,6 +40,7 @@ class TrashMenu extends PureComponent {
             getNote={this.props.getNote}
             data={item}
             obj3={this.props.obj3}
+            view={this.state.view}
           />
         );
       }
@@ -52,9 +55,8 @@ class TrashMenu extends PureComponent {
                 <div
                   style={{
                     width: "100%",
-                    position: "fixed",
                     marginLeft: "17%",
-                    fontWeight: "bold"
+                    fontWeight: "bold",
                   }}
                 >
                   <Button onClick={this.handleEmptyTrash} color="primary">
@@ -71,7 +73,7 @@ class TrashMenu extends PureComponent {
                       fontSize: "115px",
                       marginTop: "100px",
                       color: "lightgrey",
-                      marginLeft: "-27px"
+                      marginLeft: "-27px",
                     }}
                   />
                 </div>

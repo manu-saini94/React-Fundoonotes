@@ -14,7 +14,7 @@ import {
   Popover,
   Divider,
   Avatar,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import AccessTimeIcon from "@material-ui/icons/AccessTime";
 import PersonAddTwoToneIcon from "@material-ui/icons/PersonAddTwoTone";
@@ -92,6 +92,7 @@ class CreateNote extends Component {
       reminderAnchor: null,
       selectedDate: "",
       remState: [],
+      profilePicture: this.props.profilePicture,
 
       manycolor: [
         { name: "Red", colorCode: "#ef9a9a" },
@@ -105,24 +106,24 @@ class CreateNote extends Component {
         { name: "Pink", colorCode: "#f48fb1" },
         { name: "gray", colorCode: "#eeeeee" },
         { name: "Brown", colorCode: "#bcaaa4" },
-        { name: "White", colorCode: "#FDFEFE" }
-      ]
+        { name: "White", colorCode: "#FDFEFE" },
+      ],
     };
   }
   componentWillReceiveProps(props) {
-    this.setState({ obj3: props.obj3 });
+    this.setState({ obj3: props.obj3, profilePicture: props.profilePicture });
   }
 
-  handleLabel = async data => {
+  handleLabel = async (data) => {
     array.push(data);
     await this.setState({
       allLabels: array,
-      labelpresent: true
+      labelpresent: true,
     });
     console.log(this.state.allLabels);
     console.log(array, "poter potter");
   };
-  handleLabelRemove = async data => {
+  handleLabelRemove = async (data) => {
     for (let index = 0; index < array.length; index++) {
       if (array[index] === data) {
         array.splice(index, 1);
@@ -130,7 +131,7 @@ class CreateNote extends Component {
     }
     // array.pop(data)
     await this.setState({
-      allLabels: array
+      allLabels: array,
     });
     console.log(this.state.allLabels);
     if (this.state.allLabels.length === 0) {
@@ -144,14 +145,15 @@ class CreateNote extends Component {
 
     await this.setState({
       menu: false,
+
       labelMenu: false,
       hoverColorTooltip: false,
       hoverMoreTooltip: false,
       reminderMenu: false,
-      selectedDate: ""
+      selectedDate: "",
     });
   };
-  onChangeLabelName = async event => {
+  onChangeLabelName = async (event) => {
     await this.setState({ labelName: event.target.value });
     console.log(this.state.labelName);
   };
@@ -159,10 +161,10 @@ class CreateNote extends Component {
   handleDoneClick = async () => {
     if (this.state.labelName !== "") {
       var labelDetails = {
-        labelname: this.state.labelName
+        labelname: this.state.labelName,
       };
 
-      await LabelController.newlabelforuser(labelDetails).then(res => {
+      await LabelController.newlabelforuser(labelDetails).then((res) => {
         if (res.status === 200) {
           console.log("Successfully added label for user");
         }
@@ -188,28 +190,28 @@ class CreateNote extends Component {
 
     this.setState({ open: false });
   };
-  changeLabel = event => {
+  changeLabel = (event) => {
     this.setState({
       menu: true,
       labelAnchor: event.currentTarget,
-      hoverMoreTooltip: true
+      hoverMoreTooltip: true,
     });
   };
 
   handleClickOpen = () => {
     this.setState({
-      openNote: true
+      openNote: true,
     });
   };
 
-  onChangeTitle = event => {
+  onChangeTitle = (event) => {
     this.setState({
-      title: event.target.value
+      title: event.target.value,
     });
   };
-  onChangeDescription = event => {
+  onChangeDescription = (event) => {
     this.setState({
-      description: event.target.value
+      description: event.target.value,
     });
   };
 
@@ -226,7 +228,7 @@ class CreateNote extends Component {
         isPinned: false,
         isArchived: true,
         archivemsg: "Note Unpinned and Archived",
-        open: true
+        open: true,
       });
 
       var noteDetails = {
@@ -238,28 +240,28 @@ class CreateNote extends Component {
         pinned: this.state.isPinned,
         color: this.state.color,
         labelName: this.state.labelName,
-        reminder: this.state.selectedDate
+        reminder: this.state.selectedDate,
       };
 
-      await Controller.takenote(noteDetails).then(res => {
+      await Controller.takenote(noteDetails).then((res) => {
         if (res.status === 200) {
           console.log("Note created successfully");
-          this.state.allLabels.map(items => {
+          this.state.allLabels.map((items) => {
             let noteDetails = { labelname: items };
             NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
-              reso => {
+              (reso) => {
                 if (reso.status === 200) {
                   console.log("Label added to note");
                 }
               }
             );
           });
-          this.state.collaborators.map(items => {
+          this.state.collaborators.map((items) => {
             let collabDetails = {
               noteId: res.data.object.id,
-              collaborator: items
+              collaborator: items,
             };
-            NoteController.addcollabtonote(collabDetails).then(resp => {
+            NoteController.addcollabtonote(collabDetails).then((resp) => {
               if (resp.status === 200) {
                 console.log("Collaborator added to note");
               }
@@ -283,7 +285,7 @@ class CreateNote extends Component {
         labelpresent: false,
         collaborators: [],
         selectedDate: "",
-        remState: []
+        remState: [],
       });
       // for (let index = 0; index < array.length; index++) {
       //   array[index] = "";
@@ -295,7 +297,7 @@ class CreateNote extends Component {
       await this.setState({
         isArchived: true,
         archivemsg: "Note Archived",
-        open: true
+        open: true,
       });
 
       var noteDetails = {
@@ -307,27 +309,27 @@ class CreateNote extends Component {
         pinned: this.state.isPinned,
         color: this.state.color,
         labelName: this.state.labelName,
-        reminder: this.state.selectedDate
+        reminder: this.state.selectedDate,
       };
-      await Controller.takenote(noteDetails).then(res => {
+      await Controller.takenote(noteDetails).then((res) => {
         if (res.status === 200) {
           console.log("Note created successfully");
-          this.state.allLabels.map(items => {
+          this.state.allLabels.map((items) => {
             let noteDetails = { labelname: items };
             NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
-              reso => {
+              (reso) => {
                 if (reso.status === 200) {
                   console.log("Label added to note");
                 }
               }
             );
           });
-          this.state.collaborators.map(items => {
+          this.state.collaborators.map((items) => {
             let collabDetails = {
               noteId: res.data.object.id,
-              collaborator: items
+              collaborator: items,
             };
-            NoteController.addcollabtonote(collabDetails).then(resp => {
+            NoteController.addcollabtonote(collabDetails).then((resp) => {
               if (resp.status === 200) {
                 console.log("Collaborator added to note");
               }
@@ -350,7 +352,7 @@ class CreateNote extends Component {
         allLabels: [],
         labelpresent: false,
         selectedDate: "",
-        remState: []
+        remState: [],
       });
       array = [];
       arrcollab1 = [];
@@ -363,16 +365,16 @@ class CreateNote extends Component {
     arrcollab1 = [];
   };
 
-  handleReminder = async event => {
+  handleReminder = async (event) => {
     await this.setState({
-      selectedDate: event.target.value
+      selectedDate: event.target.value,
     });
     console.log("date is :", this.state.selectedDate);
   };
   handleSaveReminder = async () => {
     if (this.state.selectedDate === "") {
       await this.setState({
-        reminderMenu: false
+        reminderMenu: false,
       });
     } else if (this.state.selectedDate !== "") {
       let date = new Date(this.state.selectedDate);
@@ -401,7 +403,7 @@ class CreateNote extends Component {
       }
       await this.setState({
         remState: rem,
-        reminderMenu: false
+        reminderMenu: false,
       });
     }
   };
@@ -410,7 +412,7 @@ class CreateNote extends Component {
     rem = [];
     await this.setState({
       remState: rem,
-      selectedDate: ""
+      selectedDate: "",
     });
   };
 
@@ -426,7 +428,7 @@ class CreateNote extends Component {
   //u see null in reminders
   //ya dat was just befor i called
   //it was not inserting
-  onChangeCollabName = async event => {
+  onChangeCollabName = async (event) => {
     await this.setState({ collabName: event.target.value });
 
     if (
@@ -454,7 +456,7 @@ class CreateNote extends Component {
     await this.setState({
       collaborators1: arrcollab1,
       collabName: "",
-      disable: true
+      disable: true,
     });
   };
   handleRemoveCollab = async (data, item) => {
@@ -473,7 +475,7 @@ class CreateNote extends Component {
       if (item === arrcollab1[index]) {
         arrcollab1.splice(index, 1);
         await this.setState({
-          collaborators1: arrcollab1
+          collaborators1: arrcollab1,
         });
       }
     }
@@ -488,7 +490,7 @@ class CreateNote extends Component {
     await this.setState({
       collabOpen: false,
       collaborators: tempo,
-      collaborators1: []
+      collaborators1: [],
     });
     arrcollab1 = [];
   };
@@ -496,21 +498,21 @@ class CreateNote extends Component {
     arrcollab1 = [];
     await this.setState({
       collaborators1: arrcollab1,
-      collabOpen: false
+      collabOpen: false,
     });
   };
-  changeColor = event => {
+  changeColor = (event) => {
     this.setState({
       colorOpen: true,
       colorAnchor: event.currentTarget,
       colorTooltipOpen: true,
-      hoverColorTooltip: true
+      hoverColorTooltip: true,
     });
   };
-  changeNoteColor = event => {
+  changeNoteColor = (event) => {
     this.setState({
       color: event.target.value,
-      hoverColorTooltip: false
+      hoverColorTooltip: false,
     });
   };
   closeColorBox = () => {
@@ -518,21 +520,21 @@ class CreateNote extends Component {
       colorOpen: false,
       colorAnchor: null,
       colorTooltipOpen: false,
-      hoverColorTooltip: false
+      hoverColorTooltip: false,
     });
   };
 
-  handleReminderClick = async event => {
+  handleReminderClick = async (event) => {
     await this.setState({
       reminderMenu: true,
-      reminderAnchor: event.currentTarget
+      reminderAnchor: event.currentTarget,
     });
   };
   handleLabelMenuOpen = () => {
     this.setState({
       labelMenu: true,
       menu: false,
-      hoverMoreTooltip: true
+      hoverMoreTooltip: true,
     });
   };
 
@@ -561,7 +563,7 @@ class CreateNote extends Component {
         collabpresent: false,
         collaborators: [],
         selectedDate: "",
-        remState: []
+        remState: [],
       });
       array = [];
       arrcollab1 = [];
@@ -576,32 +578,32 @@ class CreateNote extends Component {
         pinned: this.state.isPinned,
         color: this.state.color,
         labelName: this.state.labelName,
-        reminder: this.state.selectedDate
+        reminder: this.state.selectedDate,
       };
 
-      await Controller.takenote(noteDetails).then(res => {
+      await Controller.takenote(noteDetails).then((res) => {
         console.log("hiii...", res);
         if (res.status === 200) {
           console.log(res.data.message);
           console.log("Note created successfully");
-          this.state.allLabels.map(items => {
+          this.state.allLabels.map((items) => {
             let noteDetails = { labelname: items };
             console.log(noteDetails.labelname, "hello pppp");
             console.log(res.data.object.id, "jsssssssssss");
             NoteController.addlabeltonote(noteDetails, res.data.object.id).then(
-              reso => {
+              (reso) => {
                 if (reso.status === 200) {
                   console.log("Label added to note");
                 }
               }
             );
           });
-          this.state.collaborators.map(items => {
+          this.state.collaborators.map((items) => {
             let collabDetails = {
               noteId: res.data.object.id,
-              collaborator: items
+              collaborator: items,
             };
-            NoteController.addcollabtonote(collabDetails).then(resp => {
+            NoteController.addcollabtonote(collabDetails).then((resp) => {
               if (resp.status === 200) {
                 console.log("Collaborator added to note");
               }
@@ -625,7 +627,7 @@ class CreateNote extends Component {
         labelpresent: false,
         collaborators: [],
         selectedDate: "",
-        remState: []
+        remState: [],
       });
 
       array = [];
@@ -639,7 +641,7 @@ class CreateNote extends Component {
   render() {
     console.log("reminder is ::", this.state.selectedDate);
     let owner = localStorage.getItem("owner");
-    const label = this.state.obj3.map(item => {
+    const label = this.state.obj3.map((item) => {
       if (this.state.allLabels.length !== 0) {
         for (let i = 0; i < this.state.allLabels.length; i++) {
           if (this.state.allLabels[i] === item.labelname) {
@@ -681,17 +683,17 @@ class CreateNote extends Component {
       }
     });
     let displaycollabs;
-    displaycollabs = this.state.collaborators.map(item => {
+    displaycollabs = this.state.collaborators.map((item) => {
       return (
         <div className="collab-style">
           <Tooltip title={item}>
-            <Avatar src="/broken-image.jpg" />
+            <Avatar src="/broken-image.jpg" onClick={this.handleCollabOpen} />
           </Tooltip>
         </div>
       );
     });
     let displaycoll;
-    displaycoll = this.state.collaborators1.map(item => {
+    displaycoll = this.state.collaborators1.map((item) => {
       return (
         <div className="collab-style">
           <Tooltip title={item}>
@@ -702,16 +704,22 @@ class CreateNote extends Component {
     });
     let displaylabels;
     if (this.state.allLabels.length !== 0) {
-      displaylabels = this.state.allLabels.map(el => {
+      displaylabels = this.state.allLabels.map((el) => {
         console.log(el);
         return (
           <div className="chip-style">
-            <Chip label={el} onDelete={this.handleDeleteLabelInNote} />
+            <Chip
+              label={el}
+              onDelete={() => {
+                this.handleLabelRemove(el);
+              }}
+              onClick={this.handleLabelMenuOpen}
+            />
           </div>
         );
       });
     }
-    const color1 = this.state.manycolor.map(color => {
+    const color1 = this.state.manycolor.map((color) => {
       return (
         <div>
           <Tooltip
@@ -722,7 +730,7 @@ class CreateNote extends Component {
             <IconButton
               style={{
                 background: color.colorCode,
-                margin: "2%"
+                margin: "2%",
               }}
               value={color.colorCode}
               onClick={this.changeNoteColor}
@@ -732,7 +740,7 @@ class CreateNote extends Component {
       );
     });
     let collabs;
-    collabs = this.state.collaborators.map(item => {
+    collabs = this.state.collaborators.map((item) => {
       return (
         <div className="collab-owner">
           <div style={{ marginLeft: "23px", marginTop: "10px" }}>
@@ -741,9 +749,9 @@ class CreateNote extends Component {
           <div style={{ marginLeft: "7px" }}>
             <h4>{item}</h4>
           </div>
-          <div style={{ marginLeft: "35px", marginTop: "-3px" }}>
+          <div style={{ marginTop: "6px" }}>
             <IconButton
-              onClick={data => {
+              onClick={(data) => {
                 this.handleRemoveCollab(data, item);
               }}
             >
@@ -756,7 +764,7 @@ class CreateNote extends Component {
     //bro its not getting removed
     //
     let coll;
-    coll = this.state.collaborators1.map(item => {
+    coll = this.state.collaborators1.map((item) => {
       return (
         <div className="collab-owner">
           <div style={{ marginLeft: "23px" }}>
@@ -767,7 +775,7 @@ class CreateNote extends Component {
           </div>
           <div style={{ marginTop: "-3px" }}>
             <IconButton
-              onClick={data => {
+              onClick={(data) => {
                 this.handleRemoveCollab1(data, item);
               }}
             >
@@ -779,13 +787,14 @@ class CreateNote extends Component {
     });
 
     let reminder;
-    reminder = this.state.remState.map(elem => {
+    reminder = this.state.remState.map((elem) => {
       return (
         <div className="chip-style">
           <Chip
             icon={<AccessTimeIcon />}
             label={elem}
             onDelete={this.handleReminderDelete}
+            onClick={this.handleReminderClick}
           />
         </div>
       );
@@ -794,7 +803,7 @@ class CreateNote extends Component {
     return (
       <div
         style={{
-          marginTop: "100px"
+          marginTop: "100px",
         }}
       >
         {!this.state.openNote ? (
@@ -818,7 +827,7 @@ class CreateNote extends Component {
             <Card
               id="card_decor4"
               style={{
-                backgroundColor: this.state.color
+                backgroundColor: this.state.color,
               }}
             >
               <div id="pin-inputbase">
@@ -844,7 +853,7 @@ class CreateNote extends Component {
                           style={{
                             height: "0.54cm",
                             width: "0.54cm",
-                            opacity: "0.65"
+                            opacity: "0.65",
                           }}
                           src={Pin}
                           onClick={this.handleIsPinned}
@@ -865,7 +874,7 @@ class CreateNote extends Component {
                           style={{
                             height: "0.54cm",
                             width: "0.54cm",
-                            opacity: "0.65"
+                            opacity: "0.65",
                           }}
                           src={Unpin}
                           onClick={this.handleIsPinned}
@@ -964,7 +973,7 @@ class CreateNote extends Component {
                               onClose={this.closeColorBox}
                               transformOrigin={{
                                 vertical: "right",
-                                horizontal: "right"
+                                horizontal: "right",
                               }}
                             >
                               <div id="color-align">{color1}</div>
@@ -993,11 +1002,11 @@ class CreateNote extends Component {
                                 anchorEl={this.state.labelAnchor}
                                 anchorOrigin={{
                                   vertical: "bottom",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                                 transformOrigin={{
                                   vertical: "top",
-                                  horizontal: "center"
+                                  horizontal: "center",
                                 }}
                                 onClose={this.handleMenuClickAway}
                               >
@@ -1038,11 +1047,11 @@ class CreateNote extends Component {
           anchorEl={this.state.labelAnchor}
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "center"
+            horizontal: "center",
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "center"
+            horizontal: "center",
           }}
           onClose={this.handleMenuClickAway}
         >
@@ -1103,7 +1112,7 @@ class CreateNote extends Component {
             <Divider />
             <div className="collab-owner">
               <div style={{ marginLeft: "23px", marginTop: "10px" }}>
-                <Avatar src="/broken-image.jpg" />
+                <Avatar src={this.state.profilePicture} />
               </div>
               <div style={{ marginLeft: "7px" }}>
                 <h4>{owner}(owner)</h4>
@@ -1119,7 +1128,7 @@ class CreateNote extends Component {
               </div>
               <div
                 style={{
-                  paddingTop: "6px"
+                  paddingTop: "6px",
                 }}
               >
                 <Input
@@ -1159,11 +1168,11 @@ class CreateNote extends Component {
           anchorEl={this.state.reminderAnchor}
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "center"
+            horizontal: "center",
           }}
           transformOrigin={{
             vertical: "top",
-            horizontal: "center"
+            horizontal: "center",
           }}
           onClose={this.handleMenuClickAway}
         >
@@ -1197,7 +1206,7 @@ class CreateNote extends Component {
         <Snackbar
           anchorOrigin={{
             vertical: "bottom",
-            horizontal: "center"
+            horizontal: "center",
           }}
           open={this.state.open}
           autoHideDuration={4000}

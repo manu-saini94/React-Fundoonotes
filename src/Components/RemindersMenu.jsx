@@ -32,6 +32,7 @@ class RemindersMenu extends PureComponent {
         return (
           <GetNotes
             getNote={this.props.getNote}
+            getLabel={this.props.getLabel}
             getNoteLabelArr={this.props.getNoteLabelArr}
             obj3={this.props.obj3}
             data={item}
@@ -46,6 +47,7 @@ class RemindersMenu extends PureComponent {
         return (
           <GetNotes
             getNote={this.props.getNote}
+            getLabel={this.props.getLabel}
             getNoteLabelArr={this.props.getNoteLabelArr}
             obj3={this.props.obj3}
             data={item}

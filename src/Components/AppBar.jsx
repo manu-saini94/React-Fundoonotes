@@ -36,6 +36,7 @@ import ViewCompactRoundedIcon from "@material-ui/icons/ViewCompactRounded";
 import "../Notes.css";
 import AddAPhotoRoundedIcon from "@material-ui/icons/AddAPhotoRounded";
 import ProfilePicture from "./ProfilePicture";
+import CloseRoundedIcon from "@material-ui/icons/CloseRounded";
 
 const drawerWidth = 244;
 
@@ -222,7 +223,7 @@ export default function PrimarySearchAppBar(props) {
       open={isMenuOpen}
       onClose={handleMenuClickAway}
     >
-      <Card id="card_decor7">
+      <Card id="card_decor8">
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div
             style={{
@@ -349,9 +350,17 @@ export default function PrimarySearchAppBar(props) {
                       inputProps={{ "aria-label": "description" }}
                       spellCheck={false}
                       placeholder={searchPlace}
+                      onChange={props.onChangeSearchInput}
                       onClick={props.handleSearchClick}
                     />
                   </div>
+                  {props.searchOpen ? (
+                    <div className="searchclose_icon">
+                      <IconButton onClick={props.handleSearchCloseClick}>
+                        <CloseRoundedIcon />
+                      </IconButton>
+                    </div>
+                  ) : null}
                 </div>
               </Card>
             </div>

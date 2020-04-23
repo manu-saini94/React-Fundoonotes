@@ -13,7 +13,7 @@ class GetLabelsInNoteMenu extends Component {
       allLabels: this.props.allLabels,
       labelIschecked: false,
       tick: this.props.tick,
-      data: this.props.data
+      data: this.props.data,
     };
     this.handleCheckLabel = this.handleCheckLabel.bind(this);
   }
@@ -24,7 +24,7 @@ class GetLabelsInNoteMenu extends Component {
       id: props.item.id,
       allLabels: props.allLabels,
       tick: props.tick,
-      data: props.data
+      data: props.data,
     });
   }
 
@@ -33,11 +33,11 @@ class GetLabelsInNoteMenu extends Component {
     if (this.state.checkedLabel === true) {
       console.log(this.state.checkedLabel);
       let noteDetails = {
-        labelname: this.state.labelName
+        labelname: this.state.labelName,
       };
 
       await NoteController.addlabeltonote(noteDetails, this.props.data.id).then(
-        res => {
+        (res) => {
           if (res.status === 200) {
             console.log("Label added to the note successfully");
           }
@@ -47,7 +47,7 @@ class GetLabelsInNoteMenu extends Component {
       await NoteController.deletelabelfornote(
         this.props.data.id,
         this.state.id
-      ).then(res => {
+      ).then((res) => {
         if (res.status === 200) {
           console.log("Label deleted for the note successfully");
         }
@@ -94,7 +94,7 @@ class GetLabelsInNoteMenu extends Component {
             width: "100%",
             display: "flex",
             flexDirection: "row",
-            justifyContent: "center"
+            justifyContent: "center",
           }}
         >
           <div
@@ -102,7 +102,7 @@ class GetLabelsInNoteMenu extends Component {
               width: "70%",
               display: "flex",
               justifyContent: "start",
-              padding: "5px"
+              padding: "5px",
             }}
           >
             <div className="checkbox_label">

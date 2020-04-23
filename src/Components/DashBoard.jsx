@@ -16,6 +16,7 @@ import LabelController from "../Controller/LabelController";
 import LabelMenu from "../Components/LabelMenu";
 import ProfilePicture from "./ProfilePicture";
 import UserController from "../Controller/UserController";
+import SearchComponent from "./SearchComponent";
 
 class DashBoard extends PureComponent {
   constructor(props) {
@@ -30,6 +31,9 @@ class DashBoard extends PureComponent {
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: false,
+      searchOpen: false,
+      searchListOpen: false,
+      searchBy: "",
       openDialog: false,
       getNoteArr: [],
       getLabelArr: [],
@@ -38,18 +42,37 @@ class DashBoard extends PureComponent {
       view: false,
       profilePicture: "",
       uniqLabels: [],
+      uniqCollabs: [],
+      uniqColors: [],
+      uniqReminders: [],
+      searchNotesArr: [],
+      searchFlag: false,
+      collabFlag: false,
+      labelFlag: false,
+      reminderFlag: false,
+      colorFlag: false,
+      searchListOpen: false,
+      collabName: "",
+      colorName: "",
+      labelName: "",
+      noResult: false,
     };
   }
 
-  handleDraweropen = () => {
-    this.setState({ open: !this.state.open });
-  };
-
+  componentDidMount() {
+    this.getNote();
+    this.getLabel();
+    this.getProfilePic();
+  }
   componentWillReceiveProps(props) {
     this.setState({
       jwt: props.match.params.jwt,
     });
   }
+
+  handleDraweropen = () => {
+    this.setState({ open: !this.state.open });
+  };
   handleNotesMenu = async () => {
     await this.setState({
       notesOpen: true,
@@ -58,6 +81,7 @@ class DashBoard extends PureComponent {
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: false,
+      searchOpen: false,
       heading: "fundoo",
     });
   };
@@ -69,6 +93,7 @@ class DashBoard extends PureComponent {
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: false,
+      searchOpen: false,
       heading: "Reminders",
     });
   };
@@ -81,6 +106,7 @@ class DashBoard extends PureComponent {
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: false,
+      searchOpen: false,
       heading: "Archive",
     });
   };
@@ -93,6 +119,7 @@ class DashBoard extends PureComponent {
       trashOpen: true,
       editlabelsOpen: false,
       labelNoteOpen: false,
+      searchOpen: false,
       heading: "Trash",
     });
   };
@@ -112,18 +139,12 @@ class DashBoard extends PureComponent {
       trashOpen: false,
       editlabelsOpen: false,
       labelNoteOpen: true,
+      searchOpen: false,
       labelName: data3,
       heading: data3,
     });
   };
 
-  handleSearchMenu = async () => {};
-
-  componentDidMount() {
-    this.getNote();
-    this.getLabel();
-    this.getProfilePic();
-  }
   handleRefresh = async () => {
     if (this.state.notesOpen) {
       await this.setState({ notesOpen: false });
@@ -140,6 +161,9 @@ class DashBoard extends PureComponent {
     } else if (this.state.labelNoteOpen) {
       await this.setState({ labelNoteOpen: false });
       await this.setState({ labelNoteOpen: true });
+    } else if (this.state.searchOpen) {
+      await this.setState({ searchOpen: false });
+      await this.setState({ searchOpen: true });
     }
   };
 
@@ -216,36 +240,220 @@ class DashBoard extends PureComponent {
     return tempArr;
   };
 
+  handleLabelsClick = async (elem) => {
+    await this.setState({
+      labelFlag: true,
+      reminderFlag: false,
+      collabFlag: false,
+      colorFlag: false,
+      searchListOpen: false,
+      labelName: elem,
+      searchOpen: true,
+      searchListOpen: false,
+      searchFlag: false,
+    });
+  };
+  handleRemindersClick = async () => {
+    await this.setState({
+      reminderFlag: true,
+      collabFlag: false,
+      labelFlag: false,
+      colorFlag: false,
+      searchListOpen: false,
+      searchOpen: true,
+      searchListOpen: false,
+      searchFlag: false,
+    });
+  };
+
+  handleCollabsClick = async (elem) => {
+    await this.setState({
+      collabFlag: true,
+      labelFlag: false,
+      reminderFlag: false,
+      colorFlag: false,
+      searchListOpen: false,
+      collabName: elem,
+      searchOpen: true,
+      searchListOpen: false,
+      searchFlag: false,
+    });
+  };
+  handleColorsClick = async (elem) => {
+    await this.setState({
+      colorFlag: true,
+      collabFlag: false,
+      labelFlag: false,
+      reminderFlag: false,
+      searchListOpen: false,
+      colorName: elem,
+      searchOpen: true,
+      searchListOpen: false,
+      searchFlag: false,
+    });
+  };
+  onChangeSearchInput = async (event) => {
+    await this.setState({
+      searchBy: event.target.value,
+    });
+
+    if (this.state.searchBy !== "") {
+      await NoteController.searchbytitledescription(this.state.searchBy).then(
+        (res) => {
+          this.setState({ searchNotesArr: res });
+          console.log("The serch Arr :", this.state.searchNotesArr);
+          if (this.state.searchNotesArr.length !== 0) {
+            this.setState({
+              searchOpen: true,
+              searchListOpen: false,
+              searchFlag: true,
+              collabFlag: false,
+              labelFlag: false,
+              reminderFlag: false,
+              colorFlag: false,
+              noResult: false,
+            });
+          } else if (this.state.searchNotesArr.length === 0) {
+            this.setState({ noResult: true });
+          }
+        }
+      );
+    } else {
+      if (this.state.searchBy === "") {
+        await this.setState({
+          searchOpen: true,
+          searchListOpen: true,
+          heading: "fundoo",
+          searchFlag: false,
+          noResult: false,
+        });
+        await this.handleSearchClick();
+      }
+    }
+  };
+
   handleSearchClick = async () => {
-    var uniqueLabelArray = [];
-    var uniqueCollabArray = [];
-    var uniqueColorArray = [];
-    this.calcLabels().then((data) => {
-      for (let i = 0; i < data.length; i++) {
-        if (uniqueLabelArray.indexOf(data[i].labelname) === -1) {
-          uniqueLabelArray.push(data[i].labelname);
-        }
-      }
-      console.log("the unique label array is :", uniqueLabelArray);
-    });
+    await this.setState({ heading: "fundoo" });
 
-    this.calcCollabs().then((data) => {
-      for (let i = 0; i < data.length; i++) {
-        if (uniqueCollabArray.indexOf(data[i].collaborator) === -1) {
-          uniqueCollabArray.push(data[i].collaborator);
-        }
-      }
-      console.log("the unique collaborator array is :", uniqueCollabArray);
-    });
+    if (!this.state.searchOpen) {
+      var uniqueLabelArray = [];
+      var uniqueCollabArray = [];
+      var uniqueColorArray = [];
+      var tempArr = [];
 
-    this.calcColors().then((data) => {
-      for (let i = 0; i < data.length; i++) {
-        if (uniqueColorArray.indexOf(data[i]) === -1) {
-          uniqueColorArray.push(data[i]);
+      this.state.getNoteArr.map((item) => {
+        if (item.reminder !== null) {
+          tempArr.push(item.reminder);
         }
+        console.log("reminders hjhjj", tempArr);
+      });
+
+      await this.calcLabels().then((data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (uniqueLabelArray.indexOf(data[i].labelname) === -1) {
+            uniqueLabelArray.push(data[i].labelname);
+          }
+        }
+        console.log("the unique label array is :", uniqueLabelArray);
+      });
+
+      this.calcCollabs().then((data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (uniqueCollabArray.indexOf(data[i].collaborator) === -1) {
+            uniqueCollabArray.push(data[i].collaborator);
+          }
+        }
+        console.log("the unique collaborator array is :", uniqueCollabArray);
+      });
+
+      this.calcColors().then((data) => {
+        for (let i = 0; i < data.length; i++) {
+          if (uniqueColorArray.indexOf(data[i]) === -1) {
+            uniqueColorArray.push(data[i]);
+          }
+        }
+        console.log("the unique color array is :", uniqueColorArray);
+      });
+      await this.setState({
+        uniqLabels: uniqueLabelArray,
+        uniqCollabs: uniqueCollabArray,
+        uniqColors: uniqueColorArray,
+        uniqReminders: tempArr,
+      });
+
+      if (
+        this.state.uniqLabels.length !== 0 ||
+        this.state.uniqCollabs.length !== 0 ||
+        this.state.uniqColors.length !== 0 ||
+        this.state.uniqReminders.length !== 0
+      ) {
+        await this.setState({
+          searchOpen: true,
+          searchListOpen: true,
+          notesOpen: false,
+          remindersOpen: false,
+          archiveOpen: false,
+          trashOpen: false,
+          editlabelsOpen: false,
+          labelNoteOpen: false,
+        });
+      } else {
+        await this.setState({
+          searchOpen: false,
+          searchListOpen: false,
+          notesOpen: true,
+          remindersOpen: false,
+          archiveOpen: false,
+          trashOpen: false,
+          editlabelsOpen: false,
+          labelNoteOpen: false,
+        });
       }
-      console.log("the unique color array is :", uniqueColorArray);
-    });
+    }
+  };
+
+  handleSearchCloseClick = async () => {
+    if (this.state.searchOpen && this.state.searchListOpen) {
+      await this.setState({
+        searchOpen: false,
+        searchListOpen: false,
+        notesOpen: true,
+        remindersOpen: false,
+        archiveOpen: false,
+        trashOpen: false,
+        editlabelsOpen: false,
+        labelNoteOpen: false,
+        heading: "fundoo",
+      });
+    } else if (
+      this.state.uniqLabels.length !== 0 ||
+      this.state.uniqCollabs.length !== 0 ||
+      this.state.uniqColors.length !== 0 ||
+      this.state.uniqReminders.length !== 0
+    ) {
+      await this.setState({
+        searchOpen: true,
+        searchListOpen: true,
+        notesOpen: false,
+        remindersOpen: false,
+        archiveOpen: false,
+        trashOpen: false,
+        editlabelsOpen: false,
+        labelNoteOpen: false,
+      });
+    } else {
+      await this.setState({
+        notesOpen: true,
+        remindersOpen: false,
+        archiveOpen: false,
+        trashOpen: false,
+        editlabelsOpen: false,
+        labelNoteOpen: false,
+        searchOpen: false,
+        searchListOpen: false,
+        heading: "fundoo",
+      });
+    }
   };
 
   render() {
@@ -257,11 +465,14 @@ class DashBoard extends PureComponent {
               <AppNavBar
                 handleDraweropen={this.handleDraweropen}
                 handleSignout={this.handleSignout}
+                onChangeSearchInput={this.onChangeSearchInput}
                 heading={this.state.heading}
                 handleRefresh={this.handleRefresh}
                 handleView={this.handleView}
                 profilePicture={this.state.profilePicture}
                 handleSearchClick={this.handleSearchClick}
+                handleSearchCloseClick={this.handleSearchCloseClick}
+                searchOpen={this.state.searchOpen}
               />
             </div>
 
@@ -307,6 +518,7 @@ class DashBoard extends PureComponent {
                 obj={this.state.getNoteArr}
                 obj3={this.state.getLabelArr}
                 getNote={this.getNote}
+                getLabel={this.getLabel}
                 remindersOpen={this.state.remindersOpen}
                 open={this.state.open}
                 view={this.state.view}
@@ -343,6 +555,7 @@ class DashBoard extends PureComponent {
               <ArchiveMenu
                 obj={this.state.getNoteArr}
                 getNote={this.getNote}
+                getLabel={this.getLabel}
                 archiveOpen={this.state.archiveOpen}
                 open={this.state.open}
                 obj3={this.state.getLabelArr}
@@ -360,6 +573,40 @@ class DashBoard extends PureComponent {
                 getLabel={this.getLabel}
                 obj3={this.state.getLabelArr}
                 view={this.state.view}
+              />
+            </div>
+            <div>
+              <SearchComponent
+                searchOpen={this.state.searchOpen}
+                searchListOpen={this.state.searchListOpen}
+                searchNotesArr={this.state.searchNotesArr}
+                uniqLabels={this.state.uniqLabels}
+                uniqCollabs={this.state.uniqCollabs}
+                uniqColors={this.state.uniqColors}
+                uniqReminders={this.state.uniqReminders}
+                obj={this.state.getNoteArr}
+                getNote={this.getNote}
+                notesOpen={this.state.notesOpen}
+                getLabel={this.getLabel}
+                obj3={this.state.getLabelArr}
+                view={this.state.view}
+                handleLabelNoteMenu={this.handleLabelNoteMenu}
+                profilePicture={this.state.profilePicture}
+                open={this.state.open}
+                handleColorsClick={this.handleColorsClick}
+                handleLabelsClick={this.handleLabelsClick}
+                handleCollabsClick={this.handleCollabsClick}
+                handleRemindersClick={this.handleRemindersClick}
+                searchFlag={this.state.searchFlag}
+                collabFlag={this.state.collabFlag}
+                labelFlag={this.state.labelFlag}
+                reminderFlag={this.state.reminderFlag}
+                colorFlag={this.state.colorFlag}
+                searchListOpen={this.state.searchListOpen}
+                collabName={this.state.collabName}
+                colorName={this.state.colorName}
+                labelName={this.state.labelName}
+                noResult={this.state.noResult}
               />
             </div>
 

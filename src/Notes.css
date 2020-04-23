@@ -13,13 +13,20 @@
   justify-content: space-evenly;
   width: 100%;
 }
-
+.noresult-search {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 28px;
+  margin-top: -46px;
+}
 .search-align {
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   padding-left: 3px;
   padding-top: 1px;
+}
+.searchclose_icon {
+  display: flex;
+  padding-left: 49%;
 }
 .pinunpin-align {
   padding-right: 7px;
@@ -168,7 +175,7 @@
   border-radius: 16px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-#card_decor7 {
+#card_decor8 {
   width: 280px;
   margin: 0px 0px 0px 0px;
   height: fit-content;
@@ -177,9 +184,14 @@
   border: 0px solid;
   border-radius: 8%;
   padding: 13px 27px;
+  background-color: white;
   text-align: center;
   text-decoration: none;
   font-size: 16px;
+  cursor: pointer;
+}
+.signout-button:hover {
+  background-color: #e0e0e0;
 }
 .choose-file {
   padding-left: 32px;
@@ -265,20 +277,115 @@
   height: fit-content;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-/* #card_decordialog {
- 
-} */
-/* .pin_getnotes {
-  margin-left: 0px;
-  padding-left: 1px;
-  margin-right: -43px;
-  margin-top: -6px;
-  padding-top: 0px;
-  padding-bottom: 0px;
-  padding-right: 0px;
-} */
+
+.outerdiv-searchlabelpaper {
+  margin-right: 4.5px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+.outerdiv-searchcolorpaper {
+  margin-right: 5px;
+  margin-bottom: 5px;
+  margin-left: 8px;
+}
+#types-paper {
+  width: 165.5px;
+  height: 165.5px;
+  cursor: pointer;
+  background-color: #1e88e5;
+}
+#label-paper {
+  width: 165.5px;
+  height: 165.5px;
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+#collab-paper {
+  width: 222px;
+  height: 165.5px;
+  background-color: #eeeeee;
+  cursor: pointer;
+}
+#types-paper:hover {
+  background-color: #1565c0;
+}
+#label-paper:hover {
+  background-color: #e0e0e0;
+}
+#collab-paper:hover {
+  background-color: #e0e0e0;
+}
+.style-collabname {
+  font-size: 14px;
+}
+
+#collabstyle-search {
+  font-size: 79px;
+  opacity: 0.8;
+  color: #1565c0;
+}
+.labelsalign-decor {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+.span-labels {
+  display: flex;
+  justify-content: flex-start;
+  padding-top: 12px;
+  padding-left: 14px;
+  font-weight: bold;
+  padding-bottom: 12px;
+}
+.div-labeliconsearch {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+.div-coloriconsearch {
+  padding-bottom: 10px;
+}
+.div-labelnamesearch {
+  padding-top: 14px;
+}
+#labelstyle-search {
+  font-size: 40px;
+  opacity: 0.7;
+}
+#reminderstyle-search {
+  font-size: 50px;
+  color: white;
+}
+.div-morebutton {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 3px;
+  padding-bottom: 5px;
+  margin-top: -38px;
+}
+.more-button {
+  border: 0px;
+  border-radius: 8%;
+  padding: 10px 25px;
+  text-align: center;
+  text-decoration: none;
+  background-color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+.more-button:hover {
+  background-color: #e0e0e0;
+}
 #card_decor6 {
   width: 600px;
+  margin: 0px 0px 0px 0px;
+  height: fit-content;
+  border-radius: 12px;
+  margin-left: 22.5%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 3%;
+}
+#card_decor7 {
+  width: 700px;
   margin: 0px 0px 0px 0px;
   height: fit-content;
   border-radius: 12px;
@@ -337,6 +444,13 @@
   flex-wrap: wrap;
   margin-left: 30px;
   margin-top: 45px;
+}
+.remindersearch_notes {
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: 50px;
+  margin-top: -40px;
 }
 .trash_notes {
   height: auto;
@@ -398,8 +512,7 @@
 .done_icon {
   margin-top: 6px;
 }
-#createlabel_field {
-}
+
 #editlist-labels {
   min-height: 54px;
   display: flex;
@@ -557,4 +670,5 @@
   padding-top: 6px;
   padding-right: -5px;
   padding-left: 7px;
+  cursor: pointer;
 }

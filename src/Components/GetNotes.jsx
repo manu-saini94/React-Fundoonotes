@@ -619,7 +619,7 @@ class GetNotes extends PureComponent {
       archived: this.state.isArchived,
       pinned: this.state.isPinned,
       color: this.state.color,
-      reminder: this.state.reminder,
+      reminder: this.state.selectedDate,
       labelName: this.state.labelName,
     };
 

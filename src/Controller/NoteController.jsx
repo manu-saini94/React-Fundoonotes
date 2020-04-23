@@ -89,5 +89,22 @@ var controller = {
       noteDetails
     );
   },
+  async searchbytitledescription(title) {
+    let datas = [];
+    await axios
+      .get("http://localhost:8080/note/search/", {
+        headers: { title: title, "Content-type": "application/json " },
+      })
+      .then((res) => {
+        console.log(res.data, "kjlk");
+        if (res.data.object !== null) {
+          res.data.object.forEach((element) => {
+            datas.push(element);
+          });
+        }
+        console.log("searched array is :", datas);
+      });
+    return datas;
+  },
 };
 export default controller;

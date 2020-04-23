@@ -17,7 +17,6 @@ class NotesMenu extends PureComponent {
 
     this.state = {
       obj: this.props.obj,
-      getNote: this.props.getNote,
       pinnedStatus: false,
       obj3: this.props.obj3,
       view: this.props.view,
@@ -30,7 +29,6 @@ class NotesMenu extends PureComponent {
       obj: props.obj,
       obj3: props.obj3,
       view: props.view,
-      profilePicture: props.profilePicture,
     });
   }
   getNote123 = async () => {
@@ -50,6 +48,7 @@ class NotesMenu extends PureComponent {
         return (
           <GetNotes
             getNote={this.props.getNote}
+            getLabel={this.props.getLabel}
             getNoteLabelArr={this.props.getNoteLabelArr}
             obj3={this.props.obj3}
             data={item}
